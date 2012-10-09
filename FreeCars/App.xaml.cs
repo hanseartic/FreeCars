@@ -64,7 +64,7 @@ namespace FreeCars {
         private void Application_Launching(object sender, LaunchingEventArgs e) {
             var wc = new WebClient();
             wc.OpenReadCompleted += new OpenReadCompletedEventHandler(wc_OpenReadCompleted);
-            wc.OpenReadAsync(new Uri("https://kunden.multicity-carsharing.de/kundenbuchung/hal2ajax_process.php?zoom=10&lng1=&lat1=&lng2=&lat2=&stadtCache=&mapstation_id=&mapstadt_id=&verwaltungfirma=&centerLng=13.382322739257802&centerLat=52.50734843957503&searchmode=buchanfrage&with_staedte=true&buchungsanfrage=J&lat=52.50734843957503&lng=13.382322739257802&instant_access=J&open_end=J&objectname=multicitymarker&clustername=multicitycluster&ignore_virtual_stations=J&before=null&after=null&ajxmod=hal2map&callee=getMarker&_=1349642335368"));
+            wc.OpenReadAsync(new Uri("https://kunden.multicity-carsharing.de/kundenbuchung/hal2ajax_process.php?zoom=10&lng1=&lat1=&lng2=&lat2=&stadtCache=&mapstation_id=&mapstadt_id=&verwaltungfirma=&centerLng=13.382322739257802&centerLat=52.50734843957503&searchmode=buchanfrage&with_staedte=true&buchungsanfrage=J&lat=52.50734843957503&lng=13.382322739257802&instant_access=J&open_end=J&objectname=multicitymarker&clustername=multicitycluster&ignore_virtual_stations=N&before=null&after=null&ajxmod=hal2map&callee=getMarker&_=1349642335368"));
         }
         public List<FlinksterMarker> Cars { get; private set; }
         private void wc_OpenReadCompleted(object sender, OpenReadCompletedEventArgs e) {
