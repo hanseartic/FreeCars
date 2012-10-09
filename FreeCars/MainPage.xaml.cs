@@ -13,6 +13,8 @@ using Microsoft.Phone.Controls;
 using Microsoft.Phone.Controls.Maps;
 using System.Device.Location;
 using System.Globalization;
+using System.Windows.Data;
+using Microsoft.Phone.Shell;
 
 namespace FreeCars {
     public partial class MainPage : PhoneApplicationPage {
@@ -32,8 +34,36 @@ namespace FreeCars {
             };
             cw.Start();
             map.Children.Add(me);
+						SetAppBar();
         }
 
+				void SetAppBar() {
+						ApplicationBar = new ApplicationBar();
+
+						ApplicationBar.Mode = ApplicationBarMode.Default;
+						ApplicationBar.Opacity = 1.0;
+						ApplicationBar.IsVisible = true;
+						ApplicationBar.IsMenuEnabled = true;
+
+						var mainPageApplicationBarReloadButton = new ApplicationBarIconButton();
+						mainPageApplicationBarReloadButton.IconUri = new Uri("/Resources/dark_appbar.feature.settings.rest.png", UriKind.Relative);
+						mainPageApplicationBarReloadButton.Text = FreeCars.Resources.Strings.MainPageBarSettings;
+						mainPageApplicationBarReloadButton.Click += OnMainPageApplicationBarReloadButtonClick;
+
+						var mainPageApplicationBarSettingsButton = new ApplicationBarIconButton();
+						mainPageApplicationBarSettingsButton.IconUri = new Uri("/Resources/dark_appbar.feature.settings.rest.png", UriKind.Relative);
+						mainPageApplicationBarSettingsButton.Text = FreeCars.Resources.Strings.MainPageBarMyLocation;
+						mainPageApplicationBarSettingsButton.Click += OnMainPageApplicationBarSettingsButtonClick;
+
+						ApplicationBar.Buttons.Add(mainPageApplicationBarReloadButton);
+						ApplicationBar.Buttons.Add(mainPageApplicationBarSettingsButton);
+				}
+
+				void OnMainPageApplicationBarReloadButtonClick(object sender, EventArgs e) {
+						
+				}
+				void OnMainPageApplicationBarSettingsButtonClick(object sender, EventArgs e) {
+				}
         void OnMyPositionChanged(object sender, GeoPositionChangedEventArgs<GeoCoordinate> e) {
             me.Location = e.Position.Location;
             if (false == firstLocationReceived) {
