@@ -21,10 +21,19 @@
 			<RowDefinition Height="*" />
 			<RowDefinition Height="0" />
 		</Grid.RowDefinitions>
+		<Grid.Resources>
+			<ControlTemplate x:Key="MyPositionPushpinTemplate" TargetType="map:Pushpin">
+    <Grid x:Name="ContentGrid" Width="28" Height="28" Margin="0">
+					<Image Source="Resources/system-icon-location.png" Stretch="Fill"/>
+	</Grid>
+	</ControlTemplate>
+	</Grid.Resources>
 
 		<!--ContentPanel - place additional content here-->
 		<Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
-			<map:Map HorizontalAlignment="Left" Name="map" VerticalAlignment="Top" Height="800" Width="456" CredentialsProvider="AsD4awUEo6H7hWplpv4yrTfqDS2NmKfxFFRxZv8Nl1fBm0gv5d7z_ySqquJqdKLG" />
+			<map:Map HorizontalAlignment="Left" Name="map" VerticalAlignment="Top" Height="800" Width="456" CredentialsProvider="AsD4awUEo6H7hWplpv4yrTfqDS2NmKfxFFRxZv8Nl1fBm0gv5d7z_ySqquJqdKLG">
+				<map:Pushpin x:Name="myLocationPushpin" Template="{StaticResource MyPositionPushpinTemplate}" Margin="-14, 0, -14, 0" Opacity="0.9"  Visibility="Collapsed" />
+			</map:Map>
 		</Grid>
 	</Grid>
 </phone:PhoneApplicationPage>
