@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="MainpageAppbarCenterme" xml:space="preserve">
-    <value>Center Me</value>
+    <value>Me</value>
   </data>
   <data name="MainPageBarMyLocation" xml:space="preserve">
     <value>My location</value>
