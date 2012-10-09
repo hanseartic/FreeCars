@@ -20,11 +20,12 @@ namespace FreeCars {
     public partial class MainPage : PhoneApplicationPage {
         // Constructor
         private Pushpin me;
-        private bool firstLocationReceived = false;
+        private bool trackMyLocation = false;
+				private GeoCoordinateWatcher cw;
         public MainPage() {
             InitializeComponent();
             ((App)App.Current).CarsLoaded += OnCarsLoaded;
-            var cw = new GeoCoordinateWatcher(GeoPositionAccuracy.High);
+            cw = new GeoCoordinateWatcher(GeoPositionAccuracy.High);
             cw.MovementThreshold = 20;
             cw.PositionChanged += OnMyPositionChanged;
             me = new Pushpin() { 
@@ -34,9 +35,13 @@ namespace FreeCars {
             };
             cw.Start();
             map.Children.Add(me);
+						
 						SetAppBar();
         }
 
+				void OnMainPageLoaded(object sender, RoutedEventArgs e) {
+						
+				}
 				void SetAppBar() {
 						ApplicationBar = new ApplicationBar();
 
@@ -63,14 +68,17 @@ namespace FreeCars {
 						
 				}
 				void OnMainPageApplicationBarSettingsButtonClick(object sender, EventArgs e) {
+						trackMyLocation = true;
+						cw.Start();
 				}
         void OnMyPositionChanged(object sender, GeoPositionChangedEventArgs<GeoCoordinate> e) {
             me.Location = e.Position.Location;
-            if (false == firstLocationReceived) {
-                map.Center = e.Position.Location;
-                map.ZoomLevel = 12.0;
-                firstLocationReceived = true;
-            }
+						if (true == trackMyLocation) {
+								map.Center = e.Position.Location;
+								map.ZoomLevel = 14.0;
+						} else {
+								cw.Stop();
+						}
         }
 
         void OnCarsLoaded(object sender, EventArgs e) {
