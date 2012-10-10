@@ -82,6 +82,17 @@ namespace FreeCars {
                 CarsUpdated(sender, null);
             }
         }
+				public void ReloadPOIs() {
+						try {
+								(Resources["multicity"] as Multicity).LoadPOIs();
+						} catch { }
+						try {
+								(Resources["driveNow"] as DriveNow).LoadPOIs();
+						} catch { }
+						try {
+								//(Resources["car2go"] as Car2Go).LoadPOIs();
+						} catch { }
+				}
         public event EventHandler CarsUpdated;
         // Code to execute when the application is activated (brought to foreground)
         // This code will not execute when the application is first launched

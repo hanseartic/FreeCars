@@ -85,7 +85,14 @@ namespace FreeCars {
 						};
 						mainPageApplicationBarSettingsButton.Click += OnMainPageApplicationBarSettingsButtonClick;
 
+						var mainPageApplicationBarReloadButton = new ApplicationBarIconButton {
+								IconUri = new Uri("/Resources/appbar.transport.repeat.rest.png", UriKind.Relative),
+								Text = FreeCars.Resources.Strings.MainPageBarReload,
+						};
+						mainPageApplicationBarReloadButton.Click += OnMainPageApplicationBarReloadButtonClick;
+
 						ApplicationBar.Buttons.Add(mainPageApplicationBarCentermeButton);
+						ApplicationBar.Buttons.Add(mainPageApplicationBarReloadButton);
 						ApplicationBar.Buttons.Add(mainPageApplicationBarSettingsButton);
 				}
 
@@ -96,6 +103,9 @@ namespace FreeCars {
 				}
 				void OnMainPageApplicationBarSettingsButtonClick(object sender, EventArgs e) {
                     NavigationService.Navigate(new Uri("/SettingsPage.xaml", UriKind.RelativeOrAbsolute));
+				}
+				void OnMainPageApplicationBarReloadButtonClick(object sender, EventArgs e) {
+						((App)Application.Current).ReloadPOIs();
 				}
 				void OnMyPositionChanged(object sender, GeoPositionChangedEventArgs<GeoCoordinate> e) {
 						if (GeoPositionStatus.Ready != ((GeoCoordinateWatcher)sender).Status) return;
