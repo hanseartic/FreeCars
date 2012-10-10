@@ -121,6 +121,32 @@ namespace FreeCars {
                             UpdateMulticityLayers();
                         }
                         
+						if (sender.GetType() == typeof(DriveNow)) {
+								UpdateDriveNowLayer((DriveNow)sender);
+						}                
+				}
+				void UpdateDriveNowLayer(DriveNow driveNow) {
+						var myLocation = myLocationPushpin.Location;
+						var cultureInfo = new CultureInfo("en-US");
+						var driveNowBrush = new SolidColorBrush(Colors.Brown);
+						driveNowCarsLayer.Children.Clear();
+						foreach (var car in driveNow.DriveNowCars) {
+								var coordinate = new GeoCoordinate(
+										Double.Parse(car.position.latitude, cultureInfo.NumberFormat),
+										Double.Parse(car.position.longitude, cultureInfo.NumberFormat)
+								);
+								var distance = (int)coordinate.GetDistanceTo(myLocation);
+								if (1500 < distance) continue;
+								var pushpin = new Pushpin {
+										Location = coordinate,
+										Name = car.licensePlate,
+										Background = driveNowBrush,
+										Opacity = .6,
+										Content = distance + " m",
+								};
+								pushpin.Tap += OnPushpinTap;
+								driveNowCarsLayer.Children.Add(pushpin);
+						}
 				}
                 void UpdateMulticityLayers() {
                     var myLocation = myLocationPushpin.Location;

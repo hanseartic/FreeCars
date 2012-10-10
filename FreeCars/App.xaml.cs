@@ -63,13 +63,17 @@ namespace FreeCars {
         // Code to execute when the application is launching (eg, from Start)
         // This code will not execute when the application is reactivated
         private void Application_Launching(object sender, LaunchingEventArgs e) {
-            var multicity = new Multicity ();
-            multicity.Updated += OnMulticityUpdated;
+            var multicity = new Multicity();
+            multicity.Updated += OnLayerUpdated;
             multicity.LoadPOIs();
             this.Resources.Add("multicity", multicity);
-        }
-        private void OnMulticityUpdated(object sender, EventArgs e) {
 
+						var driveNow = new DriveNow();
+						driveNow.Updated += OnLayerUpdated;
+						driveNow.LoadPOIs();
+						this.Resources.Add("driveNow", driveNow);
+        }
+        private void OnLayerUpdated(object sender, EventArgs e) {
             TriggerCarsUpdated(sender);
         }
         public List<Pushpin> POIs { get; private set; }
