@@ -36,7 +36,7 @@ namespace FreeCars {
 				private void LoadDriveNowCars() {
             if (null == position) return;
             try {
-                if (false == (bool)IsolatedStorageSettings.ApplicationSettings["settings_show_drivenow_cars"]) {
+								if (false == (bool)IsolatedStorageSettings.ApplicationSettings["settings_show_drivenow_cars"]) {
                     return;
                 }
             } catch (KeyNotFoundException) { }

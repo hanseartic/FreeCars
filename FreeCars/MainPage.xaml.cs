@@ -199,9 +199,8 @@ namespace FreeCars {
 
 				}
 				void OnPushpinTap(object sender, System.Windows.Input.GestureEventArgs e) {
-						var provider = "Multicity";
+
 						var pushpinContent = ((Pushpin)sender).Content;
-						
 						if (typeof(Border) == pushpinContent.GetType()) {
 								if (Visibility.Collapsed == ((Border)pushpinContent).Visibility) {
 										foreach (var pushpin in activeLayer.Children.ToArray()) {

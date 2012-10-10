@@ -48,6 +48,11 @@ namespace FreeCars {
             SaveToggleSwitch("settings_show_multicity_chargers", ((ToggleSwitch)sender).IsChecked);
             OnToggleSwitchChanged((ToggleSwitch)sender);
         }
+				private void OnDriveNowCarsToggleSwitchChanged(object sender, RoutedEventArgs e) {
+						SaveToggleSwitch("settings_show_drivenow_cars", ((ToggleSwitch)sender).IsChecked);
+						OnToggleSwitchChanged((ToggleSwitch)sender);
+				}
+
         private void OnGPSToggleSwitchLoaded(object sender, RoutedEventArgs e) {
             try {
                 ((ToggleSwitch)sender).IsChecked = (true == (bool)IsolatedStorageSettings.ApplicationSettings["settings_use_GPS"]);
@@ -67,6 +72,13 @@ namespace FreeCars {
             } catch (KeyNotFoundException) { ((ToggleSwitch)sender).IsChecked = true;  }
             OnToggleSwitchChanged((ToggleSwitch)sender);
         }
+
+				private void OnDriveNowCarsToggleSwitchLoaded(object sender, RoutedEventArgs e) {
+						try {
+								((ToggleSwitch)sender).IsChecked = (true == (bool)IsolatedStorageSettings.ApplicationSettings["settings_show_drivenow_cars"]);
+						} catch (KeyNotFoundException) { ((ToggleSwitch)sender).IsChecked = true; }
+						OnToggleSwitchChanged((ToggleSwitch)sender);
+				}
 
     }
 }

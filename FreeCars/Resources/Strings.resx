@@ -171,4 +171,10 @@
   <data name="Multicity" xml:space="preserve">
     <value>Multicity</value>
   </data>
+  <data name="SettingsDriveNowTitle" xml:space="preserve">
+    <value>DriveNow</value>
+  </data>
+  <data name="SettingsPageShowDriveNowCars" xml:space="preserve">
+    <value>Show cars</value>
+  </data>
 </root>

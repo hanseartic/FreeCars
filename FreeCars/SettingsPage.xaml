@@ -38,7 +38,14 @@
                     </StackPanel>
                 </Grid>
             </controls:PivotItem>
-        </controls:Pivot>
+			<controls:PivotItem Header="{Binding LocalizedStrings.SettingsDriveNowTitle, Source={StaticResource ResourceAccess}}">
+				<Grid>
+					<StackPanel>
+						<toolkit:ToggleSwitch Header="{Binding LocalizedStrings.SettingsPageShowDriveNowCars, Source={StaticResource ResourceAccess}}" Checked="OnDriveNowCarsToggleSwitchChanged" Unchecked="OnDriveNowCarsToggleSwitchChanged" Loaded="OnDriveNowCarsToggleSwitchLoaded" Content="{Binding LocalizedStrings.ToggleSwitchOff, Source={StaticResource ResourceAccess}}" />
+					</StackPanel>
+				</Grid>
+			</controls:PivotItem>
+		</controls:Pivot>
     </Grid>
 
     <!--Sample code showing usage of ApplicationBar-->
