@@ -24,8 +24,8 @@
 		<Grid.Resources>
 			<ControlTemplate x:Key="MyPositionPushpinTemplate" TargetType="map:Pushpin">
 				<Grid x:Name="ContentGrid" Width="28" Height="28" Margin="0">
-					<Ellipse Fill="{StaticResource PhoneAccentBrush}" Height="10" Width="10" />
-					<Image Source="Resources/system-icon-location.png" Stretch="Fill" />
+                    <Ellipse Fill="{StaticResource PhoneAccentBrush}" Height="10" Width="10" />
+                    <Image Source="Resources/system-icon-location.png" Stretch="Fill" />
 	</Grid>
 	</ControlTemplate>
 	</Grid.Resources>
@@ -33,8 +33,15 @@
 		<!--ContentPanel - place additional content here-->
 		<Grid x:Name="ContentPanel" Grid.Row="1" Margin="0,0,0,0">
 			<map:Map HorizontalAlignment="Left" Name="map" VerticalAlignment="Top" Height="800" Width="480" CredentialsProvider="AsD4awUEo6H7hWplpv4yrTfqDS2NmKfxFFRxZv8Nl1fBm0gv5d7z_ySqquJqdKLG">
-				<map:Pushpin x:Name="myLocationPushpin" Template="{StaticResource MyPositionPushpinTemplate}" Margin="-14, 0, -14, 0" Opacity="0.9"  Visibility="Collapsed" />
-			</map:Map>
+                <map:MapLayer x:Name="myLocationLayer">
+                    <map:Pushpin x:Name="myLocationPushpin" Template="{StaticResource MyPositionPushpinTemplate}" Margin="-14, 0, -14, 0" Opacity="0.9"  Visibility="Collapsed"  />
+                </map:MapLayer>
+                <map:MapLayer x:Name="multicityCarsLayer"></map:MapLayer>
+                <map:MapLayer x:Name="multicityFlinksterLayer"></map:MapLayer>
+                <map:MapLayer x:Name="multicityChargingLayer"></map:MapLayer>
+                <map:MapLayer x:Name="driveNowCarsLayer"></map:MapLayer>
+                <map:MapLayer x:Name="car2goCarsLayer"></map:MapLayer>
+            </map:Map>
 		</Grid>
 	</Grid>
 </phone:PhoneApplicationPage>

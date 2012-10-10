@@ -16,13 +16,15 @@ using System.Globalization;
 using System.Windows.Data;
 using Microsoft.Phone.Shell;
 using System.IO.IsolatedStorage;
+using FreeCars.Resources;
 
 namespace FreeCars {
 		public partial class MainPage : PhoneApplicationPage {
 				private GeoCoordinateWatcher cw;
+                private bool gpsAllowed = false;
 				public MainPage() {
 						InitializeComponent();
-						((App)App.Current).CarsLoaded += OnCarsLoaded;
+						((App)App.Current).CarsUpdated += OnCarsUpdated;
 						cw = new GeoCoordinateWatcher(GeoPositionAccuracy.High);
 						cw.MovementThreshold = 10;
 						cw.PositionChanged += OnMyPositionChanged;
@@ -32,11 +34,37 @@ namespace FreeCars {
 				}
 
 				void OnMainPageLoaded(object sender, RoutedEventArgs e) {
-						try {
-								var position = (GeoPosition<GeoCoordinate>)IsolatedStorageSettings.ApplicationSettings["my_last_location"];
-								ShowMeAtLocation(position.Location);
-						} catch (KeyNotFoundException) {}
+                    try {
+                        gpsAllowed = (bool)IsolatedStorageSettings.ApplicationSettings["settings_use_GPS"];
+                    } catch (KeyNotFoundException) {
+                        checkForGPSUsage();
+                    }
+                    if (gpsAllowed) {
+                        try {
+                            var position = (GeoPosition<GeoCoordinate>)IsolatedStorageSettings.ApplicationSettings["my_last_location"];
+                            ShowMeAtLocation(position.Location);
+                        } catch (KeyNotFoundException) { }
+                    } else {
+                        try {
+                            IsolatedStorageSettings.ApplicationSettings.Remove("my_last_location");
+                        } catch { }
+                    }
 				}
+                bool checkForGPSUsage() {
+                    var gpsOK = MessageBox.Show(Strings.WelcomeAskGPSBody1 + Environment.NewLine + Strings.WelcomeAskGPSBody2, Strings.WelcomeAskGPSHeader, MessageBoxButton.OKCancel);
+                    if (MessageBoxResult.OK == gpsOK) {
+                        gpsAllowed = true;
+                    } else {
+                        gpsAllowed = false;
+                    }
+                    try {
+                        IsolatedStorageSettings.ApplicationSettings.Add("settings_use_GPS", gpsAllowed);
+                    } catch (ArgumentException) {
+                        IsolatedStorageSettings.ApplicationSettings["settings_use_GPS"] = gpsAllowed;
+                    }
+                    IsolatedStorageSettings.ApplicationSettings.Save();
+                    return gpsAllowed;
+                }
 				void SetAppBar() {
 						ApplicationBar = new ApplicationBar {
 								Mode = ApplicationBarMode.Default,
@@ -62,11 +90,12 @@ namespace FreeCars {
 				}
 
 				void OnMainPageApplicationBarCentermeButtonClick(object sender, EventArgs e) {
-						myLocationPushpin.Visibility = Visibility.Collapsed;
+                    myLocationPushpin.Visibility = Visibility.Collapsed;
+                    if (!gpsAllowed && !checkForGPSUsage()) { return; }
 						cw.Start();
 				}
 				void OnMainPageApplicationBarSettingsButtonClick(object sender, EventArgs e) {
-
+                    NavigationService.Navigate(new Uri("/SettingsPage.xaml", UriKind.RelativeOrAbsolute));
 				}
 				void OnMyPositionChanged(object sender, GeoPositionChangedEventArgs<GeoCoordinate> e) {
 						if (GeoPositionStatus.Ready != ((GeoCoordinateWatcher)sender).Status) return;
@@ -86,27 +115,53 @@ namespace FreeCars {
 						myLocationPushpin.Visibility = Visibility.Visible;
 				}
 
-				void OnCarsLoaded(object sender, EventArgs e) {
-						var cultureInfo = new CultureInfo("en-US");
-						foreach (var car in ((App)sender).Cars) {
-								var coordinate = new GeoCoordinate(
-										Double.Parse(car.lat, cultureInfo.NumberFormat),
-										Double.Parse(car.lng, cultureInfo.NumberFormat));
-
-								var pushpin = new Pushpin() {
-										Location = coordinate,
-										Name = car.hal2option.tooltip,
-										Opacity = .3,
-										Width = 20
-
-								};
-								pushpin.Tap += OnPushpinTap;
-								map.Children.Add(pushpin);
-								//pushpin.Location = 
-						}  
+				void OnCarsUpdated(object sender, EventArgs e) {
+						
+                        if (sender.GetType() == typeof(Multicity)) { 
+                            UpdateMulticityLayers();
+                        }
+                        
 				}
+                void UpdateMulticityLayers() {
+                    var myLocation = myLocationPushpin.Location;
+                    var multicity = (Multicity)((App)Application.Current).Resources["multicity"];
+                    var cultureInfo = new CultureInfo("en-US");
+                    var multcityCarsBrush = new SolidColorBrush(Colors.Red);
+                    var multcityChargersBrush = new SolidColorBrush(Colors.Blue);
+                    multicityCarsLayer.Children.Clear();
+                    var tempList = new List<Pushpin>();
+                    foreach (var car in multicity.MulticityCars) {
+                        var coordinate = new GeoCoordinate(
+                                        Double.Parse(car.lat, cultureInfo.NumberFormat),
+                                        Double.Parse(car.lng, cultureInfo.NumberFormat));
+                        var distance = (int)coordinate.GetDistanceTo(myLocation);
+                        if (1500 < distance) continue;
+                        var pushpin = new Pushpin() {
+                            Location = coordinate,
+                            Name = car.hal2option.tooltip,
+                            Opacity = .6,
+                            Background = multcityCarsBrush,
+                            Content = distance + " m",
+                        };
+                        pushpin.Tap += OnPushpinTap;
+                        multicityCarsLayer.Children.Add(pushpin);
+                    }
+                    multicityFlinksterLayer.Children.Clear();
+                    multicityChargingLayer.Children.Clear();
+                    foreach (var station in multicity.MulticityChargers) {
+                        var coordinate = new GeoCoordinate(
+                            Double.Parse(station.lat, cultureInfo.NumberFormat),
+                            Double.Parse(station.lng, cultureInfo.NumberFormat));
+                        var pushpin = new Pushpin() {
+                            Location = coordinate,
+                            Name = station.hal2option.tooltip,
+                            Opacity = .6,
+                            Background = multcityChargersBrush,
+                        };
+                    }
 
-				void OnPushpinTap(object sender, GestureEventArgs e) {
+                }
+				void OnPushpinTap(object sender, System.Windows.Input.GestureEventArgs e) {
 						var provider = "Multicity";
 						MessageBox.Show(((Pushpin)sender).Name.Replace("'", ""), provider, MessageBoxButton.OK);
 				}

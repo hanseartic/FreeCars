@@ -126,4 +126,46 @@
   <data name="MainPageBarSettings" xml:space="preserve">
     <value>Settings</value>
   </data>
+  <data name="SettingsGeneralTitle" xml:space="preserve">
+    <value>general</value>
+  </data>
+  <data name="SettingsMulticityTitle" xml:space="preserve">
+    <value>multicity</value>
+  </data>
+  <data name="SettingsPageTitle" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="SettingsPageUseGPSHeader" xml:space="preserve">
+    <value>Activate GPS</value>
+  </data>
+  <data name="SettingsPageUseGPSText" xml:space="preserve">
+    <value>Use GPS-Data to show own location on the map and find free cars nearby.</value>
+  </data>
+  <data name="ButtonCancel" xml:space="preserve">
+    <value>Decline</value>
+  </data>
+  <data name="ButtonOK" xml:space="preserve">
+    <value>Allow</value>
+  </data>
+  <data name="ToggleSwitchOff" xml:space="preserve">
+    <value>Off</value>
+  </data>
+  <data name="ToggleSwitchOn" xml:space="preserve">
+    <value>On</value>
+  </data>
+  <data name="WelcomeAskGPSBody1" xml:space="preserve">
+    <value>This application wants to use your GPS-position to show you free rides nearby. The application saves you last position to present you with better search results on the following starts. If you allow the application to use you current position, this data will be transmitted to Microsoft eventually.</value>
+  </data>
+  <data name="WelcomeAskGPSBody2" xml:space="preserve">
+    <value>Do you want to allow the use of your current GPS-position? You can always change this on the settings-page.</value>
+  </data>
+  <data name="WelcomeAskGPSHeader" xml:space="preserve">
+    <value>Allow use of GPS data?</value>
+  </data>
+  <data name="SettingsPageShowMulticityCars" xml:space="preserve">
+    <value>Show Multicity cars</value>
+  </data>
+  <data name="SettingsPageShowMulticityChargers" xml:space="preserve">
+    <value>Show electrical chargin terminals</value>
+  </data>
 </root>

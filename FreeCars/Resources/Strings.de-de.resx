@@ -126,4 +126,46 @@
   <data name="MainPageBarSettings" xml:space="preserve">
     <value>Einstellungen</value>
   </data>
+  <data name="SettingsGeneralTitle" xml:space="preserve">
+    <value>allgemein</value>
+  </data>
+  <data name="SettingsMulticityTitle" xml:space="preserve">
+    <value>multicity</value>
+  </data>
+  <data name="SettingsPageTitle" xml:space="preserve">
+    <value>Einstellungen</value>
+  </data>
+  <data name="SettingsPageUseGPSHeader" xml:space="preserve">
+    <value>GPS aktivieren</value>
+  </data>
+  <data name="SettingsPageUseGPSText" xml:space="preserve">
+    <value>Benutzen Sie GPS, um die eigene Position auf der Karte anzuzeigen und verfügbare Fahrzeuge in der Nähe zu finden.</value>
+  </data>
+  <data name="ButtonCancel" xml:space="preserve">
+    <value>Verweigern</value>
+  </data>
+  <data name="ButtonOK" xml:space="preserve">
+    <value>Zustimmen</value>
+  </data>
+  <data name="ToggleSwitchOff" xml:space="preserve">
+    <value>Aus</value>
+  </data>
+  <data name="ToggleSwitchOn" xml:space="preserve">
+    <value>An</value>
+  </data>
+  <data name="WelcomeAskGPSBody1" xml:space="preserve">
+    <value>Diese Anwendung möchte auf Ihre aktuelle Position zugreifen, um Ihnen freie Fahrzeuge in Ihrer Umgebung anzeigen zu können. Diese Anwendung speichert ihren jeweils letzten Standort, um bei den folgen Starts bessere Suchergebnisse zu erzielen. Wenn Sie der Nutzung Ihrer Positionsdaten zustimmen, werden diese Daten unter Umständen auch an Microsoft übertragen.</value>
+  </data>
+  <data name="WelcomeAskGPSBody2" xml:space="preserve">
+    <value>Möchten Sie der Nutzung Ihrer Standortdaten zustimmen? Sie können diese Einstellung jederzeit auf der Einstellungsseite ändern.</value>
+  </data>
+  <data name="WelcomeAskGPSHeader" xml:space="preserve">
+    <value>Ortung erlauben?</value>
+  </data>
+  <data name="SettingsPageShowMulticityCars" xml:space="preserve">
+    <value>Multicity Fahrzeuge anzeigen</value>
+  </data>
+  <data name="SettingsPageShowMulticityChargers" xml:space="preserve">
+    <value>Elektroladesäulen anzeigen</value>
+  </data>
 </root>

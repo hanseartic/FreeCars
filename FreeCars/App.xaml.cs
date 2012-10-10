@@ -16,6 +16,7 @@ using System.IO;
 using System.Text;
 using System.Runtime.Serialization.Json;
 using System.Runtime.Serialization;
+using Microsoft.Phone.Controls.Maps;
 
 namespace FreeCars {
     public partial class App : Application {
@@ -54,7 +55,7 @@ namespace FreeCars {
                 // application's PhoneApplicationService object to Disabled.
                 // Caution:- Use this under debug mode only. Application that disables user idle detection will continue to run
                 // and consume battery power when the user is not using the phone.
-                PhoneApplicationService.Current.UserIdleDetectionMode = IdleDetectionMode.Disabled;
+                // PhoneApplicationService.Current.UserIdleDetectionMode = IdleDetectionMode.Disabled;
             }
 
         }
@@ -62,35 +63,22 @@ namespace FreeCars {
         // Code to execute when the application is launching (eg, from Start)
         // This code will not execute when the application is reactivated
         private void Application_Launching(object sender, LaunchingEventArgs e) {
-            var wc = new WebClient();
-            wc.OpenReadCompleted += new OpenReadCompletedEventHandler(wc_OpenReadCompleted);
-            wc.OpenReadAsync(new Uri("https://kunden.multicity-carsharing.de/kundenbuchung/hal2ajax_process.php?zoom=10&lng1=&lat1=&lng2=&lat2=&stadtCache=&mapstation_id=&mapstadt_id=&verwaltungfirma=&centerLng=13.382322739257802&centerLat=52.50734843957503&searchmode=buchanfrage&with_staedte=true&buchungsanfrage=J&lat=52.50734843957503&lng=13.382322739257802&instant_access=J&open_end=J&objectname=multicitymarker&clustername=multicitycluster&ignore_virtual_stations=N&before=null&after=null&ajxmod=hal2map&callee=getMarker&_=1349642335368"));
+            var multicity = new Multicity ();
+            multicity.Updated += OnMulticityUpdated;
+            multicity.LoadPOIs();
+            this.Resources.Add("multicity", multicity);
         }
-        public List<FlinksterMarker> Cars { get; private set; }
-        private void wc_OpenReadCompleted(object sender, OpenReadCompletedEventArgs e) {
-            //Stream strm = e.Result;
-            
-            var serializer = new DataContractJsonSerializer(typeof(FlinksterData));
-            var objects = (FlinksterData)serializer.ReadObject(e.Result);
-            var cars = new List<FlinksterMarker>();
-            foreach (var marker in objects.marker) {
-                if (marker.hal2option.objectname == "multicitymarker") {
-                    cars.Add(marker);
-                }
-            }
-            Cars = cars;
-            CarsLoaded.Invoke(this, new EventArgs());
-            /*
-            using (var reader = new StreamReader(mStream, Encoding.UTF8)) {
-                string value = reader.ReadToEnd();
+        private void OnMulticityUpdated(object sender, EventArgs e) {
 
-                Json.JsonArray jsonValues = (JsonArray)JsonArray.Load(value);
-var test = null;
-                // Do something with the value
-            }
-            */
+            TriggerCarsUpdated(sender);
         }
-        public event EventHandler CarsLoaded;
+        public List<Pushpin> POIs { get; private set; }
+        private void TriggerCarsUpdated(object sender) {
+            if (null != CarsUpdated) {
+                CarsUpdated(sender, null);
+            }
+        }
+        public event EventHandler CarsUpdated;
         // Code to execute when the application is activated (brought to foreground)
         // This code will not execute when the application is first launched
         private void Application_Activated(object sender, ActivatedEventArgs e) {
@@ -157,39 +145,7 @@ var test = null;
         #endregion
     }
 
-    [DataContract]
-    public class FlinksterData {
-        [DataMember(Name = "statusCode")]
-        public String statusCode { get; set; }
-        [DataMember(Name = "statusText")]
-        public String statusText { get; set; }
-        [DataMember(Name = "marker")]
-        public List<FlinksterMarker> marker { get; set; }
 
-    }
-    [DataContract]
-    public class FlinksterMarker {
-        [DataMember(Name = "lat")]
-        public String lat { get; set; }
-        [DataMember(Name = "lng")]
-        public String lng { get; set; }
-        [DataMember(Name = "iconName")]
-        public String iconName { get; set; }
-        [DataMember(Name = "iconNameSelected")]
-        public String iconNameSelected { get; set; }
-        [DataMember(Name = "hal2option")]
-        public hal2option hal2option { get; set; }
 
-    }
-    [DataContract]
-    public class hal2option {
-        [DataMember(Name = "minZoom")]
-        public String minZoom { get; set; }
-        [DataMember(Name = "maxZoom")]
-        public String maxZoom { get; set; }
-        [DataMember(Name = "tooltip")]
-        public String tooltip { get; set; }
-        [DataMember(Name = "objectname")]
-        public String objectname { get; set; }
-    }
+
 }
