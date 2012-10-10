@@ -168,4 +168,7 @@
   <data name="SettingsPageShowMulticityChargers" xml:space="preserve">
     <value>Elektroladesäulen anzeigen</value>
   </data>
+  <data name="Multicity" xml:space="preserve">
+    <value>Multicity</value>
+  </data>
 </root>

@@ -168,4 +168,7 @@
   <data name="SettingsPageShowMulticityChargers" xml:space="preserve">
     <value>Show electrical chargin terminals</value>
   </data>
+  <data name="Multicity" xml:space="preserve">
+    <value>Multicity</value>
+  </data>
 </root>
