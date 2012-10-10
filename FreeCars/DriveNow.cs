@@ -37,6 +37,10 @@ namespace FreeCars {
             if (null == position) return;
             try {
 								if (false == (bool)IsolatedStorageSettings.ApplicationSettings["settings_show_drivenow_cars"]) {
+										DriveNowCars = new List<DriveNowCarInformation>();
+										if (null != Updated) {
+												Updated(this, null);
+										}
                     return;
                 }
             } catch (KeyNotFoundException) { }

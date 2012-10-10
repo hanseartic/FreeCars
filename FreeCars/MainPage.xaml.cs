@@ -31,6 +31,7 @@ namespace FreeCars {
 						Loaded += OnMainPageLoaded;
 						//map.Children.Add(me);
 						SetAppBar();
+						
 				}
 
 				void OnMainPageLoaded(object sender, RoutedEventArgs e) {
@@ -49,6 +50,7 @@ namespace FreeCars {
                             IsolatedStorageSettings.ApplicationSettings.Remove("my_last_location");
                         } catch { }
                     }
+										((App)Application.Current).ReloadPOIs();
 				}
                 bool checkForGPSUsage() {
                     var gpsOK = MessageBox.Show(Strings.WelcomeAskGPSBody1 + Environment.NewLine + Strings.WelcomeAskGPSBody2, Strings.WelcomeAskGPSHeader, MessageBoxButton.OKCancel);
@@ -134,7 +136,7 @@ namespace FreeCars {
 						}                
 				}
 				void UpdateDriveNowLayer(DriveNow driveNow) {
-						var myLocation = myLocationPushpin.Location;
+						var centerLocation = map.Center;
 						var cultureInfo = new CultureInfo("en-US");
 						var driveNowBrush = new SolidColorBrush(Colors.Brown);
 						driveNowCarsLayer.Children.Clear();
@@ -143,8 +145,9 @@ namespace FreeCars {
 										Double.Parse(car.position.latitude, cultureInfo.NumberFormat),
 										Double.Parse(car.position.longitude, cultureInfo.NumberFormat)
 								);
-								var distance = (int)coordinate.GetDistanceTo(myLocation);
-								if (1500 < distance) continue;
+								var distanceToMapCenter = (int)coordinate.GetDistanceTo(centerLocation);
+								if (1500 < distanceToMapCenter) continue;
+								var distance = (int)coordinate.GetDistanceTo(myLocationPushpin.Location);
 								var pushpin = new Pushpin {
 										Location = coordinate,
 										Name = car.licensePlate,
@@ -158,6 +161,7 @@ namespace FreeCars {
 				}
 				void UpdateMulticityLayers(Multicity multicity) {
 						var myLocation = myLocationPushpin.Location;
+						var centerLocation = map.Center;
 						var cultureInfo = new CultureInfo("en-US");
 						var multcityCarsBrush = new SolidColorBrush(Colors.Red);
 						var multcityChargersBrush = new SolidColorBrush(Colors.Blue);
@@ -168,8 +172,8 @@ namespace FreeCars {
 										var coordinate = new GeoCoordinate(
 																		Double.Parse(car.lat, cultureInfo.NumberFormat),
 																		Double.Parse(car.lng, cultureInfo.NumberFormat));
-										var distance = (int)coordinate.GetDistanceTo(myLocation);
-										if (1500 < distance) continue;
+										var distanceToMapCenter = (int)coordinate.GetDistanceTo(centerLocation);
+										if (1500 < distanceToMapCenter) continue;
 										var pushpinContent = new Border {
 												Child = new StackPanel {
 														Orientation = System.Windows.Controls.Orientation.Vertical,
@@ -250,6 +254,10 @@ namespace FreeCars {
 										DeactivatePushpin(pushpin as Pushpin);
 								}
 						}
+				}
+
+				private void OnMapViewChangeEnd(object sender, MapEventArgs e) {
+						((App)Application.Current).RefreshPOIs();
 				}
 		}
 }

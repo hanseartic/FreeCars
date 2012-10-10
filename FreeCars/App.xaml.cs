@@ -77,7 +77,18 @@ namespace FreeCars {
             TriggerCarsUpdated(sender);
         }
         public List<Pushpin> POIs { get; private set; }
-        private void TriggerCarsUpdated(object sender) {
+				public void RefreshPOIs() {
+						try {
+								TriggerCarsUpdated(Resources["multicity"] as Multicity);
+						} catch { }
+						try {
+								TriggerCarsUpdated(Resources["driveNow"] as DriveNow);
+						} catch { }
+						try {
+								//TriggerCarsUpdated(Resources["car2go"] as Car2Go);
+						} catch { }
+				}
+				private void TriggerCarsUpdated(object sender) {
             if (null != CarsUpdated) {
                 CarsUpdated(sender, null);
             }

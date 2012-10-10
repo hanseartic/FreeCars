@@ -32,7 +32,7 @@
 
 		<!--ContentPanel - place additional content here-->
 		<Grid x:Name="ContentPanel" Grid.Row="1" Margin="0,0,0,0">
-			<map:Map HorizontalAlignment="Left" Name="map" VerticalAlignment="Top" Height="800" Width="480" CredentialsProvider="AsD4awUEo6H7hWplpv4yrTfqDS2NmKfxFFRxZv8Nl1fBm0gv5d7z_ySqquJqdKLG" Tap="OnMapTap">
+			<map:Map HorizontalAlignment="Left" Name="map" VerticalAlignment="Top" Height="800" Width="480" CredentialsProvider="AsD4awUEo6H7hWplpv4yrTfqDS2NmKfxFFRxZv8Nl1fBm0gv5d7z_ySqquJqdKLG" Tap="OnMapTap" ViewChangeEnd="OnMapViewChangeEnd">
                 <map:MapLayer x:Name="myLocationLayer">
                     <map:Pushpin x:Name="myLocationPushpin" Template="{StaticResource MyPositionPushpinTemplate}" Margin="-14, 0, -14, 0" Opacity="0.9"  Visibility="Collapsed"  />
                 </map:MapLayer>

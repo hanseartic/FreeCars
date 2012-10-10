@@ -42,7 +42,11 @@ namespace FreeCars {
             if (null == position) return;
             try {
                 if (false == (bool)IsolatedStorageSettings.ApplicationSettings["settings_show_multicity_cars"]) {
-                    return;
+										MulticityCars = new List<MulticityMarker>();
+										if (null != Updated) {
+												Updated(this, null);
+										}
+										return;
                 }
             } catch (KeyNotFoundException) { }
             var wc = new WebClient();
@@ -72,7 +76,11 @@ namespace FreeCars {
             if (null == position) return;
             try {
                 if (false == (bool)IsolatedStorageSettings.ApplicationSettings["settings_show_multicity_chargers"]) {
-                    return;
+										MulticityChargers = new List<MulticityChargerMarker>();
+										if (null != Updated) {
+												Updated(this, null);
+										}
+										return;
                 }
             } catch (KeyNotFoundException) { }
             var wc = new WebClient();
