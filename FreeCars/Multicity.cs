@@ -14,6 +14,8 @@ using System.IO.IsolatedStorage;
 using System.Globalization;
 using System.Runtime.Serialization.Json;
 using System.Text;
+using Microsoft.Phone.BackgroundTransfer;
+using System.IO;
 
 namespace FreeCars {
     public class Multicity {
@@ -85,15 +87,26 @@ namespace FreeCars {
             } catch (KeyNotFoundException) { }
             var wc = new WebClient();
             var cultureInfo = new CultureInfo("en-US");
-            var callUri = "https://www.multicity-carsharing.de/rwe/json.php";
+            var callUri = "http://www.multicity-carsharing.de/rwe/json.php";
             wc.OpenReadCompleted += OnMulticityChargersOpenReadCompleted;
             wc.OpenReadAsync(new Uri(callUri));
         }
-
-        private void OnMulticityChargersOpenReadCompleted(object sender, OpenReadCompletedEventArgs e) {
+        Stream ConvertStream(Stream stream, Encoding fromEncoding, Encoding toEncoding) {
+            var inBytes = new Byte[stream.Length];
+            stream.Read(inBytes, 0, (int)stream.Length);
+            string convertString = fromEncoding.GetString(inBytes, 0, inBytes.Length);
+            // wrong place ATM, but has to be hacked in here ... :C
+            convertString = convertString.Replace("\"click\": \"showMarkerInfos\",", "");
+            var outBytes = toEncoding.GetBytes(convertString);
+            return new MemoryStream(outBytes);
+        }
+        private void SerializeChargers(Stream inputStream) {
             try {
+                var dataStream = ConvertStream(inputStream, Encoding.UTF8, Encoding.GetEncoding("iso-8859-1"));
+                inputStream.Close();
+
                 var serializer = new DataContractJsonSerializer(typeof(MulticityChargerData));
-                var objects = (MulticityChargerData)serializer.ReadObject(e.Result);
+                var objects = (MulticityChargerData)serializer.ReadObject(dataStream);
                 var multicity_chargers = new List<MulticityChargerMarker>();
                 foreach (var marker in objects.marker) {
                     if ("rwemarker_crowded" == marker.hal2option.objectname || "rwemarker_vacant" == marker.hal2option.objectname) {
@@ -105,6 +118,9 @@ namespace FreeCars {
                     Updated(this, null);
                 }
             } catch (DecoderFallbackException) { }
+        }
+        private void OnMulticityChargersOpenReadCompleted(object sender, OpenReadCompletedEventArgs e) {
+            SerializeChargers(e.Result);
         }
         public event EventHandler Updated;
     }
