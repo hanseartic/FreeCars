@@ -3,3 +3,5 @@
 bin
 obj
 *.csproj.user
+*.designer.cs
+packages/*
