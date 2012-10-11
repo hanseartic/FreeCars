@@ -192,6 +192,7 @@ namespace FreeCars {
 												Background = multcityCarsBrush,
 												Content = pushpinContent,
 												//Content = distance + " m",
+                                                Tag = car,
 										};
 										pushpin.Tap += OnPushpinTap;
 										multicityCarsLayer.Children.Add(pushpin);
@@ -208,7 +209,11 @@ namespace FreeCars {
 										Name = station.hal2option.tooltip,
 										Opacity = .6,
 										Background = multcityChargersBrush,
+                                        Content = station.hal2option.markerInfo.free,
+                                        Tag = station,
 								};
+                                pushpin.Tap += OnPushpinTap;
+                                multicityCarsLayer.Children.Add(pushpin);
 						}
 
 				}
