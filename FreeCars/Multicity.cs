@@ -16,17 +16,18 @@ using System.Runtime.Serialization.Json;
 using System.Text;
 using Microsoft.Phone.BackgroundTransfer;
 using System.IO;
+using System.Text.RegularExpressions;
 
 namespace FreeCars {
     public class Multicity {
         public Multicity() {
-            FlinsterStations = new List<IMarker>();
+						FlinsterStations = new List<FlinksterStationMarker>();
             MulticityCars = new List<MulticityMarker>();
             MulticityChargers = new List<MulticityChargerMarker>();
         }
 
         public List<MulticityMarker> MulticityCars { get; private set; }
-        public List<IMarker> FlinsterStations { get; private set; }
+				public List<FlinksterStationMarker> FlinsterStations { get; private set; }
         public List<MulticityChargerMarker> MulticityChargers { get; private set; }
 
         private GeoPosition<GeoCoordinate> position;
@@ -45,9 +46,7 @@ namespace FreeCars {
             try {
                 if (false == (bool)IsolatedStorageSettings.ApplicationSettings["settings_show_multicity_cars"]) {
 										MulticityCars = new List<MulticityMarker>();
-										if (null != Updated) {
-												Updated(this, null);
-										}
+										TriggerUpdated();
 										return;
                 }
             } catch (KeyNotFoundException) { }
@@ -63,25 +62,35 @@ namespace FreeCars {
         private void OnMulticityCarsOpenReadCompleted(object sender, OpenReadCompletedEventArgs e) {
             var serializer = new DataContractJsonSerializer(typeof(MulticityData));
             var objects = (MulticityData)serializer.ReadObject(e.Result);
-            var multicity_cars = new List<MulticityMarker>();
-            foreach (var marker in objects.marker) {
-                if (marker.hal2option.objectname == "multicitymarker") {
-                    multicity_cars.Add(marker);
+						var multicityCars = new List<MulticityMarker>();
+            foreach (var car in objects.marker) {
+                if (car.hal2option.objectname == "multicitymarker") {										
+										car.licensePlate = Regex.Match(car.hal2option.tooltip, @"\(([^)]*)\)").Groups[1].Value;
+										car.model = car.hal2option.tooltip.Substring(0, car.hal2option.tooltip.IndexOf("(")).Substring(1);
+										multicityCars.Add(car);
+										var carForFuelUpdate = car;
+										var batteryRequestClient = new WebClient();
+										batteryRequestClient.DownloadStringCompleted += (client, eventArgs) => {
+												var result = eventArgs.Result.Substring(eventArgs.Result.IndexOf("chargepercent"));
+												result = result.Substring(0, result.IndexOf("%") - 1).Substring(15);
+												//MulticityCars.Remove(carForFuelUpdate);
+												carForFuelUpdate.fuelState = result;
+												//MulticityCars.Add(carForFuelUpdate);
+												//TriggerUpdated();
+										};
+										batteryRequestClient.DownloadStringAsync(new Uri("https://kunden.multicity-carsharing.de/kundenbuchung/hal2ajax_process.php?infoConfig%5BinfoTyp%5D=HM_AUTO_INFO&infoConfig%5Bpopup%5D=J&infoConfig%5BobjectId%5D=" + car.hal2option.id + "&infoConfig%5Bobjecttyp%5D=carpos&infoConfig%5BmarkerInfos%5D=false&ajxmod=hal2map&callee=markerinfo"));
                 }
             }
-            MulticityCars = multicity_cars;
-            if (null != Updated) {
-                Updated(this, null);
-            }
+            MulticityCars = multicityCars;
+            TriggerUpdated();
         }
+
         private void LoadMulticityChargers() {
             if (null == position) return;
             try {
                 if (false == (bool)IsolatedStorageSettings.ApplicationSettings["settings_show_multicity_chargers"]) {
 										MulticityChargers = new List<MulticityChargerMarker>();
-										if (null != Updated) {
-												Updated(this, null);
-										}
+										TriggerUpdated();
 										return;
                 }
             } catch (KeyNotFoundException) { }
@@ -101,6 +110,7 @@ namespace FreeCars {
             return new MemoryStream(outBytes);
         }
         private void SerializeChargers(Stream inputStream) {
+            if (0 == inputStream.Length) return;
             try {
                 var dataStream = ConvertStream(inputStream, Encoding.UTF8, Encoding.GetEncoding("iso-8859-1"));
                 inputStream.Close();
@@ -114,15 +124,18 @@ namespace FreeCars {
                     }
                 }
                 MulticityChargers = multicity_chargers;
-                if (null != Updated) {
-                    Updated(this, null);
-                }
-            } catch (DecoderFallbackException) { }
+                TriggerUpdated();
+            } catch (DecoderFallbackException) { } catch (NullReferenceException) { }
         }
         private void OnMulticityChargersOpenReadCompleted(object sender, OpenReadCompletedEventArgs e) {
             SerializeChargers(e.Result);
         }
         public event EventHandler Updated;
+				private void TriggerUpdated() {
+						if (null != Updated) {
+								Updated(this, null);
+						}
+				}
     }
     
 }

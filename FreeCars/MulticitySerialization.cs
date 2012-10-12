@@ -13,7 +13,7 @@ using System.Collections.Generic;
 
 namespace FreeCars {
     [DataContract]
-    public class MulticityMarker : IMarker {
+    public class MulticityMarker : Marker {
         [DataMember(Name = "lat")]
         public String lat { get; set; }
         [DataMember(Name = "lng")]
@@ -22,6 +22,7 @@ namespace FreeCars {
         public String iconName { get; set; }
         [DataMember(Name = "hal2option")]
         public hal2option hal2option { get; set; }
+
     }
 
     [DataContract]
@@ -116,5 +117,10 @@ namespace FreeCars {
         public String tooltip { get; set; }
         [DataMember(Name = "objectname")]
         public String objectname { get; set; }
+				[DataMember(Name = "id")]
+				public String id { get; set; }
     }
+
+		public class FlinksterStationMarker {
+		}
 }
