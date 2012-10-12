@@ -101,6 +101,7 @@ namespace FreeCars {
             return new MemoryStream(outBytes);
         }
         private void SerializeChargers(Stream inputStream) {
+            if (0 == inputStream.Length) return;
             try {
                 var dataStream = ConvertStream(inputStream, Encoding.UTF8, Encoding.GetEncoding("iso-8859-1"));
                 inputStream.Close();
@@ -117,7 +118,7 @@ namespace FreeCars {
                 if (null != Updated) {
                     Updated(this, null);
                 }
-            } catch (DecoderFallbackException) { }
+            } catch (DecoderFallbackException) { } catch (NullReferenceException) { }
         }
         private void OnMulticityChargersOpenReadCompleted(object sender, OpenReadCompletedEventArgs e) {
             SerializeChargers(e.Result);
