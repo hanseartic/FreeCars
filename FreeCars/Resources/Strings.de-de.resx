@@ -180,4 +180,7 @@
   <data name="SettingsPageShowDriveNowCars" xml:space="preserve">
     <value>Fahrzeuge anzeigen</value>
   </data>
+  <data name="DriveNow" xml:space="preserve">
+    <value>DriveNow</value>
+  </data>
 </root>

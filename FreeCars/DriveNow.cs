@@ -14,6 +14,7 @@ using System.IO.IsolatedStorage;
 using System.Globalization;
 using System.Runtime.Serialization.Json;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace FreeCars {
     public class DriveNow {
@@ -58,7 +59,9 @@ namespace FreeCars {
                 var serializer = new DataContractJsonSerializer(typeof(DriveNowData));
                 var driveNowData = (DriveNowData)serializer.ReadObject(e.Result);
                 var drivenow_cars = new List<DriveNowCarInformation>();
+								Regex replaceMultipleSpaceWithOnlyOneSpaceRegex = new Regex(@"[ ]{2,}", RegexOptions.None);
                 foreach (var car in driveNowData.rec.vehicles.vehicles) {
+										car.licensePlate = replaceMultipleSpaceWithOnlyOneSpaceRegex.Replace(car.licensePlate, @" ").Replace(" -", "-");
                     drivenow_cars.Add(car);
                 }
                 DriveNowCars = drivenow_cars;

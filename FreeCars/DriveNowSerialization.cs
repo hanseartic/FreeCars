@@ -37,19 +37,13 @@ namespace FreeCars {
         public List<DriveNowCarInformation> vehicles { get; set; }
     }
 		[DataContract]
-		public class DriveNowCarInformation {
+		public class DriveNowCarInformation : Marker {
 				[DataMember(Name = "position")]
 				public DriveNowPosition position { get; set; }
 				[DataMember(Name = "auto")]
 				public String auto { get; set; }
-				[DataMember(Name = "model")]
-				public String model { get; set; }
-				[DataMember(Name = "fuelState")]
-				public String fuelState { get; set; }
 				[DataMember(Name = "fuelType")]
 				public String fuelType { get; set; }
-				[DataMember(Name = "licensePlate")]
-				public String licensePlate { get; set; }
 				[DataMember(Name = "innerCleanliness")]
 				public String innerCleanliness { get; set; }
 				[DataMember(Name = "carName")]
