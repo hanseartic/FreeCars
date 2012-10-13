@@ -12,14 +12,15 @@ using System.Windows.Shapes;
 using Microsoft.Phone.Controls;
 using System.IO.IsolatedStorage;
 using FreeCars.Resources;
+using Microsoft.Phone.Shell;
 
 namespace FreeCars {
     public partial class SettingsPage : PhoneApplicationPage {
-        public SettingsPage() {
+
+		public SettingsPage() {
             InitializeComponent();
-
+			LoadAppBar();
         }
-
         
         private void OnToggleSwitchChanged(ToggleSwitch sender) {
             sender.Content = true == sender.IsChecked
@@ -73,12 +74,29 @@ namespace FreeCars {
             OnToggleSwitchChanged((ToggleSwitch)sender);
         }
 
-				private void OnDriveNowCarsToggleSwitchLoaded(object sender, RoutedEventArgs e) {
-						try {
-								((ToggleSwitch)sender).IsChecked = (true == (bool)IsolatedStorageSettings.ApplicationSettings["settings_show_drivenow_cars"]);
-						} catch (KeyNotFoundException) { ((ToggleSwitch)sender).IsChecked = true; }
-						OnToggleSwitchChanged((ToggleSwitch)sender);
-				}
+		private void OnDriveNowCarsToggleSwitchLoaded(object sender, RoutedEventArgs e) {
+				try {
+					((ToggleSwitch)sender).IsChecked = (true == (bool)IsolatedStorageSettings.ApplicationSettings["settings_show_drivenow_cars"]);
+				} catch (KeyNotFoundException) { ((ToggleSwitch)sender).IsChecked = true; }
+				OnToggleSwitchChanged((ToggleSwitch)sender);
+		}
+        private void LoadAppBar() {
+			ApplicationBar = new ApplicationBar {
+				Mode = ApplicationBarMode.Default,
+				Opacity = 0.8,
+				IsVisible = true,
+				IsMenuEnabled = false,
+			};
 
+			var settingsPageApplicationBarInfoButton = new ApplicationBarIconButton {
+				IconUri = new Uri("/Resources/about48x48.png", UriKind.Relative),
+				Text = FreeCars.Resources.Strings.SettingsAppbarAbout,
+			};
+			settingsPageApplicationBarInfoButton.Click += OnSettingsPageApplicationBarInfoButtonClick;
+			ApplicationBar.Buttons.Add(settingsPageApplicationBarInfoButton);		
+        }
+		private void OnSettingsPageApplicationBarInfoButtonClick(object sender, EventArgs e) {
+			NavigationService.Navigate(new Uri("/About.xaml", UriKind.RelativeOrAbsolute));
+		}
     }
 }

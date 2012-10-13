@@ -54,21 +54,23 @@ namespace FreeCars {
         
         }
         private void OnDriveNowCarsOpenReadCompleted(object sender, OpenReadCompletedEventArgs e) {
-            if (0 == e.Result.Length) return;
-            try {
-                var serializer = new DataContractJsonSerializer(typeof(DriveNowData));
-                var driveNowData = (DriveNowData)serializer.ReadObject(e.Result);
-                var drivenow_cars = new List<DriveNowCarInformation>();
-								Regex replaceMultipleSpaceWithOnlyOneSpaceRegex = new Regex(@"[ ]{2,}", RegexOptions.None);
-                foreach (var car in driveNowData.rec.vehicles.vehicles) {
-										car.licensePlate = replaceMultipleSpaceWithOnlyOneSpaceRegex.Replace(car.licensePlate, @" ").Replace(" -", "-");
-                    drivenow_cars.Add(car);
-                }
-                DriveNowCars = drivenow_cars;
-                if (null != Updated) {
-                    Updated(this, null);
-                }
-            } catch (NullReferenceException) { }
+			try {
+				if (0 == e.Result.Length) return;
+				try {
+					var serializer = new DataContractJsonSerializer(typeof(DriveNowData));
+					var driveNowData = (DriveNowData)serializer.ReadObject(e.Result);
+					var drivenow_cars = new List<DriveNowCarInformation>();
+					Regex replaceMultipleSpaceWithOnlyOneSpaceRegex = new Regex(@"[ ]{2,}", RegexOptions.None);
+					foreach (var car in driveNowData.rec.vehicles.vehicles) {
+						car.licensePlate = replaceMultipleSpaceWithOnlyOneSpaceRegex.Replace(car.licensePlate, @" ").Replace(" -", "-");
+						drivenow_cars.Add(car);
+					}
+					DriveNowCars = drivenow_cars;
+					if (null != Updated) {
+						Updated(this, null);
+					}
+				} catch (NullReferenceException) { }
+			} catch (WebException) { }
         }
         public event EventHandler Updated;
     }
