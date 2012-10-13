@@ -17,17 +17,18 @@ using System.Text;
 using Microsoft.Phone.BackgroundTransfer;
 using System.IO;
 using System.Text.RegularExpressions;
+using Microsoft.Phone.Controls.Maps;
 
 namespace FreeCars {
     public class Multicity {
         public Multicity() {
-						FlinsterStations = new List<FlinksterStationMarker>();
+			FlinksterStations = new List<FlinksterStationMarker>();
             MulticityCars = new List<MulticityMarker>();
             MulticityChargers = new List<MulticityChargerMarker>();
         }
 
         public List<MulticityMarker> MulticityCars { get; private set; }
-				public List<FlinksterStationMarker> FlinsterStations { get; private set; }
+		public List<FlinksterStationMarker> FlinksterStations { get; private set; }
         public List<MulticityChargerMarker> MulticityChargers { get; private set; }
 
         private GeoPosition<GeoCoordinate> position;
@@ -45,9 +46,9 @@ namespace FreeCars {
             if (null == position) return;
             try {
                 if (false == (bool)IsolatedStorageSettings.ApplicationSettings["settings_show_multicity_cars"]) {
-										MulticityCars = new List<MulticityMarker>();
-										TriggerUpdated();
-										return;
+					MulticityCars = new List<MulticityMarker>();
+					TriggerUpdated();
+					return;
                 }
             } catch (KeyNotFoundException) { }
             var wc = new WebClient();
@@ -60,38 +61,43 @@ namespace FreeCars {
         
         }
         private void OnMulticityCarsOpenReadCompleted(object sender, OpenReadCompletedEventArgs e) {
-            var serializer = new DataContractJsonSerializer(typeof(MulticityData));
-            var objects = (MulticityData)serializer.ReadObject(e.Result);
-						var multicityCars = new List<MulticityMarker>();
-            foreach (var car in objects.marker) {
-                if (car.hal2option.objectname == "multicitymarker") {										
-										car.licensePlate = Regex.Match(car.hal2option.tooltip, @"\(([^)]*)\)").Groups[1].Value;
-										car.model = car.hal2option.tooltip.Substring(0, car.hal2option.tooltip.IndexOf("(")).Substring(1);
-										multicityCars.Add(car);
-										var carForFuelUpdate = car;
-										var batteryRequestClient = new WebClient();
-										batteryRequestClient.DownloadStringCompleted += (client, eventArgs) => {
-												var result = eventArgs.Result.Substring(eventArgs.Result.IndexOf("chargepercent"));
-												result = result.Substring(0, result.IndexOf("%") - 1).Substring(15);
-												//MulticityCars.Remove(carForFuelUpdate);
-												carForFuelUpdate.fuelState = result;
-												//MulticityCars.Add(carForFuelUpdate);
-												//TriggerUpdated();
-										};
-										batteryRequestClient.DownloadStringAsync(new Uri("https://kunden.multicity-carsharing.de/kundenbuchung/hal2ajax_process.php?infoConfig%5BinfoTyp%5D=HM_AUTO_INFO&infoConfig%5Bpopup%5D=J&infoConfig%5BobjectId%5D=" + car.hal2option.id + "&infoConfig%5Bobjecttyp%5D=carpos&infoConfig%5BmarkerInfos%5D=false&ajxmod=hal2map&callee=markerinfo"));
-                }
-            }
-            MulticityCars = multicityCars;
-            TriggerUpdated();
+			try {
+				var serializer = new DataContractJsonSerializer(typeof(MulticityData));			
+				var objects = (MulticityData)serializer.ReadObject(e.Result);
+			
+				var multicityCars = new List<MulticityMarker>();
+				foreach (var car in objects.marker) {
+					if (car.hal2option.objectname == "multicitymarker") {										
+						car.licensePlate = Regex.Match(car.hal2option.tooltip, @"\(([^)]*)\)").Groups[1].Value;
+						car.model = car.hal2option.tooltip.Substring(0, car.hal2option.tooltip.IndexOf("(")).Substring(1);
+						multicityCars.Add(car);
+					}
+				}
+				MulticityCars = multicityCars;
+				TriggerUpdated();
+			} catch (WebException we) { }
         }
-
+		public static void LoadChargeState(Pushpin pushpin) {
+			var car = (MulticityMarker)pushpin.Tag;
+			var batteryRequestClient = new WebClient();
+			batteryRequestClient.DownloadStringCompleted += (client, eventArgs) => {
+				try {
+					var result = eventArgs.Result.Substring(eventArgs.Result.IndexOf("chargepercent"));
+					result = result.Substring(0, result.IndexOf("%") - 1).Substring(15);
+					pushpin.Dispatcher.BeginInvoke((Action)(() => {
+						car.fuelState = result;
+					}));
+				} catch (WebException) { }
+			};
+			batteryRequestClient.DownloadStringAsync(new Uri("https://kunden.multicity-carsharing.de/kundenbuchung/hal2ajax_process.php?infoConfig%5BinfoTyp%5D=HM_AUTO_INFO&infoConfig%5Bpopup%5D=J&infoConfig%5BobjectId%5D=" + car.hal2option.id + "&infoConfig%5Bobjecttyp%5D=carpos&infoConfig%5BmarkerInfos%5D=false&ajxmod=hal2map&callee=markerinfo"));
+		}
         private void LoadMulticityChargers() {
             if (null == position) return;
             try {
                 if (false == (bool)IsolatedStorageSettings.ApplicationSettings["settings_show_multicity_chargers"]) {
-										MulticityChargers = new List<MulticityChargerMarker>();
-										TriggerUpdated();
-										return;
+					MulticityChargers = new List<MulticityChargerMarker>();
+					TriggerUpdated();
+					return;
                 }
             } catch (KeyNotFoundException) { }
             var wc = new WebClient();
@@ -131,11 +137,11 @@ namespace FreeCars {
             SerializeChargers(e.Result);
         }
         public event EventHandler Updated;
-				private void TriggerUpdated() {
-						if (null != Updated) {
-								Updated(this, null);
-						}
-				}
+		private void TriggerUpdated() {
+			if (null != Updated) {
+				Updated(this, null);
+			}
+		}
     }
     
 }
