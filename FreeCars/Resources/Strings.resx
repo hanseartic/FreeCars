@@ -183,4 +183,13 @@
   <data name="DriveNow" xml:space="preserve">
     <value>DriveNow</value>
   </data>
+  <data name="SettingsAppbarAbout" xml:space="preserve">
+    <value>About</value>
+  </data>
+  <data name="AboutPageTitle" xml:space="preserve">
+    <value>About</value>
+  </data>
+  <data name="ApplicationName" xml:space="preserve">
+    <value>FreeCars</value>
+  </data>
 </root>
