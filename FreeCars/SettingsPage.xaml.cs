@@ -76,7 +76,7 @@ namespace FreeCars {
 
 		private void OnDriveNowCarsToggleSwitchLoaded(object sender, RoutedEventArgs e) {
 				try {
-						((ToggleSwitch)sender).IsChecked = (true == (bool)IsolatedStorageSettings.ApplicationSettings["settings_show_drivenow_cars"]);
+					((ToggleSwitch)sender).IsChecked = (true == (bool)IsolatedStorageSettings.ApplicationSettings["settings_show_drivenow_cars"]);
 				} catch (KeyNotFoundException) { ((ToggleSwitch)sender).IsChecked = true; }
 				OnToggleSwitchChanged((ToggleSwitch)sender);
 		}
@@ -89,14 +89,14 @@ namespace FreeCars {
 			};
 
 			var settingsPageApplicationBarInfoButton = new ApplicationBarIconButton {
-				IconUri = new Uri("/Resources/appbar.map.centerme.rest.png", UriKind.Relative),
+				IconUri = new Uri("/Resources/about48x48.png", UriKind.Relative),
 				Text = FreeCars.Resources.Strings.SettingsAppbarAbout,
 			};
 			settingsPageApplicationBarInfoButton.Click += OnSettingsPageApplicationBarInfoButtonClick;
 			ApplicationBar.Buttons.Add(settingsPageApplicationBarInfoButton);		
         }
 		private void OnSettingsPageApplicationBarInfoButtonClick(object sender, EventArgs e) {
-
+			NavigationService.Navigate(new Uri("/About.xaml", UriKind.RelativeOrAbsolute));
 		}
     }
 }
