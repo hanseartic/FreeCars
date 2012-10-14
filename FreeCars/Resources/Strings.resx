@@ -192,4 +192,26 @@
   <data name="ApplicationName" xml:space="preserve">
     <value>FreeCars</value>
   </data>
+  <data name="AboutPageContactAddress" xml:space="preserve">
+    <value>warokartwork@gmail.com</value>
+  </data>
+  <data name="AboutPageContactHeader" xml:space="preserve">
+    <value>Contact:</value>
+  </data>
+  <data name="AboutPageContactTwitter" xml:space="preserve">
+    <value>@fraggedreality</value>
+  </data>
+  <data name="AboutPageDisclaimer" xml:space="preserve">
+    <value>FreeCars shows you free rides of the carsharing companies DriveNow and multicity as well as electrical charging-units nearby.
+
+At the moment you can not reserve cars via this app.
+
+Integration of car2go is in progress right now.</value>
+  </data>
+  <data name="AboutPageVersionInfo" xml:space="preserve">
+    <value>Version:</value>
+  </data>
+  <data name="SupportEmailSubject" xml:space="preserve">
+    <value>Request regarding FreeCars (v {0}) for WP7</value>
+  </data>
 </root>
