@@ -29,7 +29,12 @@
         <!--ContentPanel - place additional content here-->
         <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
 			<StackPanel Orientation="Vertical">
-				<TextBlock Text=""></TextBlock>
+				<TextBlock Text="{Binding LocalizedStrings.AboutPageVersionInfo, Source={StaticResource ResourceAccess}}" TextWrapping="Wrap" Style="{StaticResource PhoneTextTitle2Style}" Margin="0"></TextBlock>
+				<TextBlock Text="{Binding Version}" TextWrapping="Wrap"></TextBlock>
+				<TextBlock Text="{Binding LocalizedStrings.AboutPageDisclaimer, Source={StaticResource ResourceAccess}}" TextWrapping="Wrap"></TextBlock>
+				<TextBlock Text="{Binding LocalizedStrings.AboutPageContactHeader, Source={StaticResource ResourceAccess}}" TextWrapping="Wrap" Style="{StaticResource PhoneTextTitle2Style}" Margin="0,12,0,0"></TextBlock>
+				<TextBlock Text="{Binding LocalizedStrings.AboutPageContactAddress, Source={StaticResource ResourceAccess}}" TextWrapping="Wrap" Tap="OnMailTap" Margin="0,8"></TextBlock>
+				<TextBlock Text="{Binding LocalizedStrings.AboutPageContactTwitter, Source={StaticResource ResourceAccess}}" TextWrapping="Wrap" Tap="OnTwitterTap" Margin="0,8"></TextBlock>
 			</StackPanel>
 		</Grid>
     </Grid>

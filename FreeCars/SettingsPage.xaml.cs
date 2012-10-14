@@ -13,6 +13,7 @@ using Microsoft.Phone.Controls;
 using System.IO.IsolatedStorage;
 using FreeCars.Resources;
 using Microsoft.Phone.Shell;
+using Microsoft.Phone.Tasks;
 
 namespace FreeCars {
     public partial class SettingsPage : PhoneApplicationPage {
@@ -97,6 +98,18 @@ namespace FreeCars {
         }
 		private void OnSettingsPageApplicationBarInfoButtonClick(object sender, EventArgs e) {
 			NavigationService.Navigate(new Uri("/About.xaml", UriKind.RelativeOrAbsolute));
+		}
+
+		private void OnCallMulticityTap(object sender, System.Windows.Input.GestureEventArgs e) {
+			try {
+				var callTask = new PhoneCallTask { 
+					DisplayName = Strings.SettingsPageCallMulticityPhoneName,
+					PhoneNumber = Strings.SettingsPageCallMulticityPhoneNumber,
+				};
+				callTask.Show();
+			} catch (Exception ex) {
+				return;
+			}
 		}
     }
 }
