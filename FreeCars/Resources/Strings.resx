@@ -204,9 +204,9 @@
   <data name="AboutPageDisclaimer" xml:space="preserve">
     <value>FreeCars shows you free rides of the carsharing companies DriveNow and multicity as well as electrical charging-units nearby.
 
-At the moment you can not reserve cars via this app.
+At the moment you cannot reserve cars via this app.
 
-Integration of car2go is in progress right now.</value>
+Integration of car2go is in progress.</value>
   </data>
   <data name="AboutPageVersionInfo" xml:space="preserve">
     <value>Version:</value>
@@ -221,7 +221,7 @@ Integration of car2go is in progress right now.</value>
     <value>Call Servicecenter</value>
   </data>
   <data name="SettingsPageCallMulticityPhoneName" xml:space="preserve">
-    <value>Multicity ServicecenterS</value>
+    <value>Multicity Servicecenter</value>
   </data>
   <data name="SettingsPageCallMulticityPhoneNumber" xml:space="preserve">
     <value>+49 30 59 00 85 85</value>
