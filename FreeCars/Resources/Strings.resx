@@ -211,6 +211,21 @@ Integration of car2go is in progress right now.</value>
   <data name="AboutPageVersionInfo" xml:space="preserve">
     <value>Version:</value>
   </data>
+  <data name="SettingsPageCallDrivenowHeader" xml:space="preserve">
+    <value>Call Servicecenter</value>
+  </data>
+  <data name="SettingsPageCallDrivenowPhoneNumber" xml:space="preserve">
+    <value />
+  </data>
+  <data name="SettingsPageCallMulticityHeader" xml:space="preserve">
+    <value>Call Servicecenter</value>
+  </data>
+  <data name="SettingsPageCallMulticityPhoneName" xml:space="preserve">
+    <value>Multicity ServicecenterS</value>
+  </data>
+  <data name="SettingsPageCallMulticityPhoneNumber" xml:space="preserve">
+    <value>+49 30 59 00 85 85</value>
+  </data>
   <data name="SupportEmailSubject" xml:space="preserve">
     <value>Request regarding FreeCars (v {0}) for WP7</value>
   </data>
