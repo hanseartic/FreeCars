@@ -192,4 +192,41 @@
   <data name="ApplicationName" xml:space="preserve">
     <value>FreeCars</value>
   </data>
+  <data name="AboutPageContactAddress" xml:space="preserve">
+    <value>warokartwork@gmail.com</value>
+  </data>
+  <data name="AboutPageContactHeader" xml:space="preserve">
+    <value>Contact:</value>
+  </data>
+  <data name="AboutPageContactTwitter" xml:space="preserve">
+    <value>@fraggedreality</value>
+  </data>
+  <data name="AboutPageDisclaimer" xml:space="preserve">
+    <value>FreeCars shows you free rides of the carsharing companies DriveNow and multicity as well as electrical charging-units nearby.
+
+At the moment you cannot reserve cars via this app.
+
+Integration of car2go is in progress.</value>
+  </data>
+  <data name="AboutPageVersionInfo" xml:space="preserve">
+    <value>Version:</value>
+  </data>
+  <data name="SettingsPageCallDrivenowHeader" xml:space="preserve">
+    <value>Call Servicecenter</value>
+  </data>
+  <data name="SettingsPageCallDrivenowPhoneNumber" xml:space="preserve">
+    <value />
+  </data>
+  <data name="SettingsPageCallMulticityHeader" xml:space="preserve">
+    <value>Call Servicecenter</value>
+  </data>
+  <data name="SettingsPageCallMulticityPhoneName" xml:space="preserve">
+    <value>Multicity Servicecenter</value>
+  </data>
+  <data name="SettingsPageCallMulticityPhoneNumber" xml:space="preserve">
+    <value>+49 30 59 00 85 85</value>
+  </data>
+  <data name="SupportEmailSubject" xml:space="preserve">
+    <value>Request regarding FreeCars (v {0}) for WP7</value>
+  </data>
 </root>
