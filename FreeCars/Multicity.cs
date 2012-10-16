@@ -87,7 +87,7 @@ namespace FreeCars {
 					pushpin.Dispatcher.BeginInvoke((Action)(() => {
 						car.fuelState = result;
 					}));
-				} catch (WebException) { }
+				} catch (WebException) { } catch { }
 			};
 			batteryRequestClient.DownloadStringAsync(new Uri("https://kunden.multicity-carsharing.de/kundenbuchung/hal2ajax_process.php?infoConfig%5BinfoTyp%5D=HM_AUTO_INFO&infoConfig%5Bpopup%5D=J&infoConfig%5BobjectId%5D=" + car.hal2option.id + "&infoConfig%5Bobjecttyp%5D=carpos&infoConfig%5BmarkerInfos%5D=false&ajxmod=hal2map&callee=markerinfo"));
 		}

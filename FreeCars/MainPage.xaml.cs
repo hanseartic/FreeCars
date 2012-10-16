@@ -197,13 +197,18 @@ namespace FreeCars {
 							Double.Parse(car.lat, cultureInfo.NumberFormat),
 							Double.Parse(car.lng, cultureInfo.NumberFormat));
 					var distanceToMapCenter = (int)coordinate.GetDistanceTo(centerLocation);
-					var fuelTextBlock = new TextBlock { Text = "" != car.fuelState ? car.fuelState + "%" : "", };
+					var fuelTextBlock = new TextBlock { Text = (null != car.fuelState && "" != car.fuelState) ? car.fuelState + "%" : "", };
 
 					if (1500 < distanceToMapCenter) continue;
 
 					if (null == car.fuelState) {
 						car.Updated += (updatedCar, eventArgs) => {
-							car.fuelState = ((MulticityMarker)updatedCar).fuelState;
+						  if (car.fuelState != ((MulticityMarker)updatedCar).fuelState) {
+								try {
+									car.fuelState = ((MulticityMarker)updatedCar).fuelState;
+									fuelTextBlock.Text = car.fuelState + "%";
+									} catch { }
+							}
 							fuelTextBlock.Text = car.fuelState + "%";
 						};
 					}
