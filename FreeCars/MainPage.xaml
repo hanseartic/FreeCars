@@ -36,9 +36,9 @@
                 <map:MapLayer x:Name="myLocationLayer">
                     <map:Pushpin x:Name="myLocationPushpin" Template="{StaticResource MyPositionPushpinTemplate}" Margin="-14, 0, -14, 0" Opacity="0.9"  Visibility="Collapsed"  />
                 </map:MapLayer>
-                <map:MapLayer x:Name="multicityCarsLayer"></map:MapLayer>
-                <map:MapLayer x:Name="multicityFlinksterLayer"></map:MapLayer>
-                <map:MapLayer x:Name="multicityChargingLayer"></map:MapLayer>
+				<map:MapLayer x:Name="multicityChargingLayer"></map:MapLayer>
+				<map:MapLayer x:Name="multicityFlinksterLayer"></map:MapLayer>
+				<map:MapLayer x:Name="multicityCarsLayer"></map:MapLayer>
                 <map:MapLayer x:Name="driveNowCarsLayer"></map:MapLayer>
                 <map:MapLayer x:Name="car2goCarsLayer"></map:MapLayer>
 				<map:MapLayer x:Name="activeLayer"></map:MapLayer>

@@ -39,8 +39,8 @@ namespace FreeCars {
                 position = null;
                 return;
             }
-            LoadMulticityCars();
-            LoadMulticityChargers();
+			LoadMulticityChargers();
+			LoadMulticityCars();            
         }
         private void LoadMulticityCars() {
             if (null == position) return;
