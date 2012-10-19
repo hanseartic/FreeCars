@@ -139,7 +139,7 @@ namespace FreeCars {
 		void UpdateDriveNowLayer(DriveNow driveNow) {
 			var centerLocation = map.Center;
 			var cultureInfo = new CultureInfo("en-US");
-			var driveNowBrush = new SolidColorBrush(Colors.Brown);
+			var driveNowBrush = new SolidColorBrush(new Color { A = 255, R = 176, G = 105, B = 9 });
 			driveNowCarsLayer.Children.Clear();
 			foreach (var car in driveNow.DriveNowCars) {
 				var coordinate = new GeoCoordinate(
@@ -281,8 +281,8 @@ namespace FreeCars {
 
 		}
 		void OnPushpinTap(object sender, System.Windows.Input.GestureEventArgs e) {
-			e.Handled = true;
 			if (null != ((Pushpin)sender).Tag && typeof(MulticityChargerMarker) == ((Pushpin)sender).Tag.GetType()) return;
+			e.Handled = true;
 			var pushpinContent = ((Pushpin)sender).Content;
 			if (typeof(Border) == pushpinContent.GetType()) {
 				if (Visibility.Collapsed == ((Border)pushpinContent).Visibility) {
@@ -333,6 +333,7 @@ namespace FreeCars {
 					DeactivatePushpin(pushpin as Pushpin);
 				}
 			}
+			e.Handled = true;
 		}
 
 		private void OnMapViewChangeEnd(object sender, MapEventArgs e) {
