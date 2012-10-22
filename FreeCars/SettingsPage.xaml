@@ -34,8 +34,8 @@
             <controls:PivotItem Header="{Binding LocalizedStrings.SettingsMulticityTitle, Source={StaticResource ResourceAccess}}">
                 <Grid>
                     <StackPanel>
-                        <toolkit:ToggleSwitch Header="{Binding LocalizedStrings.SettingsPageShowMulticityCars, Source={StaticResource ResourceAccess}}" Checked="OnMulticityCarsToggleSwitchChanged" Unchecked="OnMulticityCarsToggleSwitchChanged" Loaded="OnMulticityCarsToggleSwitchLoaded" Content="{Binding LocalizedStrings.ToggleSwitchOff, Source={StaticResource ResourceAccess}}" />
-                        <toolkit:ToggleSwitch Header="{Binding LocalizedStrings.SettingsPageShowMulticityChargers, Source={StaticResource ResourceAccess}}" Checked="OnMulticityChargersToggleSwitchChanged" Unchecked="OnMulticityChargersToggleSwitchChanged" Loaded="OnMulticityChargersToggleSwitchLoaded" Content="{Binding LocalizedStrings.ToggleSwitchOff, Source={StaticResource ResourceAccess}}" />
+                        <toolkit:ToggleSwitch Header="{Binding LocalizedStrings.SettingsPageShowMulticityCars, Source={StaticResource ResourceAccess}}" Checked="OnMulticityCarsToggleSwitchChanged" Unchecked="OnMulticityCarsToggleSwitchChanged" Loaded="OnMulticityCarsToggleSwitchLoaded" Content="{Binding LocalizedStrings.ToggleSwitchOff, Source={StaticResource ResourceAccess}}" SwitchForeground="Red" />
+						<toolkit:ToggleSwitch Header="{Binding LocalizedStrings.SettingsPageShowMulticityChargers, Source={StaticResource ResourceAccess}}" Checked="OnMulticityChargersToggleSwitchChanged" Unchecked="OnMulticityChargersToggleSwitchChanged" Loaded="OnMulticityChargersToggleSwitchLoaded" Content="{Binding LocalizedStrings.ToggleSwitchOff, Source={StaticResource ResourceAccess}}" SwitchForeground="Blue" />
 						<TextBlock Text="{Binding LocalizedStrings.SettingsPageCallMulticityHeader, Source={StaticResource ResourceAccess}}" Tap="OnCallMulticityTap" />
 						<TextBlock Text="{Binding LocalizedStrings.SettingsPageCallMulticityPhoneNumber, Source={StaticResource ResourceAccess}}" Style="{StaticResource PhoneTextTitle2Style}" Margin="0" Tap="OnCallMulticityTap" />
 					</StackPanel>
@@ -44,7 +44,7 @@
 			<controls:PivotItem Header="{Binding LocalizedStrings.SettingsDriveNowTitle, Source={StaticResource ResourceAccess}}">
 				<Grid>
 					<StackPanel>
-						<toolkit:ToggleSwitch Header="{Binding LocalizedStrings.SettingsPageShowDriveNowCars, Source={StaticResource ResourceAccess}}" Checked="OnDriveNowCarsToggleSwitchChanged" Unchecked="OnDriveNowCarsToggleSwitchChanged" Loaded="OnDriveNowCarsToggleSwitchLoaded" Content="{Binding LocalizedStrings.ToggleSwitchOff, Source={StaticResource ResourceAccess}}" />
+						<toolkit:ToggleSwitch Header="{Binding LocalizedStrings.SettingsPageShowDriveNowCars, Source={StaticResource ResourceAccess}}" Checked="OnDriveNowCarsToggleSwitchChanged" Unchecked="OnDriveNowCarsToggleSwitchChanged" Loaded="OnDriveNowCarsToggleSwitchLoaded" Content="{Binding LocalizedStrings.ToggleSwitchOff, Source={StaticResource ResourceAccess}}" SwitchForeground="#FFB06909" />
 						<!--
 						<TextBlock Text="{Binding LocalizedStrings.SettingsPageCallDrivenowHeader, Source={StaticResource ResourceAccess}}" Tap="OnCallDriveNowTap" />
 						<TextBlock Text="{Binding LocalizedStrings.SettingsPageCallDrivenowPhoneNumber, Source={StaticResource ResourceAccess}}" Tap="OnCallDriveNowTap" />					
