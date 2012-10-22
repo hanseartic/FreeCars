@@ -9,6 +9,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
+using AdDuplex;
+using Microsoft.Advertising;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Controls.Maps;
 using System.Device.Location;
@@ -32,7 +34,13 @@ namespace FreeCars {
 			Loaded += OnMainPageLoaded;
 			//map.Children.Add(me);
 			SetAppBar();
+		}
 
+		private void CheckTrialAndAds() {
+			return;
+			AdsGrid.Visibility = App.IsInTrialMode
+				? Visibility.Visible
+				: Visibility.Collapsed;
 		}
 
 		void OnMainPageLoaded(object sender, RoutedEventArgs e) {
@@ -52,6 +60,7 @@ namespace FreeCars {
 				} catch { }
 			}
 			((App)Application.Current).ReloadPOIs();
+			CheckTrialAndAds();
 		}
 		bool checkForGPSUsage() {
 			var gpsOK = MessageBox.Show(Strings.WelcomeAskGPSBody1 + Environment.NewLine + Strings.WelcomeAskGPSBody2, Strings.WelcomeAskGPSHeader, MessageBoxButton.OKCancel);
@@ -120,6 +129,8 @@ namespace FreeCars {
 			}
 			IsolatedStorageSettings.ApplicationSettings.Save();
 			ShowMeAtLocation(e.Position.Location);
+			SDKDuplexAdControl.Latitude = e.Position.Location.Latitude;
+			SDKDuplexAdControl.Longitude = e.Position.Location.Longitude;
 		}
 		void ShowMeAtLocation(GeoCoordinate location) {
 			myLocationPushpin.Location = location;
@@ -338,6 +349,25 @@ namespace FreeCars {
 
 		private void OnMapViewChangeEnd(object sender, MapEventArgs e) {
 			((App)Application.Current).RefreshPOIs();
+		}
+
+		private void OnSDKAddControlErrorOccured(object sender, AdErrorEventArgs e) {
+			((Microsoft.Advertising.Mobile.UI.AdControl)sender).Visibility = Visibility.Collapsed;
+			AdDuplexAdControl.Visibility = Visibility.Visible;
+		}
+		private void OnAdduplexAddControlErrorOccured(object sender, AdLoadingErrorEventArgs e) {
+			((AdControl)sender).Visibility = Visibility.Visible;
+			SDKDuplexAdControl.Visibility = Visibility.Collapsed;
+		}
+
+		private void OnSDKAddControlAdRefreshed(object sender, EventArgs e) {
+			SDKDuplexAdControl.Visibility = Visibility.Visible;
+			AdDuplexAdControl.Visibility = Visibility.Collapsed;
+		}
+
+		private void OnAdduplexAddControlAdRefreshed(object sender, AdLoadedEventArgs e) {
+			AdDuplexAdControl.Visibility = Visibility.Visible;
+			SDKDuplexAdControl.Visibility = Visibility.Collapsed;
 		}
 	}
 }

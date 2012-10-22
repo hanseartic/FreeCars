@@ -14,6 +14,15 @@ namespace FreeCars {
             InitializeComponent();
 			LoadAppBar();
         }
+		private void AppOnTrialModeChanged(object sender, EventArgs e) {
+			if (App.IsInTrialMode) {
+				ShowAdsToggleSwitch.Visibility = Visibility.Visible;
+			}
+		}
+		private void OnSettingsPageLoaded(object sender, RoutedEventArgs e) {
+			((App)App.Current).TrialModeChanged += AppOnTrialModeChanged;
+			AppOnTrialModeChanged(null, null);
+		}
         private void OnToggleSwitchChanged(ToggleSwitch sender) {
             sender.Content = true == sender.IsChecked
                 ? Strings.ToggleSwitchOn
