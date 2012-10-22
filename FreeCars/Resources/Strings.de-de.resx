@@ -187,7 +187,7 @@
     <value>Über FreeCars</value>
   </data>
   <data name="AboutPageTitle" xml:space="preserve">
-    <value>Info</value>
+    <value>info</value>
   </data>
   <data name="ApplicationName" xml:space="preserve">
     <value>FreeCars</value>
@@ -196,7 +196,7 @@
     <value>warokartwork@gmail.com</value>
   </data>
   <data name="AboutPageContactHeader" xml:space="preserve">
-    <value>Feedback:</value>
+    <value>Feedback</value>
   </data>
   <data name="AboutPageContactTwitter" xml:space="preserve">
     <value>@fraggedreality</value>
@@ -209,7 +209,7 @@ Derzeit ist noch keine Vorreservierung der Fahrzeuge über die App möglich.
 Die Integration von car2go ist in Vorbereitung.</value>
   </data>
   <data name="AboutPageVersionInfo" xml:space="preserve">
-    <value>Version:</value>
+    <value>Version</value>
   </data>
   <data name="SettingsPageCallDrivenowHeader" xml:space="preserve">
     <value>Servicezentrale anrufen</value>
@@ -251,5 +251,14 @@ Sie brauchen sie App nicht erneut herunterzuladen – nach dem Kauf ist und blei
   </data>
   <data name="AboutPageRateThisApp" xml:space="preserve">
     <value>FreeCars bewerten</value>
+  </data>
+  <data name="AboutPageContactViaStore" xml:space="preserve">
+    <value>Store:</value>
+  </data>
+  <data name="HelpPageMarkersHeading" xml:space="preserve">
+    <value>Marker</value>
+  </data>
+  <data name="HelpPageTitle" xml:space="preserve">
+    <value>hilfe</value>
   </data>
 </root>

@@ -187,7 +187,7 @@
     <value>About</value>
   </data>
   <data name="AboutPageTitle" xml:space="preserve">
-    <value>About</value>
+    <value>about</value>
   </data>
   <data name="ApplicationName" xml:space="preserve">
     <value>FreeCars</value>
@@ -196,7 +196,7 @@
     <value>warokartwork@gmail.com</value>
   </data>
   <data name="AboutPageContactHeader" xml:space="preserve">
-    <value>Social:</value>
+    <value>Social</value>
   </data>
   <data name="AboutPageContactTwitter" xml:space="preserve">
     <value>@fraggedreality</value>
@@ -209,7 +209,7 @@ At the moment you cannot reserve cars via this app.
 Integration of car2go is in progress.</value>
   </data>
   <data name="AboutPageVersionInfo" xml:space="preserve">
-    <value>Version:</value>
+    <value>Version</value>
   </data>
   <data name="SettingsPageCallDrivenowHeader" xml:space="preserve">
     <value>Call Servicecenter</value>
@@ -250,5 +250,14 @@ You do not need to redownload FreeCars – after you bought FreeCars, the app is
   </data>
   <data name="AboutPageRateThisApp" xml:space="preserve">
     <value>Rate FreeCars</value>
+  </data>
+  <data name="AboutPageContactViaStore" xml:space="preserve">
+    <value>Store:</value>
+  </data>
+  <data name="HelpPageMarkersHeading" xml:space="preserve">
+    <value>Markers</value>
+  </data>
+  <data name="HelpPageTitle" xml:space="preserve">
+    <value>help</value>
   </data>
 </root>
