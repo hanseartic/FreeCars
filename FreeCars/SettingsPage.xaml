@@ -25,7 +25,8 @@
                     <StackPanel>
                         <toolkit:ToggleSwitch Header="{Binding LocalizedStrings.SettingsPageUseGPSHeader, Source={StaticResource ResourceAccess}}" Checked="OnGPSToggleSwitchChanged" Unchecked="OnGPSToggleSwitchChanged" Loaded="OnGPSToggleSwitchLoaded" Content="{Binding LocalizedStrings.ToggleSwitchOff, Source={StaticResource ResourceAccess}}" />
                         <TextBlock Text="{Binding LocalizedStrings.SettingsPageUseGPSText, Source={StaticResource ResourceAccess}}" Width="456" Height="Auto" TextWrapping="Wrap" />
-                    </StackPanel>
+						<toolkit:ToggleSwitch x:Name="ShowAdsToggleSwitch" Header="{Binding LocalizedStrings.ShowAds, Source={StaticResource ResourceAccess}}" Content="{Binding LocalizedStrings.ToggleSwitchOff, Source={StaticResource ResourceAccess}}" Checked="OnShowAdsToggleSwitchChanged" Unchecked="OnShowAdsToggleSwitchChanged" Loaded="OnShowAdsToggleSwitchLoaded" Visibility="Collapsed"  />
+					</StackPanel>
                 </Grid>
             </controls:PivotItem>
 

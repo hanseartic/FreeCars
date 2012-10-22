@@ -17,6 +17,7 @@ using System.Text;
 using System.Runtime.Serialization.Json;
 using System.Runtime.Serialization;
 using Microsoft.Phone.Controls.Maps;
+using Microsoft.Phone.Marketplace;
 
 namespace FreeCars {
     public partial class App : Application {
@@ -57,59 +58,73 @@ namespace FreeCars {
                 // and consume battery power when the user is not using the phone.
                 // PhoneApplicationService.Current.UserIdleDetectionMode = IdleDetectionMode.Disabled;
             }
-
+			
         }
-
+		private void ValidateTrialMode() {
+			IsInTrialMode = new LicenseInformation().IsTrial();
+			TriggerTrialModeChanged();
+		}
+		public static bool IsInTrialMode {
+			get;
+			private set;
+		}
         // Code to execute when the application is launching (eg, from Start)
         // This code will not execute when the application is reactivated
         private void Application_Launching(object sender, LaunchingEventArgs e) {
+			ValidateTrialMode();
             var multicity = new Multicity();
             multicity.Updated += OnLayerUpdated;
             multicity.LoadPOIs();
             this.Resources.Add("multicity", multicity);
 
-						var driveNow = new DriveNow();
-						driveNow.Updated += OnLayerUpdated;
-						driveNow.LoadPOIs();
-						this.Resources.Add("driveNow", driveNow);
+			var driveNow = new DriveNow();
+			driveNow.Updated += OnLayerUpdated;
+			driveNow.LoadPOIs();
+			this.Resources.Add("driveNow", driveNow);
         }
         private void OnLayerUpdated(object sender, EventArgs e) {
             TriggerCarsUpdated(sender);
         }
         public List<Pushpin> POIs { get; private set; }
-				public void RefreshPOIs() {
-						try {
-								TriggerCarsUpdated(Resources["multicity"] as Multicity);
-						} catch { }
-						try {
-								TriggerCarsUpdated(Resources["driveNow"] as DriveNow);
-						} catch { }
-						try {
-								//TriggerCarsUpdated(Resources["car2go"] as Car2Go);
-						} catch { }
-				}
-				private void TriggerCarsUpdated(object sender) {
-            if (null != CarsUpdated) {
-                CarsUpdated(sender, null);
-            }
-        }
-				public void ReloadPOIs() {
-						try {
-								(Resources["multicity"] as Multicity).LoadPOIs();
-						} catch { }
-						try {
-								(Resources["driveNow"] as DriveNow).LoadPOIs();
-						} catch { }
-						try {
-								//(Resources["car2go"] as Car2Go).LoadPOIs();
-						} catch { }
-				}
+		public void RefreshPOIs() {
+			try {
+					TriggerCarsUpdated(Resources["multicity"] as Multicity);
+			} catch { }
+			try {
+					TriggerCarsUpdated(Resources["driveNow"] as DriveNow);
+			} catch { }
+			try {
+					//TriggerCarsUpdated(Resources["car2go"] as Car2Go);
+			} catch { }
+		}
+		public void ReloadPOIs() {
+			try {
+					(Resources["multicity"] as Multicity).LoadPOIs();
+			} catch { }
+			try {
+					(Resources["driveNow"] as DriveNow).LoadPOIs();
+			} catch { }
+			try {
+					//(Resources["car2go"] as Car2Go).LoadPOIs();
+			} catch { }
+		}
         public event EventHandler CarsUpdated;
+		public event EventHandler TrialModeChanged;
         // Code to execute when the application is activated (brought to foreground)
         // This code will not execute when the application is first launched
         private void Application_Activated(object sender, ActivatedEventArgs e) {
+			ValidateTrialMode();
         }
-
+		private void TriggerCarsUpdated(object sender) {
+			if (null != CarsUpdated) {
+				CarsUpdated(sender, null);
+			}
+		}
+		private void TriggerTrialModeChanged() {
+			if (null != TrialModeChanged) {
+				TrialModeChanged(this, null);
+			}
+		}
         // Code to execute when the application is deactivated (sent to background)
         // This code will not execute when the application is closing
         private void Application_Deactivated(object sender, DeactivatedEventArgs e) {

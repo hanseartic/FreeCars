@@ -229,4 +229,18 @@ Die Integration von car2go ist in Vorbereitung.</value>
   <data name="SupportEmailSubject" xml:space="preserve">
     <value>Anfrage bzgl. FreeCars für WP7 (v {0})</value>
   </data>
+  <data name="SettingsPageBuyCaption" xml:space="preserve">
+    <value>Werbung ausblenden</value>
+  </data>
+  <data name="SettingsPageBuyText" xml:space="preserve">
+    <value>Diese App finanziert sich über das Einblenden von Werbung.
+
+Sie können die App aber auch bezahlen, um die Werbung auszublenden. Wenn Sie die Werbung loswerden möchten wählen Sie "OK", um den Store zu öffnen und FreeCars zu kaufen, anderenfalls wählen Sie "Abbrechen".
+
+Sie brauchen sie App nicht erneut herunterzuladen – nach dem Kauf ist und bleibt FreeCars werbefrei.
+</value>
+  </data>
+  <data name="ShowAds" xml:space="preserve">
+    <value>Werbung einblenden</value>
+  </data>
 </root>
