@@ -37,12 +37,13 @@ namespace FreeCars {
 		}
 
 		private void CheckTrialAndAds() {
-			return;
 			AdsGrid.Visibility = App.IsInTrialMode
 				? Visibility.Visible
 				: Visibility.Collapsed;
 		}
-
+		void OnAppTrialModeChanged(object sender, EventArgs e) {
+			CheckTrialAndAds();
+		}
 		void OnMainPageLoaded(object sender, RoutedEventArgs e) {
 			try {
 				gpsAllowed = (bool)IsolatedStorageSettings.ApplicationSettings["settings_use_GPS"];
@@ -61,6 +62,7 @@ namespace FreeCars {
 			}
 			((App)Application.Current).ReloadPOIs();
 			CheckTrialAndAds();
+			((App)App.Current).TrialModeChanged += OnAppTrialModeChanged;
 		}
 		bool checkForGPSUsage() {
 			var gpsOK = MessageBox.Show(Strings.WelcomeAskGPSBody1 + Environment.NewLine + Strings.WelcomeAskGPSBody2, Strings.WelcomeAskGPSHeader, MessageBoxButton.OKCancel);
@@ -129,8 +131,8 @@ namespace FreeCars {
 			}
 			IsolatedStorageSettings.ApplicationSettings.Save();
 			ShowMeAtLocation(e.Position.Location);
-			SDKDuplexAdControl.Latitude = e.Position.Location.Latitude;
-			SDKDuplexAdControl.Longitude = e.Position.Location.Longitude;
+			SDKAdControl.Latitude = e.Position.Location.Latitude;
+			SDKAdControl.Longitude = e.Position.Location.Longitude;
 		}
 		void ShowMeAtLocation(GeoCoordinate location) {
 			myLocationPushpin.Location = location;
@@ -357,17 +359,17 @@ namespace FreeCars {
 		}
 		private void OnAdduplexAddControlErrorOccured(object sender, AdLoadingErrorEventArgs e) {
 			((AdControl)sender).Visibility = Visibility.Visible;
-			SDKDuplexAdControl.Visibility = Visibility.Collapsed;
+			SDKAdControl.Visibility = Visibility.Collapsed;
 		}
 
 		private void OnSDKAddControlAdRefreshed(object sender, EventArgs e) {
-			SDKDuplexAdControl.Visibility = Visibility.Visible;
+			SDKAdControl.Visibility = Visibility.Visible;
 			AdDuplexAdControl.Visibility = Visibility.Collapsed;
 		}
 
 		private void OnAdduplexAddControlAdRefreshed(object sender, AdLoadedEventArgs e) {
 			AdDuplexAdControl.Visibility = Visibility.Visible;
-			SDKDuplexAdControl.Visibility = Visibility.Collapsed;
+			SDKAdControl.Visibility = Visibility.Collapsed;
 		}
 	}
 }

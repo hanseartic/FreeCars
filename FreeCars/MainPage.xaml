@@ -46,14 +46,14 @@
 				<map:MapLayer x:Name="activeLayer"></map:MapLayer>
             </map:Map>
 		</Grid>
-		<Grid x:Name="AdsGrid" Grid.Row="2" Visibility="Visible">
+		<Grid x:Name="AdsGrid" Grid.Row="2" Visibility="Collapsed">
 			<adduplex:AdControl
 				x:Name="AdDuplexAdControl" Visibility="Visible" 
 				AdLoadingError="OnAdduplexAddControlErrorOccured"
 				AdLoaded="OnAdduplexAddControlAdRefreshed" 
 				RefreshInterval="10" />
 			<my:AdControl
-				x:Name="SDKDuplexAdControl" Visibility="Collapsed"
+				x:Name="SDKAdControl" Visibility="Visible"
 				ErrorOccurred="OnSDKAddControlErrorOccured" 
 				AdRefreshed="OnSDKAddControlAdRefreshed"
 				IsAutoRefreshEnabled="True"
