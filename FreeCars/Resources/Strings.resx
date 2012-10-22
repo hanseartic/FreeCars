@@ -196,7 +196,7 @@
     <value>warokartwork@gmail.com</value>
   </data>
   <data name="AboutPageContactHeader" xml:space="preserve">
-    <value>Contact:</value>
+    <value>Social:</value>
   </data>
   <data name="AboutPageContactTwitter" xml:space="preserve">
     <value>@fraggedreality</value>
@@ -241,5 +241,14 @@ You do not need to redownload FreeCars – after you bought FreeCars, the app is
   </data>
   <data name="ShowAds" xml:space="preserve">
     <value>Display Ads</value>
+  </data>
+  <data name="AboutPageContactViaMail" xml:space="preserve">
+    <value>eMail:</value>
+  </data>
+  <data name="AboutPageContactViaTwitter" xml:space="preserve">
+    <value>Twitter:</value>
+  </data>
+  <data name="AboutPageRateThisApp" xml:space="preserve">
+    <value>Rate FreeCars</value>
   </data>
 </root>

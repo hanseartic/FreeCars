@@ -71,5 +71,12 @@ namespace FreeCars {
 				return rdr.GetAttribute(attributeName);
 			}
 		}
+
+		private void OnRateTap(object sender, System.Windows.Input.GestureEventArgs e) {
+			try {
+				var marketplaceReviewTask = new MarketplaceReviewTask();
+				marketplaceReviewTask.Show();
+			} catch { }
+		}
 	}
 }
