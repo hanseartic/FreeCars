@@ -187,7 +187,7 @@
     <value>Über FreeCars</value>
   </data>
   <data name="AboutPageTitle" xml:space="preserve">
-    <value>Info</value>
+    <value>info</value>
   </data>
   <data name="ApplicationName" xml:space="preserve">
     <value>FreeCars</value>
@@ -196,7 +196,7 @@
     <value>warokartwork@gmail.com</value>
   </data>
   <data name="AboutPageContactHeader" xml:space="preserve">
-    <value>Kontakt:</value>
+    <value>Feedback</value>
   </data>
   <data name="AboutPageContactTwitter" xml:space="preserve">
     <value>@fraggedreality</value>
@@ -209,7 +209,7 @@ Derzeit ist noch keine Vorreservierung der Fahrzeuge über die App möglich.
 Die Integration von car2go ist in Vorbereitung.</value>
   </data>
   <data name="AboutPageVersionInfo" xml:space="preserve">
-    <value>Version:</value>
+    <value>Version</value>
   </data>
   <data name="SettingsPageCallDrivenowHeader" xml:space="preserve">
     <value>Servicezentrale anrufen</value>
@@ -228,5 +228,37 @@ Die Integration von car2go ist in Vorbereitung.</value>
   </data>
   <data name="SupportEmailSubject" xml:space="preserve">
     <value>Anfrage bzgl. FreeCars für WP7 (v {0})</value>
+  </data>
+  <data name="SettingsPageBuyCaption" xml:space="preserve">
+    <value>Werbung ausblenden</value>
+  </data>
+  <data name="SettingsPageBuyText" xml:space="preserve">
+    <value>Diese App finanziert sich über das Einblenden von Werbung.
+
+Sie können die App aber auch bezahlen, um die Werbung auszublenden. Wenn Sie die Werbung loswerden möchten wählen Sie "OK", um den Store zu öffnen und FreeCars zu kaufen, anderenfalls wählen Sie "Abbrechen".
+
+Sie brauchen sie App nicht erneut herunterzuladen – nach dem Kauf ist und bleibt FreeCars werbefrei.
+</value>
+  </data>
+  <data name="ShowAds" xml:space="preserve">
+    <value>Werbung einblenden</value>
+  </data>
+  <data name="AboutPageContactViaMail" xml:space="preserve">
+    <value>E-Mail:</value>
+  </data>
+  <data name="AboutPageContactViaTwitter" xml:space="preserve">
+    <value>Twitter:</value>
+  </data>
+  <data name="AboutPageRateThisApp" xml:space="preserve">
+    <value>FreeCars bewerten</value>
+  </data>
+  <data name="AboutPageContactViaStore" xml:space="preserve">
+    <value>Store:</value>
+  </data>
+  <data name="HelpPageMarkersHeading" xml:space="preserve">
+    <value>Marker</value>
+  </data>
+  <data name="HelpPageTitle" xml:space="preserve">
+    <value>hilfe</value>
   </data>
 </root>
