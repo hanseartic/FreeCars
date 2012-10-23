@@ -260,4 +260,16 @@ You do not need to redownload FreeCars – after you bought FreeCars, the app is
   <data name="HelpPageTitle" xml:space="preserve">
     <value>help</value>
   </data>
+  <data name="AboutPageContactViaUservoice" xml:space="preserve">
+    <value>Uservoice:</value>
+  </data>
+  <data name="AboutPageGotoUservoiceSite" xml:space="preserve">
+    <value>Visit site</value>
+  </data>
+  <data name="AboutPageSendUservoiceRequest" xml:space="preserve">
+    <value>Stage report</value>
+  </data>
+  <data name="AboutPageUservoiceAddress" xml:space="preserve">
+    <value>http://hanseartic.uservoice.com</value>
+  </data>
 </root>

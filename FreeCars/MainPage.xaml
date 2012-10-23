@@ -7,7 +7,7 @@
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:map="clr-namespace:Microsoft.Phone.Controls.Maps;assembly=Microsoft.Phone.Controls.Maps"
-	xmlns:adduplex="clr-namespace:AdDuplex;assembly=AdDuplex.AdControl.Silverlight"
+	xmlns:adduplex="clr-namespace:AdDuplex;assembly=AdDuplex.WindowsPhone"
 	xmlns:my="clr-namespace:Microsoft.Advertising.Mobile.UI;assembly=Microsoft.Advertising.Mobile.UI"
 	mc:Ignorable="d" d:DesignWidth="480" d:DesignHeight="800"
 	FontFamily="{StaticResource PhoneFontFamilyNormal}"
@@ -51,7 +51,7 @@
 				x:Name="AdDuplexAdControl" Visibility="Visible" 
 				AdLoadingError="OnAdduplexAddControlErrorOccured"
 				AdLoaded="OnAdduplexAddControlAdRefreshed" 
-				RefreshInterval="10" />
+				RefreshInterval="30" />
 			<my:AdControl
 				x:Name="SDKAdControl" Visibility="Visible"
 				ErrorOccurred="OnSDKAddControlErrorOccured" 

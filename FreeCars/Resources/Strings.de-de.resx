@@ -261,4 +261,16 @@ Sie brauchen sie App nicht erneut herunterzuladen – nach dem Kauf ist und blei
   <data name="HelpPageTitle" xml:space="preserve">
     <value>hilfe</value>
   </data>
+  <data name="AboutPageContactViaUservoice" xml:space="preserve">
+    <value>Uservoice:</value>
+  </data>
+  <data name="AboutPageGotoUservoiceSite" xml:space="preserve">
+    <value>Zum Forum</value>
+  </data>
+  <data name="AboutPageSendUservoiceRequest" xml:space="preserve">
+    <value>Fehler melden</value>
+  </data>
+  <data name="AboutPageUservoiceAddress" xml:space="preserve">
+    <value>http://hanseartic.uservoice.com</value>
+  </data>
 </root>
