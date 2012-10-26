@@ -19,6 +19,7 @@
 
 		<controls:Pivot Title="{Binding LocalizedStrings.ApplicationName, Source={StaticResource ResourceAccess}}">
 			<controls:PivotItem Header="{Binding LocalizedStrings.AboutPageTitle, Source={StaticResource ResourceAccess}}">
+				<ScrollViewer>
 				<Grid>
 					<StackPanel>
 						<StackPanel Orientation="Vertical">
@@ -52,11 +53,12 @@
 								<TextBlock Grid.Column="0" Grid.Row="3"
 									Text="{Binding LocalizedStrings.AboutPageContactViaUservoice, Source={StaticResource ResourceAccess}}" TextWrapping="Wrap" Margin="0,8" VerticalAlignment="Center" />
 								<Button Grid.Column="1" Grid.Row="3" 
-									Content="{Binding LocalizedStrings.AboutPageGotoUservoiceSite, Source={StaticResource ResourceAccess}}" />
+									Content="{Binding LocalizedStrings.AboutPageGotoUservoiceSite, Source={StaticResource ResourceAccess}}" Tap="OnGotoUservoiceTap" />
 							</Grid>
 						</StackPanel>
 					</StackPanel>
 				</Grid>
+				</ScrollViewer>
 			</controls:PivotItem>
 			<!--
 			<controls:PivotItem Header="{Binding LocalizedStrings.HelpPageTitle, Source={StaticResource ResourceAccess}}">
