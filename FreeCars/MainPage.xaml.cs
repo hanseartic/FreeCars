@@ -9,6 +9,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
+using AdDuplex;
+using Microsoft.Advertising;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Controls.Maps;
 using System.Device.Location;
@@ -32,9 +34,16 @@ namespace FreeCars {
 			Loaded += OnMainPageLoaded;
 			//map.Children.Add(me);
 			SetAppBar();
-
 		}
 
+		private void CheckTrialAndAds() {
+			AdsGrid.Visibility = App.IsInTrialMode
+				? Visibility.Visible
+				: Visibility.Collapsed;
+		}
+		void OnAppTrialModeChanged(object sender, EventArgs e) {
+			CheckTrialAndAds();
+		}
 		void OnMainPageLoaded(object sender, RoutedEventArgs e) {
 			try {
 				gpsAllowed = (bool)IsolatedStorageSettings.ApplicationSettings["settings_use_GPS"];
@@ -52,6 +61,8 @@ namespace FreeCars {
 				} catch { }
 			}
 			((App)Application.Current).ReloadPOIs();
+			CheckTrialAndAds();
+			((App)App.Current).TrialModeChanged += OnAppTrialModeChanged;
 		}
 		bool checkForGPSUsage() {
 			var gpsOK = MessageBox.Show(Strings.WelcomeAskGPSBody1 + Environment.NewLine + Strings.WelcomeAskGPSBody2, Strings.WelcomeAskGPSHeader, MessageBoxButton.OKCancel);
@@ -120,6 +131,8 @@ namespace FreeCars {
 			}
 			IsolatedStorageSettings.ApplicationSettings.Save();
 			ShowMeAtLocation(e.Position.Location);
+			SDKAdControl.Latitude = e.Position.Location.Latitude;
+			SDKAdControl.Longitude = e.Position.Location.Longitude;
 		}
 		void ShowMeAtLocation(GeoCoordinate location) {
 			myLocationPushpin.Location = location;
@@ -139,7 +152,7 @@ namespace FreeCars {
 		void UpdateDriveNowLayer(DriveNow driveNow) {
 			var centerLocation = map.Center;
 			var cultureInfo = new CultureInfo("en-US");
-			var driveNowBrush = new SolidColorBrush(Colors.Brown);
+			var driveNowBrush = new SolidColorBrush(new Color { A = 255, R = 176, G = 105, B = 9 });
 			driveNowCarsLayer.Children.Clear();
 			foreach (var car in driveNow.DriveNowCars) {
 				var coordinate = new GeoCoordinate(
@@ -197,13 +210,18 @@ namespace FreeCars {
 							Double.Parse(car.lat, cultureInfo.NumberFormat),
 							Double.Parse(car.lng, cultureInfo.NumberFormat));
 					var distanceToMapCenter = (int)coordinate.GetDistanceTo(centerLocation);
-					var fuelTextBlock = new TextBlock { Text = "" != car.fuelState ? car.fuelState + "%" : "", };
+					var fuelTextBlock = new TextBlock { Text = (null != car.fuelState && "" != car.fuelState) ? car.fuelState + "%" : "", };
 
 					if (1500 < distanceToMapCenter) continue;
 
 					if (null == car.fuelState) {
 						car.Updated += (updatedCar, eventArgs) => {
-							car.fuelState = ((MulticityMarker)updatedCar).fuelState;
+						  if (car.fuelState != ((MulticityMarker)updatedCar).fuelState) {
+								try {
+									car.fuelState = ((MulticityMarker)updatedCar).fuelState;
+									fuelTextBlock.Text = car.fuelState + "%";
+									} catch { }
+							}
 							fuelTextBlock.Text = car.fuelState + "%";
 						};
 					}
@@ -276,8 +294,8 @@ namespace FreeCars {
 
 		}
 		void OnPushpinTap(object sender, System.Windows.Input.GestureEventArgs e) {
-			e.Handled = true;
 			if (null != ((Pushpin)sender).Tag && typeof(MulticityChargerMarker) == ((Pushpin)sender).Tag.GetType()) return;
+			e.Handled = true;
 			var pushpinContent = ((Pushpin)sender).Content;
 			if (typeof(Border) == pushpinContent.GetType()) {
 				if (Visibility.Collapsed == ((Border)pushpinContent).Visibility) {
@@ -328,10 +346,30 @@ namespace FreeCars {
 					DeactivatePushpin(pushpin as Pushpin);
 				}
 			}
+			e.Handled = true;
 		}
 
 		private void OnMapViewChangeEnd(object sender, MapEventArgs e) {
 			((App)Application.Current).RefreshPOIs();
+		}
+
+		private void OnSDKAddControlErrorOccured(object sender, AdErrorEventArgs e) {
+			((Microsoft.Advertising.Mobile.UI.AdControl)sender).Visibility = Visibility.Collapsed;
+			AdDuplexAdControl.Visibility = Visibility.Visible;
+		}
+		private void OnAdduplexAddControlErrorOccured(object sender, AdLoadingErrorEventArgs e) {
+			((AdControl)sender).Visibility = Visibility.Visible;
+			SDKAdControl.Visibility = Visibility.Collapsed;
+		}
+
+		private void OnSDKAddControlAdRefreshed(object sender, EventArgs e) {
+			SDKAdControl.Visibility = Visibility.Visible;
+			AdDuplexAdControl.Visibility = Visibility.Collapsed;
+		}
+
+		private void OnAdduplexAddControlAdRefreshed(object sender, AdLoadedEventArgs e) {
+			AdDuplexAdControl.Visibility = Visibility.Visible;
+			SDKAdControl.Visibility = Visibility.Collapsed;
 		}
 	}
 }

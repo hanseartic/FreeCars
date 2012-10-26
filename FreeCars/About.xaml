@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
     xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+    xmlns:controls="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
@@ -15,29 +16,67 @@
 
     <!--LayoutRoot is the root grid where all page content is placed-->
     <Grid x:Name="LayoutRoot" Background="Transparent">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
 
-        <!--TitlePanel contains the name of the application and page title-->
-        <StackPanel x:Name="TitlePanel" Grid.Row="0" Margin="12,17,0,28">
-			<TextBlock x:Name="ApplicationTitle" Text="{Binding LocalizedStrings.ApplicationName, Source={StaticResource ResourceAccess}}" Style="{StaticResource PhoneTextNormalStyle}"/>
-			<TextBlock x:Name="PageTitle" Text="{Binding LocalizedStrings.AboutPageTitle, Source={StaticResource ResourceAccess}}" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
-        </StackPanel>
-
-        <!--ContentPanel - place additional content here-->
-        <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
-			<StackPanel Orientation="Vertical">
-				<TextBlock Text="{Binding LocalizedStrings.AboutPageVersionInfo, Source={StaticResource ResourceAccess}}" TextWrapping="Wrap" Style="{StaticResource PhoneTextTitle2Style}" Margin="0"></TextBlock>
-				<TextBlock Text="{Binding Version}" TextWrapping="Wrap"></TextBlock>
-				<TextBlock Text="{Binding LocalizedStrings.AboutPageDisclaimer, Source={StaticResource ResourceAccess}}" TextWrapping="Wrap"></TextBlock>
-				<TextBlock Text="{Binding LocalizedStrings.AboutPageContactHeader, Source={StaticResource ResourceAccess}}" TextWrapping="Wrap" Style="{StaticResource PhoneTextTitle2Style}" Margin="0,12,0,0"></TextBlock>
-				<TextBlock Text="{Binding LocalizedStrings.AboutPageContactAddress, Source={StaticResource ResourceAccess}}" TextWrapping="Wrap" Tap="OnMailTap" Margin="0,8"></TextBlock>
-				<TextBlock Text="{Binding LocalizedStrings.AboutPageContactTwitter, Source={StaticResource ResourceAccess}}" TextWrapping="Wrap" Tap="OnTwitterTap" Margin="0,8"></TextBlock>
-			</StackPanel>
-		</Grid>
+		<controls:Pivot Title="{Binding LocalizedStrings.ApplicationName, Source={StaticResource ResourceAccess}}">
+			<controls:PivotItem Header="{Binding LocalizedStrings.AboutPageTitle, Source={StaticResource ResourceAccess}}">
+				<ScrollViewer>
+				<Grid>
+					<StackPanel>
+						<StackPanel Orientation="Vertical">
+							<TextBlock Text="{Binding LocalizedStrings.AboutPageVersionInfo, Source={StaticResource ResourceAccess}}" TextWrapping="Wrap" Style="{StaticResource PhoneTextTitle2Style}" Margin="0"></TextBlock>
+							<TextBlock Text="{Binding Version}" TextWrapping="Wrap"></TextBlock>
+							<TextBlock Text="{Binding LocalizedStrings.AboutPageDisclaimer, Source={StaticResource ResourceAccess}}" TextWrapping="Wrap"></TextBlock>
+							<TextBlock Text="{Binding LocalizedStrings.AboutPageContactHeader, Source={StaticResource ResourceAccess}}" TextWrapping="Wrap" Style="{StaticResource PhoneTextTitle2Style}" Margin="0,12,0,0" />
+							<Grid>
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="*"/>
+									<ColumnDefinition Width="Auto"/>
+								</Grid.ColumnDefinitions>
+								<Grid.RowDefinitions>
+									<RowDefinition />
+									<RowDefinition />
+									<RowDefinition />
+									<RowDefinition />
+								</Grid.RowDefinitions>
+								<TextBlock Grid.Column="0" Grid.Row="0"
+									Text="{Binding LocalizedStrings.AboutPageContactViaMail, Source={StaticResource ResourceAccess}}" TextWrapping="Wrap" Tap="OnMailTap" Margin="0,8" VerticalAlignment="Center" />
+								<Button Grid.Column="1" Grid.Row="0"
+									Content="{Binding LocalizedStrings.AboutPageContactAddress, Source={StaticResource ResourceAccess}}" Tap="OnMailTap" />
+								<TextBlock Grid.Column="0" Grid.Row="1"
+									Text="{Binding LocalizedStrings.AboutPageContactViaTwitter, Source={StaticResource ResourceAccess}}" TextWrapping="Wrap" Tap="OnTwitterTap" Margin="0,8" VerticalAlignment="Center" />
+								<Button Grid.Column="1" Grid.Row="1" 
+									Content="{Binding LocalizedStrings.AboutPageContactTwitter, Source={StaticResource ResourceAccess}}" Tap="OnTwitterTap" />
+								<TextBlock Grid.Column="0" Grid.Row="2"
+									Text="{Binding LocalizedStrings.AboutPageContactViaStore, Source={StaticResource ResourceAccess}}" TextWrapping="Wrap" Tap="OnRateTap" Margin="0,8" VerticalAlignment="Center" />
+								<Button Grid.Column="1" Grid.Row="2" 
+									Content="{Binding LocalizedStrings.AboutPageRateThisApp, Source={StaticResource ResourceAccess}}" Tap="OnRateTap" />
+								<TextBlock Grid.Column="0" Grid.Row="3"
+									Text="{Binding LocalizedStrings.AboutPageContactViaUservoice, Source={StaticResource ResourceAccess}}" TextWrapping="Wrap" Margin="0,8" VerticalAlignment="Center" />
+								<Button Grid.Column="1" Grid.Row="3" 
+									Content="{Binding LocalizedStrings.AboutPageGotoUservoiceSite, Source={StaticResource ResourceAccess}}" Tap="OnGotoUservoiceTap" />
+							</Grid>
+						</StackPanel>
+					</StackPanel>
+				</Grid>
+				</ScrollViewer>
+			</controls:PivotItem>
+			<!--
+			<controls:PivotItem Header="{Binding LocalizedStrings.HelpPageTitle, Source={StaticResource ResourceAccess}}">
+				<Grid>
+					<StackPanel>
+						<TextBlock Text="{Binding LocalizedStrings.HelpPageMarkersHeading, Source={StaticResource ResourceAccess}}" Style="{StaticResource PhoneTextTitle2Style}" />
+					</StackPanel>
+				</Grid>	
+			</controls:PivotItem>
+			
+			<controls:PivotItem Header="change log" Visibility="Collapsed">
+				<Grid>
+					<StackPanel Orientation="Vertical">
+						
+					</StackPanel>
+				</Grid>
+			</controls:PivotItem>
+			-->
+		</controls:Pivot>
     </Grid>
- 
-  
 </phone:PhoneApplicationPage>

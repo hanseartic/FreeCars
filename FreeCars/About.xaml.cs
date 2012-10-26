@@ -71,5 +71,21 @@ namespace FreeCars {
 				return rdr.GetAttribute(attributeName);
 			}
 		}
+
+		private void OnRateTap(object sender, System.Windows.Input.GestureEventArgs e) {
+			try {
+				var marketplaceReviewTask = new MarketplaceReviewTask();
+				marketplaceReviewTask.Show();
+			} catch { }
+		}
+
+		private void OnGotoUservoiceTap(object sender, System.Windows.Input.GestureEventArgs e) {
+			try {
+				var webBrowserTask = new WebBrowserTask {
+					Uri = new Uri("http://hanseartic.uservoice.com/"),
+				};
+				webBrowserTask.Show();
+			} catch { }
+		}
 	}
 }

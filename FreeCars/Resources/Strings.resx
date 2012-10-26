@@ -187,7 +187,7 @@
     <value>About</value>
   </data>
   <data name="AboutPageTitle" xml:space="preserve">
-    <value>About</value>
+    <value>about</value>
   </data>
   <data name="ApplicationName" xml:space="preserve">
     <value>FreeCars</value>
@@ -196,7 +196,7 @@
     <value>warokartwork@gmail.com</value>
   </data>
   <data name="AboutPageContactHeader" xml:space="preserve">
-    <value>Contact:</value>
+    <value>Social</value>
   </data>
   <data name="AboutPageContactTwitter" xml:space="preserve">
     <value>@fraggedreality</value>
@@ -209,7 +209,7 @@ At the moment you cannot reserve cars via this app.
 Integration of car2go is in progress.</value>
   </data>
   <data name="AboutPageVersionInfo" xml:space="preserve">
-    <value>Version:</value>
+    <value>Version</value>
   </data>
   <data name="SettingsPageCallDrivenowHeader" xml:space="preserve">
     <value>Call Servicecenter</value>
@@ -228,5 +228,48 @@ Integration of car2go is in progress.</value>
   </data>
   <data name="SupportEmailSubject" xml:space="preserve">
     <value>Request regarding FreeCars (v {0}) for WP7</value>
+  </data>
+  <data name="SettingsPageBuyCaption" xml:space="preserve">
+    <value>Remove ads</value>
+  </data>
+  <data name="SettingsPageBuyText" xml:space="preserve">
+    <value>This app is funded by displaying ads.
+
+But you can easily get rid of the ads by purchasing FreeCars. Chose "ok" to open the store and buy FreeCars. Otherwise chose "cancel".
+
+You do not need to redownload FreeCars – after you bought FreeCars, the app is and will remain ad-free!</value>
+  </data>
+  <data name="ShowAds" xml:space="preserve">
+    <value>Display Ads</value>
+  </data>
+  <data name="AboutPageContactViaMail" xml:space="preserve">
+    <value>eMail:</value>
+  </data>
+  <data name="AboutPageContactViaTwitter" xml:space="preserve">
+    <value>Twitter:</value>
+  </data>
+  <data name="AboutPageRateThisApp" xml:space="preserve">
+    <value>Rate FreeCars</value>
+  </data>
+  <data name="AboutPageContactViaStore" xml:space="preserve">
+    <value>Store:</value>
+  </data>
+  <data name="HelpPageMarkersHeading" xml:space="preserve">
+    <value>Markers</value>
+  </data>
+  <data name="HelpPageTitle" xml:space="preserve">
+    <value>help</value>
+  </data>
+  <data name="AboutPageContactViaUservoice" xml:space="preserve">
+    <value>Uservoice:</value>
+  </data>
+  <data name="AboutPageGotoUservoiceSite" xml:space="preserve">
+    <value>Visit site</value>
+  </data>
+  <data name="AboutPageSendUservoiceRequest" xml:space="preserve">
+    <value>Stage report</value>
+  </data>
+  <data name="AboutPageUservoiceAddress" xml:space="preserve">
+    <value>http://hanseartic.uservoice.com</value>
   </data>
 </root>

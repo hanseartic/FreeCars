@@ -1,14 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
 using Microsoft.Phone.Controls;
 using System.IO.IsolatedStorage;
 using FreeCars.Resources;
@@ -22,7 +14,15 @@ namespace FreeCars {
             InitializeComponent();
 			LoadAppBar();
         }
-        
+		private void AppOnTrialModeChanged(object sender, EventArgs e) {
+			if (App.IsInTrialMode) {
+				ShowAdsToggleSwitch.Visibility = Visibility.Visible;
+			}
+		}
+		private void OnSettingsPageLoaded(object sender, RoutedEventArgs e) {
+			((App)App.Current).TrialModeChanged += AppOnTrialModeChanged;
+			AppOnTrialModeChanged(null, null);
+		}
         private void OnToggleSwitchChanged(ToggleSwitch sender) {
             sender.Content = true == sender.IsChecked
                 ? Strings.ToggleSwitchOn
@@ -50,11 +50,22 @@ namespace FreeCars {
             SaveToggleSwitch("settings_show_multicity_chargers", ((ToggleSwitch)sender).IsChecked);
             OnToggleSwitchChanged((ToggleSwitch)sender);
         }
-				private void OnDriveNowCarsToggleSwitchChanged(object sender, RoutedEventArgs e) {
-						SaveToggleSwitch("settings_show_drivenow_cars", ((ToggleSwitch)sender).IsChecked);
-						OnToggleSwitchChanged((ToggleSwitch)sender);
+		private void OnDriveNowCarsToggleSwitchChanged(object sender, RoutedEventArgs e) {
+				SaveToggleSwitch("settings_show_drivenow_cars", ((ToggleSwitch)sender).IsChecked);
+				OnToggleSwitchChanged((ToggleSwitch)sender);
+		}
+		private void OnShowAdsToggleSwitchChanged(object sender, RoutedEventArgs e) {
+			if (false == ((ToggleSwitch)sender).IsChecked) {
+				var buyAppNow = MessageBox.Show(Strings.SettingsPageBuyText, Strings.SettingsPageBuyCaption, MessageBoxButton.OKCancel);
+				if (MessageBoxResult.OK == buyAppNow) {
+					var mt = new MarketplaceDetailTask {
+						ContentType = MarketplaceContentType.Applications,
+					};
+					mt.Show();
 				}
-
+			}
+			OnToggleSwitchChanged((ToggleSwitch)sender);
+		}
         private void OnGPSToggleSwitchLoaded(object sender, RoutedEventArgs e) {
             try {
                 ((ToggleSwitch)sender).IsChecked = (true == (bool)IsolatedStorageSettings.ApplicationSettings["settings_use_GPS"]);
@@ -80,6 +91,10 @@ namespace FreeCars {
 					((ToggleSwitch)sender).IsChecked = (true == (bool)IsolatedStorageSettings.ApplicationSettings["settings_show_drivenow_cars"]);
 				} catch (KeyNotFoundException) { ((ToggleSwitch)sender).IsChecked = true; }
 				OnToggleSwitchChanged((ToggleSwitch)sender);
+		}
+		private void OnShowAdsToggleSwitchLoaded(object sender, RoutedEventArgs e) {
+			((ToggleSwitch)sender).IsChecked = App.IsInTrialMode;
+			OnToggleSwitchChanged((ToggleSwitch)sender);
 		}
         private void LoadAppBar() {
 			ApplicationBar = new ApplicationBar {
@@ -107,9 +122,7 @@ namespace FreeCars {
 					PhoneNumber = Strings.SettingsPageCallMulticityPhoneNumber,
 				};
 				callTask.Show();
-			} catch (Exception ex) {
-				return;
-			}
+			} catch {}
 		}
     }
 }

@@ -1,4 +1,4 @@
-﻿<phone:PhoneApplicationPage 
+﻿<phone:PhoneApplicationPage  
 	x:Class="FreeCars.MainPage"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -7,6 +7,8 @@
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:map="clr-namespace:Microsoft.Phone.Controls.Maps;assembly=Microsoft.Phone.Controls.Maps"
+	xmlns:adduplex="clr-namespace:AdDuplex;assembly=AdDuplex.WindowsPhone"
+	xmlns:my="clr-namespace:Microsoft.Advertising.Mobile.UI;assembly=Microsoft.Advertising.Mobile.UI"
 	mc:Ignorable="d" d:DesignWidth="480" d:DesignHeight="800"
 	FontFamily="{StaticResource PhoneFontFamilyNormal}"
 	FontSize="{StaticResource PhoneFontSizeNormal}"
@@ -19,7 +21,7 @@
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto" />
 			<RowDefinition Height="*" />
-			<RowDefinition Height="0" />
+			<RowDefinition Height="Auto" />
 		</Grid.RowDefinitions>
 		<Grid.Resources>
 			<ControlTemplate x:Key="MyPositionPushpinTemplate" TargetType="map:Pushpin">
@@ -36,13 +38,29 @@
                 <map:MapLayer x:Name="myLocationLayer">
                     <map:Pushpin x:Name="myLocationPushpin" Template="{StaticResource MyPositionPushpinTemplate}" Margin="-14, 0, -14, 0" Opacity="0.9"  Visibility="Collapsed"  />
                 </map:MapLayer>
-                <map:MapLayer x:Name="multicityCarsLayer"></map:MapLayer>
-                <map:MapLayer x:Name="multicityFlinksterLayer"></map:MapLayer>
-                <map:MapLayer x:Name="multicityChargingLayer"></map:MapLayer>
+				<map:MapLayer x:Name="multicityChargingLayer"></map:MapLayer>
+				<map:MapLayer x:Name="multicityFlinksterLayer"></map:MapLayer>
+				<map:MapLayer x:Name="multicityCarsLayer"></map:MapLayer>
                 <map:MapLayer x:Name="driveNowCarsLayer"></map:MapLayer>
                 <map:MapLayer x:Name="car2goCarsLayer"></map:MapLayer>
 				<map:MapLayer x:Name="activeLayer"></map:MapLayer>
             </map:Map>
+		</Grid>
+		<Grid x:Name="AdsGrid" Grid.Row="2" Visibility="Collapsed">
+			<adduplex:AdControl
+				x:Name="AdDuplexAdControl" Visibility="Visible" 
+				AppId="23411"
+				AdLoadingError="OnAdduplexAddControlErrorOccured"
+				AdLoaded="OnAdduplexAddControlAdRefreshed" 
+				RefreshInterval="30" />
+			<my:AdControl
+				x:Name="SDKAdControl" Visibility="Visible"
+				AdUnitId="10047728" ApplicationId="1e220ae2-a6af-4bb3-a0c8-919d80531e85"
+				ErrorOccurred="OnSDKAddControlErrorOccured" 
+				AdRefreshed="OnSDKAddControlAdRefreshed"
+				IsAutoRefreshEnabled="True"
+				IsAutoCollapseEnabled="True"
+				Height="80" Width="480" />
 		</Grid>
 	</Grid>
 </phone:PhoneApplicationPage>
