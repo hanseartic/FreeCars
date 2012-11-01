@@ -6,6 +6,8 @@ using System.IO.IsolatedStorage;
 using FreeCars.Resources;
 using Microsoft.Phone.Shell;
 using Microsoft.Phone.Tasks;
+using System.Threading;
+using System.Globalization;
 
 namespace FreeCars {
     public partial class SettingsPage : PhoneApplicationPage {
@@ -123,6 +125,38 @@ namespace FreeCars {
 				};
 				callTask.Show();
 			} catch {}
+		}
+
+		private void OnCallDriveNowTap(object sender, System.Windows.Input.GestureEventArgs e) {
+			try {
+				var callTask = new PhoneCallTask {
+					DisplayName = Strings.SettingsPageCallDrivenowPhoneName,
+					PhoneNumber = Strings.SettingsPageCallDrivenowPhoneNumber,
+				};
+				callTask.Show();
+			} catch { }
+		}
+
+		private void OnRedeemDrivenowPromoViaMailButtonTap(object sender, System.Windows.Input.GestureEventArgs e) {
+			try {
+				var promoCodeMailTask = new EmailComposeTask { 
+					Subject = "",
+					Body = "",
+				};
+				promoCodeMailTask.Show();
+			} catch { }
+		}
+
+		private void OnRedeemDrivenowPromoViaWebButtonTap(object sender, System.Windows.Input.GestureEventArgs e) {
+			try {
+				var lang = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.ToUpper == "DE"
+					? "de_DE"
+					: "en_US";
+				var promoCodeBrowserTask = new WebBrowserTask {
+					Uri = new Uri("https://de.drive-now.com/php/metropolis/registration?language=" + lang + "&L=2&prc=ZNEUATHQJA"),
+				};
+				promoCodeBrowserTask.Show();
+			} catch { }
 		}
     }
 }

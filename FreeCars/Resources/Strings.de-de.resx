@@ -215,7 +215,7 @@ Die Integration von car2go ist in Vorbereitung.</value>
     <value>Servicezentrale anrufen</value>
   </data>
   <data name="SettingsPageCallDrivenowPhoneNumber" xml:space="preserve">
-    <value />
+    <value>01804/29 29 29</value>
   </data>
   <data name="SettingsPageCallMulticityHeader" xml:space="preserve">
     <value>Servicezentrale anrufen</value>
@@ -272,5 +272,19 @@ Sie brauchen sie App nicht erneut herunterzuladen – nach dem Kauf ist und blei
   </data>
   <data name="AboutPageUservoiceAddress" xml:space="preserve">
     <value>http://hanseartic.uservoice.com</value>
+  </data>
+  <data name="SettingsPageCallDrivenowPhoneName" xml:space="preserve">
+    <value>DriveNow Servicezentrale</value>
+  </data>
+  <data name="SettingsPageRedeemDrivenowPromoCodeHeader" xml:space="preserve">
+    <value>Sparen Sie 19,– € Anmeldegebühren und erhalten Sie 15 Freiminuten mit dem folgenden PromoCode.
+
+ZNEUATHQJA</value>
+  </data>
+  <data name="SettingsPageRedeemDrivenowPromocodeMailButton" xml:space="preserve">
+    <value>PromoCode via Mail senden</value>
+  </data>
+  <data name="SettingsPageRedeemDrivenowPromocodeWebButton" xml:space="preserve">
+    <value>PromoCode online einlösen</value>
   </data>
 </root>

@@ -45,10 +45,13 @@
 				<Grid>
 					<StackPanel>
 						<toolkit:ToggleSwitch Header="{Binding LocalizedStrings.SettingsPageShowDriveNowCars, Source={StaticResource ResourceAccess}}" Checked="OnDriveNowCarsToggleSwitchChanged" Unchecked="OnDriveNowCarsToggleSwitchChanged" Loaded="OnDriveNowCarsToggleSwitchLoaded" Content="{Binding LocalizedStrings.ToggleSwitchOff, Source={StaticResource ResourceAccess}}" SwitchForeground="#FFB06909" />
-						<!--
 						<TextBlock Text="{Binding LocalizedStrings.SettingsPageCallDrivenowHeader, Source={StaticResource ResourceAccess}}" Tap="OnCallDriveNowTap" />
-						<TextBlock Text="{Binding LocalizedStrings.SettingsPageCallDrivenowPhoneNumber, Source={StaticResource ResourceAccess}}" Tap="OnCallDriveNowTap" />					
-					    -->
+						<TextBlock Text="{Binding LocalizedStrings.SettingsPageCallDrivenowPhoneNumber, Source={StaticResource ResourceAccess}}" Tap="OnCallDriveNowTap" />
+						<TextBlock Text="{Binding LocalizedStrings.SettingsPageRedeemDrivenowPromoCodeHeader, Source={StaticResource ResourceAccess}}" />
+						<StackPanel Orientation="Horizontal">
+							<Button Content="{Binding LocalizedStrings.SettingsPageRedeemDrivenowPromocodeMailButton, Source={StaticResource ResourceAccess}}" Tap="OnRedeemDrivenowPromoViaMailButtonTap"></Button>
+							<Button Content="{Binding LocalizedStrings.SettingsPageRedeemDrivenowPromocodeWebButton, Source={StaticResource ResourceAccess}}" Tap="OnRedeemDrivenowPromoViaWebButtonTap"></Button>
+						</StackPanel>
 					</StackPanel>
 				</Grid>
 			</controls:PivotItem>

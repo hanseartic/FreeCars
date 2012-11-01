@@ -215,13 +215,13 @@ Integration of car2go is in progress.</value>
     <value>Call Servicecenter</value>
   </data>
   <data name="SettingsPageCallDrivenowPhoneNumber" xml:space="preserve">
-    <value />
+    <value>+49 1804 29 29 29</value>
   </data>
   <data name="SettingsPageCallMulticityHeader" xml:space="preserve">
     <value>Call Servicecenter</value>
   </data>
   <data name="SettingsPageCallMulticityPhoneName" xml:space="preserve">
-    <value>Multicity Servicecenter</value>
+    <value>Multicity servicecenter</value>
   </data>
   <data name="SettingsPageCallMulticityPhoneNumber" xml:space="preserve">
     <value>+49 30 59 00 85 85</value>
@@ -271,5 +271,19 @@ You do not need to redownload FreeCars – after you bought FreeCars, the app is
   </data>
   <data name="AboutPageUservoiceAddress" xml:space="preserve">
     <value>http://hanseartic.uservoice.com</value>
+  </data>
+  <data name="SettingsPageCallDrivenowPhoneName" xml:space="preserve">
+    <value>DriveNow servicecenter</value>
+  </data>
+  <data name="SettingsPageRedeemDrivenowPromoCodeHeader" xml:space="preserve">
+    <value>Save 19,– € on the registration-fees and get 15 driving-minutes for free by using the following PromoCode in the registration-process for your DriveNow account.
+
+ZNEUATHQJA</value>
+  </data>
+  <data name="SettingsPageRedeemDrivenowPromocodeMailButton" xml:space="preserve">
+    <value>Send PromoCode via email</value>
+  </data>
+  <data name="SettingsPageRedeemDrivenowPromocodeWebButton" xml:space="preserve">
+    <value>Redeem PromoCode online</value>
   </data>
 </root>
