@@ -149,7 +149,7 @@ namespace FreeCars {
 
 		private void OnRedeemDrivenowPromoViaWebButtonTap(object sender, System.Windows.Input.GestureEventArgs e) {
 			try {
-				var lang = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.ToUpper == "DE"
+				var lang = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.ToUpper() == "DE"
 					? "de_DE"
 					: "en_US";
 				var promoCodeBrowserTask = new WebBrowserTask {

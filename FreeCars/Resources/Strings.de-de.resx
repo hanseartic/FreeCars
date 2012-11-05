@@ -193,7 +193,7 @@
     <value>FreeCars</value>
   </data>
   <data name="AboutPageContactAddress" xml:space="preserve">
-    <value>warokartwork@gmail.com</value>
+    <value>freecars@hanseartic.de</value>
   </data>
   <data name="AboutPageContactHeader" xml:space="preserve">
     <value>Feedback</value>
@@ -212,7 +212,7 @@ Die Integration von car2go ist in Vorbereitung.</value>
     <value>Version</value>
   </data>
   <data name="SettingsPageCallDrivenowHeader" xml:space="preserve">
-    <value>Servicezentrale anrufen</value>
+    <value>Servicezentrale anrufen (max. 42 ct./Minute)</value>
   </data>
   <data name="SettingsPageCallDrivenowPhoneNumber" xml:space="preserve">
     <value>01804/29 29 29</value>
@@ -227,7 +227,7 @@ Die Integration von car2go ist in Vorbereitung.</value>
     <value>030/59 00 85 85</value>
   </data>
   <data name="SupportEmailSubject" xml:space="preserve">
-    <value>Anfrage bzgl. FreeCars für WP7 (v {0})</value>
+    <value>Anfrage bzgl. FreeCars für WindowsPhone (v {0})</value>
   </data>
   <data name="SettingsPageBuyCaption" xml:space="preserve">
     <value>Werbung ausblenden</value>
@@ -277,15 +277,20 @@ Sie brauchen sie App nicht erneut herunterzuladen – nach dem Kauf ist und blei
     <value>DriveNow Servicezentrale</value>
   </data>
   <data name="SettingsPageRedeemDrivenowPromoCodeHeader" xml:space="preserve">
-    <value>Sparen Sie 19,– € Anmeldegebühren und erhalten Sie 15 Freiminuten mit dem folgenden PromoCode.
-
-ZNEUATHQJA</value>
+    <value>PromoCode</value>
   </data>
   <data name="SettingsPageRedeemDrivenowPromocodeMailButton" xml:space="preserve">
     <value>PromoCode via Mail senden</value>
   </data>
   <data name="SettingsPageRedeemDrivenowPromocodeWebButton" xml:space="preserve">
     <value>PromoCode online einlösen</value>
+  </data>
+  <data name="AboutPageContactText" xml:space="preserve">
+    <value>Ihre Meinung ist mir wichtig!
+
+Bitte nutzen Sie eine der folgenden Kontaktmöglichkeiten bei Kritik, Verbesserungsvorschlägen oder Änderungswünschen, statt eine schlechte Bewertung abzugeben.
+
+Jede Anfrage wird beantwortet!</value>
   </data>
   <data name="ChangelogPageBody" xml:space="preserve">
     <value>1.2:
@@ -306,5 +311,29 @@ ZNEUATHQJA</value>
   </data>
   <data name="ChangelogPageTitle" xml:space="preserve">
     <value>log</value>
+  </data>
+  <data name="DrivenowPromoCodeMailbody" xml:space="preserve">
+    <value>Vielen Dank für die Verwendung von FreeCars.
+
+Nutzen Sie den PromoCode (ZNEUATHQJA), und sparen Sie 19,– € Anmeldegebühren und erhalten Sie zusätzlich 15 Freiminuten.
+
+Jetzt bei DriveNow anmelden: 
+
+https://de.drive-now.com/php/metropolis/registration?language=de_DE&amp;L=2&amp;prc=ZNEUATHQJA
+
+</value>
+  </data>
+  <data name="DrivenowPromoCodeMailheader" xml:space="preserve">
+    <value>PromoCode für DriveNow</value>
+  </data>
+  <data name="MainMenuAboutAppItemText" xml:space="preserve">
+    <value>Über FreeCars</value>
+  </data>
+  <data name="SettingsPageRedeemDrivenowPromoCodeText" xml:space="preserve">
+    <value>Sparen Sie 19,– € Anmeldegebühren und erhalten Sie zusätzlich 15 Freiminuten mit dem folgenden PromoCode:
+
+ZNEUATHQJA
+
+Einmalige Anmeldegebühr 9,98 € statt 29,– €</value>
   </data>
 </root>

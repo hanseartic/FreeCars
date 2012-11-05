@@ -36,24 +36,27 @@
                     <StackPanel>
                         <toolkit:ToggleSwitch Header="{Binding LocalizedStrings.SettingsPageShowMulticityCars, Source={StaticResource ResourceAccess}}" Checked="OnMulticityCarsToggleSwitchChanged" Unchecked="OnMulticityCarsToggleSwitchChanged" Loaded="OnMulticityCarsToggleSwitchLoaded" Content="{Binding LocalizedStrings.ToggleSwitchOff, Source={StaticResource ResourceAccess}}" SwitchForeground="Red" />
 						<toolkit:ToggleSwitch Header="{Binding LocalizedStrings.SettingsPageShowMulticityChargers, Source={StaticResource ResourceAccess}}" Checked="OnMulticityChargersToggleSwitchChanged" Unchecked="OnMulticityChargersToggleSwitchChanged" Loaded="OnMulticityChargersToggleSwitchLoaded" Content="{Binding LocalizedStrings.ToggleSwitchOff, Source={StaticResource ResourceAccess}}" SwitchForeground="Blue" />
-						<TextBlock Text="{Binding LocalizedStrings.SettingsPageCallMulticityHeader, Source={StaticResource ResourceAccess}}" Tap="OnCallMulticityTap" />
+						<TextBlock Text="{Binding LocalizedStrings.SettingsPageCallMulticityHeader, Source={StaticResource ResourceAccess}}" Tap="OnCallMulticityTap" Style="{StaticResource PhoneTextTitle3Style}" Margin="0" />
 						<TextBlock Text="{Binding LocalizedStrings.SettingsPageCallMulticityPhoneNumber, Source={StaticResource ResourceAccess}}" Style="{StaticResource PhoneTextTitle2Style}" Margin="0" Tap="OnCallMulticityTap" />
 					</StackPanel>
                 </Grid>
             </controls:PivotItem>
 			<controls:PivotItem Header="{Binding LocalizedStrings.SettingsDriveNowTitle, Source={StaticResource ResourceAccess}}">
-				<Grid>
-					<StackPanel>
-						<toolkit:ToggleSwitch Header="{Binding LocalizedStrings.SettingsPageShowDriveNowCars, Source={StaticResource ResourceAccess}}" Checked="OnDriveNowCarsToggleSwitchChanged" Unchecked="OnDriveNowCarsToggleSwitchChanged" Loaded="OnDriveNowCarsToggleSwitchLoaded" Content="{Binding LocalizedStrings.ToggleSwitchOff, Source={StaticResource ResourceAccess}}" SwitchForeground="#FFB06909" />
-						<TextBlock Text="{Binding LocalizedStrings.SettingsPageCallDrivenowHeader, Source={StaticResource ResourceAccess}}" Tap="OnCallDriveNowTap" />
-						<TextBlock Text="{Binding LocalizedStrings.SettingsPageCallDrivenowPhoneNumber, Source={StaticResource ResourceAccess}}" Tap="OnCallDriveNowTap" />
-						<TextBlock Text="{Binding LocalizedStrings.SettingsPageRedeemDrivenowPromoCodeHeader, Source={StaticResource ResourceAccess}}" />
-						<StackPanel Orientation="Horizontal">
-							<Button Content="{Binding LocalizedStrings.SettingsPageRedeemDrivenowPromocodeMailButton, Source={StaticResource ResourceAccess}}" Tap="OnRedeemDrivenowPromoViaMailButtonTap"></Button>
-							<Button Content="{Binding LocalizedStrings.SettingsPageRedeemDrivenowPromocodeWebButton, Source={StaticResource ResourceAccess}}" Tap="OnRedeemDrivenowPromoViaWebButtonTap"></Button>
+				<ScrollViewer>
+					<Grid>
+						<StackPanel Margin="0,8">
+							<toolkit:ToggleSwitch Header="{Binding LocalizedStrings.SettingsPageShowDriveNowCars, Source={StaticResource ResourceAccess}}" Checked="OnDriveNowCarsToggleSwitchChanged" Unchecked="OnDriveNowCarsToggleSwitchChanged" Loaded="OnDriveNowCarsToggleSwitchLoaded" Content="{Binding LocalizedStrings.ToggleSwitchOff, Source={StaticResource ResourceAccess}}" SwitchForeground="#FFB06909" />
+							<TextBlock Text="{Binding LocalizedStrings.SettingsPageCallDrivenowHeader, Source={StaticResource ResourceAccess}}" Tap="OnCallDriveNowTap"  Style="{StaticResource PhoneTextTitle3Style}" Margin="0" />
+							<TextBlock Text="{Binding LocalizedStrings.SettingsPageCallDrivenowPhoneNumber, Source={StaticResource ResourceAccess}}" Tap="OnCallDriveNowTap" Style="{StaticResource PhoneTextTitle2Style}" Margin="0"/>
+							<TextBlock Text="{Binding LocalizedStrings.SettingsPageRedeemDrivenowPromoCodeHeader, Source={StaticResource ResourceAccess}}" Style="{StaticResource PhoneTextTitle3Style}" Margin="0,8" />
+							<TextBlock Text="{Binding LocalizedStrings.SettingsPageRedeemDrivenowPromoCodeText, Source={StaticResource ResourceAccess}}" TextWrapping="Wrap" />
+							<StackPanel Orientation="Vertical">
+								<Button Content="{Binding LocalizedStrings.SettingsPageRedeemDrivenowPromocodeWebButton, Source={StaticResource ResourceAccess}}" Tap="OnRedeemDrivenowPromoViaWebButtonTap"></Button>
+								<Button Content="{Binding LocalizedStrings.SettingsPageRedeemDrivenowPromocodeMailButton, Source={StaticResource ResourceAccess}}" Tap="OnRedeemDrivenowPromoViaMailButtonTap"></Button>
+							</StackPanel>
 						</StackPanel>
-					</StackPanel>
-				</Grid>
+					</Grid>
+				</ScrollViewer>
 			</controls:PivotItem>
 		</controls:Pivot>
     </Grid>
