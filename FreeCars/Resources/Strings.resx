@@ -166,7 +166,7 @@
     <value>Show Multicity cars</value>
   </data>
   <data name="SettingsPageShowMulticityChargers" xml:space="preserve">
-    <value>Show electrical chargin terminals</value>
+    <value>Show electrical charging terminals</value>
   </data>
   <data name="MainPageBarReload" xml:space="preserve">
     <value>Refresh</value>
@@ -212,22 +212,22 @@ Integration of car2go is in progress.</value>
     <value>Version</value>
   </data>
   <data name="SettingsPageCallDrivenowHeader" xml:space="preserve">
-    <value>Call Servicecenter</value>
+    <value>Call the servicecenter</value>
   </data>
   <data name="SettingsPageCallDrivenowPhoneNumber" xml:space="preserve">
-    <value />
+    <value>+49 1804 29 29 29</value>
   </data>
   <data name="SettingsPageCallMulticityHeader" xml:space="preserve">
-    <value>Call Servicecenter</value>
+    <value>Call the servicecenter</value>
   </data>
   <data name="SettingsPageCallMulticityPhoneName" xml:space="preserve">
-    <value>Multicity Servicecenter</value>
+    <value>Multicity servicecenter</value>
   </data>
   <data name="SettingsPageCallMulticityPhoneNumber" xml:space="preserve">
     <value>+49 30 59 00 85 85</value>
   </data>
   <data name="SupportEmailSubject" xml:space="preserve">
-    <value>Request regarding FreeCars (v {0}) for WP7</value>
+    <value>Request regarding FreeCars (v {0}) for WindowsPhone</value>
   </data>
   <data name="SettingsPageBuyCaption" xml:space="preserve">
     <value>Remove ads</value>
@@ -271,5 +271,68 @@ You do not need to redownload FreeCars – after you bought FreeCars, the app is
   </data>
   <data name="AboutPageUservoiceAddress" xml:space="preserve">
     <value>http://hanseartic.uservoice.com</value>
+  </data>
+  <data name="SettingsPageCallDrivenowPhoneName" xml:space="preserve">
+    <value>DriveNow servicecenter</value>
+  </data>
+  <data name="SettingsPageRedeemDrivenowPromocodeMailButton" xml:space="preserve">
+    <value>Send PromoCode via email</value>
+  </data>
+  <data name="SettingsPageRedeemDrivenowPromocodeWebButton" xml:space="preserve">
+    <value>Redeem PromoCode online</value>
+  </data>
+  <data name="AboutPageContactText" xml:space="preserve">
+    <value>Your opinion counts!
+
+Please use one of the following options to get in touch with me for critics, suggestions or proposed changes instead of a low rating.
+
+I will answer every request!</value>
+  </data>
+  <data name="ChangelogPageBody" xml:space="preserve">
+    <value>1.2:
+* linked 'About' in main-menu
+* new feedback email-address 
+* changelog
+* phone number of DriveNow service-center
+* DriveNow PromoCode
+
+1.1:
+* links to uservoice-Feedback
+* changed colors of pushpins
+* phone number of multicity service-center
+* new splashscreen
+
+1.0:
+* Show available cars of DriveNow and multicity on the map</value>
+  </data>
+  <data name="ChangelogPageTitle" xml:space="preserve">
+    <value>changelog</value>
+  </data>
+  <data name="DrivenowPromoCodeMailbody" xml:space="preserve">
+    <value>Thank you very much for using FreeCars.
+
+Use the promotion code (ZNEUATHQJA) and save 19,– € on the registration-fees and get credited with 15 driving-minutes.
+
+Sign up to DriveNow: 
+
+https://de.drive-now.com/php/metropolis/registration?language=en_US&amp;L=2&amp;prc=ZNEUATHQJA
+
+</value>
+  </data>
+  <data name="DrivenowPromoCodeMailheader" xml:space="preserve">
+    <value>PromoCode for DriveNow</value>
+  </data>
+  <data name="MainMenuAboutAppItemText" xml:space="preserve">
+    <value>About FreeCars</value>
+  </data>
+  <data name="SettingsPageRedeemDrivenowPromoCodeHeader" xml:space="preserve">
+    <value>PromoCode</value>
+  </data>
+  <data name="SettingsPageRedeemDrivenowPromoCodeText" xml:space="preserve">
+    <value>Save 19,– € on the registration fees by using the following promotion-code and get 15 driving-minutes:
+
+ZNEUATHQJA
+
+Pay only 9,98 € instead of 29,– € on the registration and get credited with 15 driving-minutes by using the PromoCode.</value>
   </data>
 </root>
