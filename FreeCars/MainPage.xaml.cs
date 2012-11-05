@@ -104,10 +104,17 @@ namespace FreeCars {
 				Text = FreeCars.Resources.Strings.MainPageBarReload,
 			};
 			mainPageApplicationBarReloadButton.Click += OnMainPageApplicationBarReloadButtonClick;
+			var mainPageApplicationBarAboutMenuItem = new ApplicationBarMenuItem {
+				Text = FreeCars.Resources.Strings.MainMenuAboutAppItemText,
+			};
+			mainPageApplicationBarAboutMenuItem.Click += OnMainPageApplicationBarAboutMenuItemClick;
+
 
 			ApplicationBar.Buttons.Add(mainPageApplicationBarCentermeButton);
 			ApplicationBar.Buttons.Add(mainPageApplicationBarReloadButton);
 			ApplicationBar.Buttons.Add(mainPageApplicationBarSettingsButton);
+			ApplicationBar.MenuItems.Add(mainPageApplicationBarAboutMenuItem);
+
 		}
 
 		void OnMainPageApplicationBarCentermeButtonClick(object sender, EventArgs e) {
@@ -120,6 +127,9 @@ namespace FreeCars {
 		}
 		void OnMainPageApplicationBarReloadButtonClick(object sender, EventArgs e) {
 			((App)Application.Current).ReloadPOIs();
+		}
+		void OnMainPageApplicationBarAboutMenuItemClick(object sender, EventArgs e) {
+			NavigationService.Navigate(new Uri("/About.xaml", UriKind.RelativeOrAbsolute));
 		}
 		void OnMyPositionChanged(object sender, GeoPositionChangedEventArgs<GeoCoordinate> e) {
 			if (GeoPositionStatus.Ready != ((GeoCoordinateWatcher)sender).Status) return;
