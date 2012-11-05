@@ -27,6 +27,7 @@
 							<TextBlock Text="{Binding Version}" TextWrapping="Wrap"></TextBlock>
 							<TextBlock Text="{Binding LocalizedStrings.AboutPageDisclaimer, Source={StaticResource ResourceAccess}}" TextWrapping="Wrap"></TextBlock>
 							<TextBlock Text="{Binding LocalizedStrings.AboutPageContactHeader, Source={StaticResource ResourceAccess}}" TextWrapping="Wrap" Style="{StaticResource PhoneTextTitle2Style}" Margin="0,12,0,0" />
+							<TextBlock Text="{Binding LocalizedStrings.AboutPageContactText, Source={StaticResource ResourceAccess}}" TextWrapping="Wrap" />
 							<Grid>
 								<Grid.ColumnDefinitions>
 									<ColumnDefinition Width="*"/>
@@ -60,6 +61,15 @@
 				</Grid>
 				</ScrollViewer>
 			</controls:PivotItem>
+			<controls:PivotItem Header="{Binding LocalizedStrings.ChangelogPageTitle, Source={StaticResource ResourceAccess}}" Visibility="Collapsed">
+				<ScrollViewer>
+					<Grid>
+						<StackPanel Orientation="Vertical">
+							<TextBlock Text="{Binding LocalizedStrings.ChangelogPageBody, Source={StaticResource ResourceAccess}}" TextWrapping="Wrap" />	
+						</StackPanel>
+					</Grid>
+				</ScrollViewer>
+			</controls:PivotItem>
 			<!--
 			<controls:PivotItem Header="{Binding LocalizedStrings.HelpPageTitle, Source={StaticResource ResourceAccess}}">
 				<Grid>
@@ -69,13 +79,7 @@
 				</Grid>	
 			</controls:PivotItem>
 			
-			<controls:PivotItem Header="change log" Visibility="Collapsed">
-				<Grid>
-					<StackPanel Orientation="Vertical">
-						
-					</StackPanel>
-				</Grid>
-			</controls:PivotItem>
+
 			-->
 		</controls:Pivot>
     </Grid>

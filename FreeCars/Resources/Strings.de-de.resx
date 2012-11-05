@@ -287,4 +287,24 @@ ZNEUATHQJA</value>
   <data name="SettingsPageRedeemDrivenowPromocodeWebButton" xml:space="preserve">
     <value>PromoCode online einlösen</value>
   </data>
+  <data name="ChangelogPageBody" xml:space="preserve">
+    <value>1.2:
+* About im Hauptmenü verlinkt
+* Neue Kontakt-E-Mail-Adresse
+* changelog
+* Rufnummer der DriveNow-Servicezentrale
+* DriveNow PromoCode
+
+1.1:
+* Links zu Uservoice-Feedback
+* Farben der Pushpins angepasst
+* Rufnummer multicity-Servicezentrale
+* Neuer Splash-Screen
+
+1.0:
+* Freie Fahrzeuge von DriveNow und multicity auf der Karte anzeigen</value>
+  </data>
+  <data name="ChangelogPageTitle" xml:space="preserve">
+    <value>log</value>
+  </data>
 </root>
