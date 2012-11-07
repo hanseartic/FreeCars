@@ -56,6 +56,10 @@ namespace FreeCars {
 				SaveToggleSwitch("settings_show_drivenow_cars", ((ToggleSwitch)sender).IsChecked);
 				OnToggleSwitchChanged((ToggleSwitch)sender);
 		}
+		private void OnCar2GoCarsToggleSwitchChanged(object sender, RoutedEventArgs e) {
+			SaveToggleSwitch("settings_show_car2go_cars", ((ToggleSwitch)sender).IsChecked);
+			OnToggleSwitchChanged((ToggleSwitch)sender);
+		}
 		private void OnShowAdsToggleSwitchChanged(object sender, RoutedEventArgs e) {
 			if (false == ((ToggleSwitch)sender).IsChecked) {
 				var buyAppNow = MessageBox.Show(Strings.SettingsPageBuyText, Strings.SettingsPageBuyCaption, MessageBoxButton.OKCancel);
@@ -74,20 +78,24 @@ namespace FreeCars {
             } catch (KeyNotFoundException) { }
             OnToggleSwitchChanged((ToggleSwitch)sender);
         }
+		private void OnCar2GoCarsToggleSwitchLoaded(object sender, RoutedEventArgs e) {
+			try {
+				((ToggleSwitch)sender).IsChecked = (true == (bool)IsolatedStorageSettings.ApplicationSettings["settings_show_car2go_cars"]);
+			} catch (KeyNotFoundException) { ((ToggleSwitch)sender).IsChecked = true; }
+			OnToggleSwitchChanged((ToggleSwitch)sender);
+		}
         private void OnMulticityCarsToggleSwitchLoaded(object sender, RoutedEventArgs e) {
             try {
                 ((ToggleSwitch)sender).IsChecked = (true == (bool)IsolatedStorageSettings.ApplicationSettings["settings_show_multicity_cars"]);
             } catch (KeyNotFoundException) { ((ToggleSwitch)sender).IsChecked = true; }
             OnToggleSwitchChanged((ToggleSwitch)sender);
         }
-
         private void OnMulticityChargersToggleSwitchLoaded(object sender, RoutedEventArgs e) {
             try {
                 ((ToggleSwitch)sender).IsChecked = (true == (bool)IsolatedStorageSettings.ApplicationSettings["settings_show_multicity_chargers"]);
             } catch (KeyNotFoundException) { ((ToggleSwitch)sender).IsChecked = true;  }
             OnToggleSwitchChanged((ToggleSwitch)sender);
         }
-
 		private void OnDriveNowCarsToggleSwitchLoaded(object sender, RoutedEventArgs e) {
 				try {
 					((ToggleSwitch)sender).IsChecked = (true == (bool)IsolatedStorageSettings.ApplicationSettings["settings_show_drivenow_cars"]);

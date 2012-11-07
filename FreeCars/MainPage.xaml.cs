@@ -313,6 +313,7 @@ namespace FreeCars {
 					var pushpin = new Pushpin {
 						Location = car.position,
 						Background =  car2GoCarsBrush,
+						Opacity = .6,
 					};
 					car2goCarsLayer.Children.Add(pushpin);
 				} catch { }
