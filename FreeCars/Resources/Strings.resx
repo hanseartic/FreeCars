@@ -193,7 +193,7 @@
     <value>FreeCars</value>
   </data>
   <data name="AboutPageContactAddress" xml:space="preserve">
-    <value>warokartwork@gmail.com</value>
+    <value>freecars@hanseartic.de</value>
   </data>
   <data name="AboutPageContactHeader" xml:space="preserve">
     <value>Social</value>
@@ -334,5 +334,11 @@ https://de.drive-now.com/php/metropolis/registration?language=en_US&amp;L=2&amp;
 ZNEUATHQJA
 
 Pay only 9,98 € instead of 29,– € on the registration and get credited with 15 driving-minutes by using the PromoCode.</value>
+  </data>
+  <data name="SettingsCar2goTitle" xml:space="preserve">
+    <value>car2go</value>
+  </data>
+  <data name="SettingsPageShowCar2goCars" xml:space="preserve">
+    <value>Show cars</value>
   </data>
 </root>

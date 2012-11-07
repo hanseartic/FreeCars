@@ -336,4 +336,10 @@ ZNEUATHQJA
 
 Einmalige Anmeldegebühr 9,98 € statt 29,– €</value>
   </data>
+  <data name="SettingsCar2goTitle" xml:space="preserve">
+    <value>car2go</value>
+  </data>
+  <data name="SettingsPageShowCar2goCars" xml:space="preserve">
+    <value>car2go Fahrzeuge anzeigen</value>
+  </data>
 </root>

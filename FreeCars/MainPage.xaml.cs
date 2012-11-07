@@ -158,6 +158,9 @@ namespace FreeCars {
 			if (sender.GetType() == typeof(DriveNow)) {
 				UpdateDriveNowLayer((DriveNow)sender);
 			}
+			if (sender.GetType() == typeof(Car2Go)) {
+				UpdateCar2GoLayer((Car2Go)sender);
+			}
 		}
 		void UpdateDriveNowLayer(DriveNow driveNow) {
 			var centerLocation = map.Center;
@@ -295,6 +298,25 @@ namespace FreeCars {
 				} catch (ArgumentException) { }
 			}
 
+		}
+		void UpdateCar2GoLayer(Car2Go car2Go) {
+			var usCultureInfo = new CultureInfo("en-US");
+			var car2GoCarsBrush = new SolidColorBrush(new Color() {A = 255, R = 0, G = 159, B = 228,});
+			var centerLocation = map.Center;
+			car2goCarsLayer.Children.Clear();
+			foreach (var car in car2Go.Car2GoCars) {
+				try {
+					var distanceToMapCenter = (int)car.position.GetDistanceTo(centerLocation);
+
+					if (1500 < distanceToMapCenter) continue;
+
+					var pushpin = new Pushpin {
+						Location = car.position,
+						Background =  car2GoCarsBrush,
+					};
+					car2goCarsLayer.Children.Add(pushpin);
+				} catch { }
+			}
 		}
 		void OnPushpinTap(object sender, System.Windows.Input.GestureEventArgs e) {
 			if (null != ((Pushpin)sender).Tag && typeof(MulticityChargerMarker) == ((Pushpin)sender).Tag.GetType()) return;

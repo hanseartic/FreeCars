@@ -81,6 +81,11 @@ namespace FreeCars {
 			driveNow.Updated += OnLayerUpdated;
 			driveNow.LoadPOIs();
 			this.Resources.Add("driveNow", driveNow);
+
+	        var car2Go = new Car2Go();
+	        car2Go.Updated += OnLayerUpdated;
+			car2Go.LoadPOIs();
+			this.Resources.Add("car2go", car2Go);
         }
         private void OnLayerUpdated(object sender, EventArgs e) {
             TriggerCarsUpdated(sender);
@@ -94,7 +99,7 @@ namespace FreeCars {
 					TriggerCarsUpdated(Resources["driveNow"] as DriveNow);
 			} catch { }
 			try {
-					//TriggerCarsUpdated(Resources["car2go"] as Car2Go);
+					TriggerCarsUpdated(Resources["car2go"] as Car2Go);
 			} catch { }
 		}
 		public void ReloadPOIs() {
@@ -105,7 +110,7 @@ namespace FreeCars {
 					(Resources["driveNow"] as DriveNow).LoadPOIs();
 			} catch { }
 			try {
-					//(Resources["car2go"] as Car2Go).LoadPOIs();
+					(Resources["car2go"] as Car2Go).LoadPOIs();
 			} catch { }
 		}
         public event EventHandler CarsUpdated;
