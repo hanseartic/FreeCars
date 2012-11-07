@@ -293,7 +293,11 @@ Bitte nutzen Sie eine der folgenden Kontaktmöglichkeiten bei Kritik, Verbesseru
 Jede Anfrage wird beantwortet!</value>
   </data>
   <data name="ChangelogPageBody" xml:space="preserve">
-    <value>1.2:
+    <value>1.3:
+* Unterstützung für car2go
+* Performance-Verbesserungen in der Map
+
+1.2:
 * About im Hauptmenü verlinkt
 * Neue Kontakt-E-Mail-Adresse
 * changelog

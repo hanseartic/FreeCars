@@ -289,7 +289,11 @@ Please use one of the following options to get in touch with me for critics, sug
 I will answer every request!</value>
   </data>
   <data name="ChangelogPageBody" xml:space="preserve">
-    <value>1.2:
+    <value>1.3:
+* supports car2go by now
+* improve map-performance
+
+1.2:
 * linked 'About' in main-menu
 * new feedback email-address 
 * changelog
