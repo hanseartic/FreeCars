@@ -165,13 +165,9 @@ namespace FreeCars {
 			var driveNowBrush = new SolidColorBrush(new Color { A = 255, R = 176, G = 105, B = 9 });
 			driveNowCarsLayer.Children.Clear();
 			foreach (var car in driveNow.DriveNowCars) {
-				var coordinate = new GeoCoordinate(
-						Double.Parse(car.position.latitude, cultureInfo.NumberFormat),
-						Double.Parse(car.position.longitude, cultureInfo.NumberFormat)
-				);
-				var distanceToMapCenter = (int)coordinate.GetDistanceTo(centerLocation);
+				var distanceToMapCenter = (int)car.position.GetDistanceTo(centerLocation);
 				if (1500 < distanceToMapCenter) continue;
-				var distance = (int)coordinate.GetDistanceTo(myLocationPushpin.Location);
+				var distance = (int)car.position.GetDistanceTo(myLocationPushpin.Location);
 				var pushpinContent = new Border {
 					Child = new StackPanel {
 						Orientation = System.Windows.Controls.Orientation.Vertical,
@@ -193,7 +189,7 @@ namespace FreeCars {
 					Visibility = Visibility.Collapsed,
 				};
 				var pushpin = new Pushpin {
-					Location = coordinate,
+					Location = car.position,
 					Name = car.licensePlate,
 					Background = driveNowBrush,
 					Opacity = .6,
@@ -211,16 +207,13 @@ namespace FreeCars {
 			var centerLocation = map.Center;
 			var cultureInfo = new CultureInfo("en-US");
 			var multcityCarsBrush = new SolidColorBrush(Colors.Red);
-			var multcityChargersBrush = new SolidColorBrush(Colors.Blue);
+			var multcityChargersBrush = new SolidColorBrush(Colors.Green);
 			multicityCarsLayer.Children.Clear();
 			var tempList = new List<Pushpin>();
 			foreach (var car in multicity.MulticityCars) {
 				try {
-					var coordinate = new GeoCoordinate(
-							Double.Parse(car.lat, cultureInfo.NumberFormat),
-							Double.Parse(car.lng, cultureInfo.NumberFormat));
-					var distanceToMapCenter = (int)coordinate.GetDistanceTo(centerLocation);
-					var fuelTextBlock = new TextBlock { Text = (null != car.fuelState && "" != car.fuelState) ? car.fuelState + "%" : "", };
+					var distanceToMapCenter = (int)car.position.GetDistanceTo(centerLocation);
+					var fuelTextBlock = new TextBlock { Text = !string.IsNullOrEmpty(car.fuelState) ? car.fuelState + "%" : "", };
 
 					if (1500 < distanceToMapCenter) continue;
 
@@ -257,7 +250,7 @@ namespace FreeCars {
 						Visibility = Visibility.Collapsed,
 					};
 					var pushpin = new Pushpin() {
-						Location = coordinate,
+						Location = car.position,
 						Name = car.hal2option.tooltip,
 						Opacity = .6,
 						Background = multcityCarsBrush,

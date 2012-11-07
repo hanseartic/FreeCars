@@ -15,9 +15,9 @@ namespace FreeCars {
     [DataContract]
     public class MulticityMarker : Marker {
         [DataMember(Name = "lat")]
-        public String lat { get; set; }
+        public new String lat { get; set; }
         [DataMember(Name = "lng")]
-        public String lng { get; set; }
+        public new String lng { get; set; }
         [DataMember(Name = "iconName")]
         public String iconName { get; set; }
         [DataMember(Name = "hal2option")]

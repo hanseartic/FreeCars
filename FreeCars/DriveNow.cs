@@ -61,8 +61,14 @@ namespace FreeCars {
 					var driveNowData = (DriveNowData)serializer.ReadObject(e.Result);
 					var drivenow_cars = new List<DriveNowCarInformation>();
 					Regex replaceMultipleSpaceWithOnlyOneSpaceRegex = new Regex(@"[ ]{2,}", RegexOptions.None);
+					var usCultureInfo = new CultureInfo("en-US");
 					foreach (var car in driveNowData.rec.vehicles.vehicles) {
 						car.licensePlate = replaceMultipleSpaceWithOnlyOneSpaceRegex.Replace(car.licensePlate, @" ").Replace(" -", "-");
+						try {
+							car.position = new GeoCoordinate(
+								double.Parse(car.dn_position.latitude, usCultureInfo.NumberFormat), 
+								double.Parse(car.dn_position.longitude, usCultureInfo.NumberFormat));
+						} catch {}
 						drivenow_cars.Add(car);
 					}
 					DriveNowCars = drivenow_cars;
