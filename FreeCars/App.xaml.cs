@@ -10,6 +10,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Xml;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using System.IO;
@@ -86,7 +87,12 @@ namespace FreeCars {
 	        car2Go.Updated += OnLayerUpdated;
 			car2Go.LoadPOIs();
 			this.Resources.Add("car2go", car2Go);
+			StartFlurry();
         }
+		private void StartFlurry() {
+			FlurryWP7SDK.Api.SetVersion(GetAppAttribute("Version"));
+			FlurryWP7SDK.Api.StartSession("QSJ5BJB37BNTT862WT8G");
+		}
         private void OnLayerUpdated(object sender, EventArgs e) {
             TriggerCarsUpdated(sender);
         }
@@ -119,6 +125,7 @@ namespace FreeCars {
         // This code will not execute when the application is first launched
         private void Application_Activated(object sender, ActivatedEventArgs e) {
 			ValidateTrialMode();
+			StartFlurry();
         }
 		private void TriggerCarsUpdated(object sender) {
 			if (null != CarsUpdated) {
