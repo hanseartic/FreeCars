@@ -345,4 +345,7 @@ Pay only 9,98 € instead of 29,– € on the registration and get credited wit
   <data name="SettingsPageShowCar2goCars" xml:space="preserve">
     <value>Show cars</value>
   </data>
+  <data name="SettingsPageCallDrivenowPhoneNumberToDial" xml:space="preserve">
+    <value>+49 800 723 40 70</value>
+  </data>
 </root>

@@ -108,7 +108,7 @@ namespace FreeCars {
 		}
         private void LoadAppBar() {
 			ApplicationBar = new ApplicationBar {
-				Mode = ApplicationBarMode.Default,
+				Mode = ApplicationBarMode.Minimized,
 				Opacity = 0.8,
 				IsVisible = true,
 				IsMenuEnabled = false,
@@ -139,7 +139,7 @@ namespace FreeCars {
 			try {
 				var callTask = new PhoneCallTask {
 					DisplayName = Strings.SettingsPageCallDrivenowPhoneName,
-					PhoneNumber = Strings.SettingsPageCallDrivenowPhoneNumber,
+					PhoneNumber = Strings.SettingsPageCallDrivenowPhoneNumberToDial,
 				};
 				callTask.Show();
 			} catch { }

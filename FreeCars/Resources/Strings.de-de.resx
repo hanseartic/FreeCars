@@ -212,7 +212,7 @@ Die Integration von car2go ist in Vorbereitung.</value>
     <value>Version</value>
   </data>
   <data name="SettingsPageCallDrivenowHeader" xml:space="preserve">
-    <value>Servicezentrale anrufen (max. 42 ct./Minute)</value>
+    <value>Servicezentrale anrufen</value>
   </data>
   <data name="SettingsPageCallDrivenowPhoneNumber" xml:space="preserve">
     <value>01804/29 29 29</value>
@@ -345,5 +345,8 @@ Einmalige Anmeldegebühr 9,98 € statt 29,– €</value>
   </data>
   <data name="SettingsPageShowCar2goCars" xml:space="preserve">
     <value>car2go Fahrzeuge anzeigen</value>
+  </data>
+  <data name="SettingsPageCallDrivenowPhoneNumberToDial" xml:space="preserve">
+    <value>0800/72 340 70</value>
   </data>
 </root>
