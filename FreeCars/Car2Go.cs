@@ -64,6 +64,7 @@ namespace FreeCars {
 								double.Parse(car.coordinates[0], usCultureInfo.NumberFormat));
 						} catch {}
 						var carInfo = new Car2GoInformation {
+							model = "Smart ForTwo",
 							fuelState = car.fuel,
 						    position = carPosition,
              				licensePlate = car.name,

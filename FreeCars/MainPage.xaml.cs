@@ -301,7 +301,7 @@ namespace FreeCars {
 		}
 		void UpdateCar2GoLayer(Car2Go car2Go) {
 			var usCultureInfo = new CultureInfo("en-US");
-			var car2GoCarsBrush = new SolidColorBrush(new Color() {A = 255, R = 0, G = 159, B = 228,});
+			var car2GoCarsBrush = new SolidColorBrush(new Color {A = 255, R = 0, G = 159, B = 228,});
 			var centerLocation = map.Center;
 			car2goCarsLayer.Children.Clear();
 			foreach (var car in car2Go.Car2GoCars) {
@@ -309,13 +309,35 @@ namespace FreeCars {
 					var distanceToMapCenter = (int)car.position.GetDistanceTo(centerLocation);
 
 					if (1500 < distanceToMapCenter) continue;
-
+					var pushpinContent = new Border {
+						Child = new StackPanel {
+							Orientation = System.Windows.Controls.Orientation.Vertical,
+							Children = {
+							new TextBlock { Text = car.model, },
+							new TextBlock { Text = car.licensePlate, },
+							new StackPanel {
+								Orientation = System.Windows.Controls.Orientation.Horizontal,
+								Children = {
+									new Image {
+										Source = new BitmapImage(new Uri("/Resources/fuel28x28.png", UriKind.Relative)), 
+										Margin = new Thickness(0, 0, 12, 0),
+									},
+									new TextBlock { Text = car.fuelState + "%", },
+								},
+							},
+						},
+						},
+						Visibility = Visibility.Collapsed,
+					};
 					var pushpin = new Pushpin {
 						Location = car.position,
 						Background =  car2GoCarsBrush,
 						Opacity = .6,
+						Content = pushpinContent,
+						Tag = car,
 					};
 					car2goCarsLayer.Children.Add(pushpin);
+					pushpin.Tap += OnPushpinTap;
 				} catch { }
 			}
 		}
