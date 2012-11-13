@@ -193,7 +193,7 @@
     <value>FreeCars</value>
   </data>
   <data name="AboutPageContactAddress" xml:space="preserve">
-    <value>warokartwork@gmail.com</value>
+    <value>freecars@hanseartic.de</value>
   </data>
   <data name="AboutPageContactHeader" xml:space="preserve">
     <value>Social</value>
@@ -204,9 +204,7 @@
   <data name="AboutPageDisclaimer" xml:space="preserve">
     <value>FreeCars shows you free rides of the carsharing companies DriveNow and multicity as well as electrical charging-units nearby.
 
-At the moment you cannot reserve cars via this app.
-
-Integration of car2go is in progress.</value>
+At the moment you cannot reserve cars via this app.</value>
   </data>
   <data name="AboutPageVersionInfo" xml:space="preserve">
     <value>Version</value>
@@ -289,7 +287,15 @@ Please use one of the following options to get in touch with me for critics, sug
 I will answer every request!</value>
   </data>
   <data name="ChangelogPageBody" xml:space="preserve">
-    <value>1.2:
+    <value>1.4:
+* Secondary tiles for arbritrary locations
+* Analytics
+
+1.3:
+* supports car2go (only Berlin, yet) by now
+* improve map-performance
+
+1.2:
 * linked 'About' in main-menu
 * new feedback email-address 
 * changelog
@@ -334,5 +340,34 @@ https://de.drive-now.com/php/metropolis/registration?language=en_US&amp;L=2&amp;
 ZNEUATHQJA
 
 Pay only 9,98 € instead of 29,– € on the registration and get credited with 15 driving-minutes by using the PromoCode.</value>
+  </data>
+  <data name="SettingsCar2goTitle" xml:space="preserve">
+    <value>car2go</value>
+  </data>
+  <data name="SettingsPageShowCar2goCars" xml:space="preserve">
+    <value>Show cars</value>
+  </data>
+  <data name="SettingsPageCallDrivenowPhoneNumberToDial" xml:space="preserve">
+    <value>+49 800 723 40 70</value>
+  </data>
+  <data name="AllowAnalytics" xml:space="preserve">
+    <value>Help to improve FreeCars</value>
+  </data>
+  <data name="AllowAnalyticsDisclaimer" xml:space="preserve">
+    <value>By allowing to send data for analytics, you help to improve FreeCars.
+
+Your privacy is not at stake and the submitted data will not be used for anything else then understanding errors and preferred features of the users and to improve FreeCars by responding to the collected results.
+
+I am not able to personally identify you by means of the submitted data.</value>
+  </data>
+  <data name="PinMapAsSecondaryTile" xml:space="preserve">
+    <value>Pin map-sector</value>
+  </data>
+  <data name="PinToStartQuestionBody" xml:space="preserve">
+    <value>Möchten Sie den aktuellen Ausschnitt auf den Startscreen 
+Geben Sie eine Beschreibung für den aktuellen Ausschnitt an.</value>
+  </data>
+  <data name="PinToStartQuestionHeader" xml:space="preserve">
+    <value>Auf den Startbildschirm</value>
   </data>
 </root>

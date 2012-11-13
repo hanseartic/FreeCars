@@ -51,6 +51,9 @@
     <Reference Include="AdDuplex.WindowsPhone">
       <HintPath>..\packages\AdDuplexWP7.2.7.0.2\lib\sl4-windowsphone71\AdDuplex.WindowsPhone.dll</HintPath>
     </Reference>
+    <Reference Include="FlurryWP7SDK">
+      <HintPath>Lib\FlurryWP7SDK.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Advertising.Mobile, Version=6.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
     <Reference Include="Microsoft.Advertising.Mobile.UI, Version=6.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
     <Reference Include="Microsoft.Devices.Sensors" />
@@ -85,6 +88,9 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Car2Go.cs" />
+    <Compile Include="Car2GoSerialization.cs" />
+    <Compile Include="Converters.cs" />
     <Compile Include="DriveNow.cs" />
     <Compile Include="DriveNowSerialization.cs" />
     <Compile Include="MainPage.xaml.cs">
@@ -137,6 +143,8 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\about48x48.png" />
+    <Content Include="Resources\appbar.cogs.png" />
+    <Content Include="Resources\appbar.deeplink.round.png" />
     <Content Include="Resources\appbar.map.centerme.rest.png" />
     <Content Include="Resources\appbar.transport.repeat.rest.png" />
     <Content Include="Resources\battery28x28.png" />

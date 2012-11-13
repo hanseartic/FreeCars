@@ -64,18 +64,23 @@ namespace FreeCars {
 			try {
 				var serializer = new DataContractJsonSerializer(typeof(MulticityData));			
 				var objects = (MulticityData)serializer.ReadObject(e.Result);
-			
+				var usCultureInfo = new CultureInfo("en-US");
 				var multicityCars = new List<MulticityMarker>();
 				foreach (var car in objects.marker) {
 					if (car.hal2option.objectname == "multicitymarker") {										
 						car.licensePlate = Regex.Match(car.hal2option.tooltip, @"\(([^)]*)\)").Groups[1].Value;
 						car.model = car.hal2option.tooltip.Substring(0, car.hal2option.tooltip.IndexOf("(")).Substring(1);
+						try {
+							car.position = new GeoCoordinate(
+								double.Parse(car.lat, usCultureInfo.NumberFormat),
+								double.Parse(car.lng, usCultureInfo.NumberFormat));	
+						} catch { }
 						multicityCars.Add(car);
 					}
 				}
 				MulticityCars = multicityCars;
 				TriggerUpdated();
-			} catch (WebException we) { }
+			} catch { }
         }
 		public static void LoadChargeState(Pushpin pushpin) {
 			var car = (MulticityMarker)pushpin.Tag;
