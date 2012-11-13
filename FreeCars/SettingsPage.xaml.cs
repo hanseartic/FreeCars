@@ -6,6 +6,8 @@ using System.IO.IsolatedStorage;
 using FreeCars.Resources;
 using Microsoft.Phone.Shell;
 using Microsoft.Phone.Tasks;
+using System.Threading;
+using System.Globalization;
 
 namespace FreeCars {
     public partial class SettingsPage : PhoneApplicationPage {
@@ -54,6 +56,14 @@ namespace FreeCars {
 				SaveToggleSwitch("settings_show_drivenow_cars", ((ToggleSwitch)sender).IsChecked);
 				OnToggleSwitchChanged((ToggleSwitch)sender);
 		}
+		private void OnCar2GoCarsToggleSwitchChanged(object sender, RoutedEventArgs e) {
+			SaveToggleSwitch("settings_show_car2go_cars", ((ToggleSwitch)sender).IsChecked);
+			OnToggleSwitchChanged((ToggleSwitch)sender);
+		}
+		private void OnAllowAnalyticsToggleSwitchChanged(object sender, RoutedEventArgs e) {
+			SaveToggleSwitch("settings_allow_analytics", ((ToggleSwitch)sender).IsChecked);
+			OnToggleSwitchChanged((ToggleSwitch)sender);
+		}
 		private void OnShowAdsToggleSwitchChanged(object sender, RoutedEventArgs e) {
 			if (false == ((ToggleSwitch)sender).IsChecked) {
 				var buyAppNow = MessageBox.Show(Strings.SettingsPageBuyText, Strings.SettingsPageBuyCaption, MessageBoxButton.OKCancel);
@@ -72,25 +82,35 @@ namespace FreeCars {
             } catch (KeyNotFoundException) { }
             OnToggleSwitchChanged((ToggleSwitch)sender);
         }
+		private void OnCar2GoCarsToggleSwitchLoaded(object sender, RoutedEventArgs e) {
+			try {
+				((ToggleSwitch)sender).IsChecked = (true == (bool)IsolatedStorageSettings.ApplicationSettings["settings_show_car2go_cars"]);
+			} catch (KeyNotFoundException) { ((ToggleSwitch)sender).IsChecked = true; }
+			OnToggleSwitchChanged((ToggleSwitch)sender);
+		}
         private void OnMulticityCarsToggleSwitchLoaded(object sender, RoutedEventArgs e) {
             try {
                 ((ToggleSwitch)sender).IsChecked = (true == (bool)IsolatedStorageSettings.ApplicationSettings["settings_show_multicity_cars"]);
             } catch (KeyNotFoundException) { ((ToggleSwitch)sender).IsChecked = true; }
             OnToggleSwitchChanged((ToggleSwitch)sender);
         }
-
         private void OnMulticityChargersToggleSwitchLoaded(object sender, RoutedEventArgs e) {
             try {
                 ((ToggleSwitch)sender).IsChecked = (true == (bool)IsolatedStorageSettings.ApplicationSettings["settings_show_multicity_chargers"]);
             } catch (KeyNotFoundException) { ((ToggleSwitch)sender).IsChecked = true;  }
             OnToggleSwitchChanged((ToggleSwitch)sender);
         }
-
 		private void OnDriveNowCarsToggleSwitchLoaded(object sender, RoutedEventArgs e) {
 				try {
 					((ToggleSwitch)sender).IsChecked = (true == (bool)IsolatedStorageSettings.ApplicationSettings["settings_show_drivenow_cars"]);
 				} catch (KeyNotFoundException) { ((ToggleSwitch)sender).IsChecked = true; }
 				OnToggleSwitchChanged((ToggleSwitch)sender);
+		}
+		private void OnAllowAnalyticsToggleSwitchLoaded(object sender, RoutedEventArgs e) {
+			try {
+				((ToggleSwitch)sender).IsChecked = (true == (bool)IsolatedStorageSettings.ApplicationSettings["settings_allow_analytics"]);
+			} catch (KeyNotFoundException) { ((ToggleSwitch)sender).IsChecked = true; }
+			OnToggleSwitchChanged((ToggleSwitch)sender);
 		}
 		private void OnShowAdsToggleSwitchLoaded(object sender, RoutedEventArgs e) {
 			((ToggleSwitch)sender).IsChecked = App.IsInTrialMode;
@@ -98,7 +118,7 @@ namespace FreeCars {
 		}
         private void LoadAppBar() {
 			ApplicationBar = new ApplicationBar {
-				Mode = ApplicationBarMode.Default,
+				Mode = ApplicationBarMode.Minimized,
 				Opacity = 0.8,
 				IsVisible = true,
 				IsMenuEnabled = false,
@@ -123,6 +143,38 @@ namespace FreeCars {
 				};
 				callTask.Show();
 			} catch {}
+		}
+
+		private void OnCallDriveNowTap(object sender, System.Windows.Input.GestureEventArgs e) {
+			try {
+				var callTask = new PhoneCallTask {
+					DisplayName = Strings.SettingsPageCallDrivenowPhoneName,
+					PhoneNumber = Strings.SettingsPageCallDrivenowPhoneNumberToDial,
+				};
+				callTask.Show();
+			} catch { }
+		}
+
+		private void OnRedeemDrivenowPromoViaMailButtonTap(object sender, System.Windows.Input.GestureEventArgs e) {
+			try {
+				var promoCodeMailTask = new EmailComposeTask { 
+					Subject = "",
+					Body = "",
+				};
+				promoCodeMailTask.Show();
+			} catch { }
+		}
+
+		private void OnRedeemDrivenowPromoViaWebButtonTap(object sender, System.Windows.Input.GestureEventArgs e) {
+			try {
+				var lang = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.ToUpper() == "DE"
+					? "de_DE"
+					: "en_US";
+				var promoCodeBrowserTask = new WebBrowserTask {
+					Uri = new Uri("https://de.drive-now.com/php/metropolis/registration?language=" + lang + "&L=2&prc=ZNEUATHQJA"),
+				};
+				promoCodeBrowserTask.Show();
+			} catch { }
 		}
     }
 }

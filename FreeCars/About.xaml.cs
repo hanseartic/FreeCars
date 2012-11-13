@@ -20,7 +20,7 @@ namespace FreeCars {
 			InitializeComponent();
 			DataContext = this;
 			try {
-				Version = GetAppAttribute("Version");
+				Version = App.GetAppAttribute("Version");
 			} catch {
 				Version = "Error loading Version";
 			}
@@ -56,26 +56,19 @@ namespace FreeCars {
 			} catch { }
 		}
 
-		private static string GetAppAttribute(string attributeName) {
-			string appManifestName = "WMAppManifest.xml";
-			string appNodeName = "App";
-
-			var settings = new XmlReaderSettings();
-			settings.XmlResolver = new XmlXapResolver();
-
-			using (XmlReader rdr = XmlReader.Create(appManifestName, settings)) {
-				rdr.ReadToDescendant(appNodeName);
-				if (!rdr.IsStartElement()) {
-					throw new System.FormatException(appManifestName + " is missing " + appNodeName);
-				}
-				return rdr.GetAttribute(attributeName);
-			}
-		}
-
 		private void OnRateTap(object sender, System.Windows.Input.GestureEventArgs e) {
 			try {
 				var marketplaceReviewTask = new MarketplaceReviewTask();
 				marketplaceReviewTask.Show();
+			} catch { }
+		}
+
+		private void OnGotoUservoiceTap(object sender, System.Windows.Input.GestureEventArgs e) {
+			try {
+				var webBrowserTask = new WebBrowserTask {
+					Uri = new Uri("http://hanseartic.uservoice.com/"),
+				};
+				webBrowserTask.Show();
 			} catch { }
 		}
 	}

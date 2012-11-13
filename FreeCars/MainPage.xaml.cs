@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 using AdDuplex;
 using Microsoft.Advertising;
@@ -20,6 +23,7 @@ using Microsoft.Phone.Shell;
 using System.IO.IsolatedStorage;
 using FreeCars.Resources;
 using System.Windows.Media.Imaging;
+using GestureEventArgs = System.Windows.Input.GestureEventArgs;
 
 namespace FreeCars {
 	public partial class MainPage : PhoneApplicationPage {
@@ -37,7 +41,7 @@ namespace FreeCars {
 		}
 
 		private void CheckTrialAndAds() {
-			AdsGrid.Visibility = App.IsInTrialMode
+			AdsGrid.Visibility = App.IsInTrialMode || true
 				? Visibility.Visible
 				: Visibility.Collapsed;
 		}
@@ -45,24 +49,43 @@ namespace FreeCars {
 			CheckTrialAndAds();
 		}
 		void OnMainPageLoaded(object sender, RoutedEventArgs e) {
+			((App)App.Current).TrialModeChanged += OnAppTrialModeChanged;
+		}
+		protected override void OnNavigatedTo(NavigationEventArgs e) {
+			base.OnNavigatedTo(e);
+			CheckTrialAndAds();
+			((App)Application.Current).ReloadPOIs();
+
 			try {
 				gpsAllowed = (bool)IsolatedStorageSettings.ApplicationSettings["settings_use_GPS"];
 			} catch (KeyNotFoundException) {
 				checkForGPSUsage();
 			}
-			if (gpsAllowed) {
+
+			if (NavigationContext.QueryString.ContainsKey("Lat") && NavigationContext.QueryString.ContainsKey("Lon") && NavigationContext.QueryString.ContainsKey("Zoom")) {
 				try {
-					var position = (GeoPosition<GeoCoordinate>)IsolatedStorageSettings.ApplicationSettings["my_last_location"];
-					ShowMeAtLocation(position.Location);
-				} catch (KeyNotFoundException) { }
-			} else {
-				try {
-					IsolatedStorageSettings.ApplicationSettings.Remove("my_last_location");
+					var usCultureInformation = new CultureInfo("en-US");
+					var latitude = double.Parse(NavigationContext.QueryString["Lat"], usCultureInformation.NumberFormat);
+					var longitude = double.Parse(NavigationContext.QueryString["Lon"], usCultureInformation.NumberFormat);
+					var zoom = double.Parse(NavigationContext.QueryString["Zoom"], usCultureInformation.NumberFormat);
+					map.ZoomLevel = zoom;
+					map.Center = new GeoCoordinate(latitude, longitude);
+					return;
 				} catch { }
 			}
-			((App)Application.Current).ReloadPOIs();
-			CheckTrialAndAds();
-			((App)App.Current).TrialModeChanged += OnAppTrialModeChanged;
+
+			if (NavigationMode.Back != e.NavigationMode) {
+				if (gpsAllowed) {
+					try {
+						var position = (GeoPosition<GeoCoordinate>)IsolatedStorageSettings.ApplicationSettings["my_last_location"];
+						ShowMeAtLocation(position.Location);
+					} catch (KeyNotFoundException) { }
+				} else {
+					try {
+						IsolatedStorageSettings.ApplicationSettings.Remove("my_last_location");
+					} catch { }
+				}
+			}
 		}
 		bool checkForGPSUsage() {
 			var gpsOK = MessageBox.Show(Strings.WelcomeAskGPSBody1 + Environment.NewLine + Strings.WelcomeAskGPSBody2, Strings.WelcomeAskGPSHeader, MessageBoxButton.OKCancel);
@@ -94,7 +117,7 @@ namespace FreeCars {
 			mainPageApplicationBarCentermeButton.Click += OnMainPageApplicationBarCentermeButtonClick;
 
 			var mainPageApplicationBarSettingsButton = new ApplicationBarIconButton {
-				IconUri = new Uri("/Resources/dark_appbar.feature.settings.rest.png", UriKind.Relative),
+				IconUri = new Uri("/Resources/appbar.cogs.png", UriKind.Relative),
 				Text = FreeCars.Resources.Strings.MainPageBarSettings,
 			};
 			mainPageApplicationBarSettingsButton.Click += OnMainPageApplicationBarSettingsButtonClick;
@@ -105,9 +128,23 @@ namespace FreeCars {
 			};
 			mainPageApplicationBarReloadButton.Click += OnMainPageApplicationBarReloadButtonClick;
 
+			var mainPageApplicationBarPinButton = new ApplicationBarIconButton {
+				IconUri = new Uri("/Resources/appbar.deeplink.round.png", UriKind.Relative),
+				Text = FreeCars.Resources.Strings.PinMapAsSecondaryTile,
+			};
+			mainPageApplicationBarPinButton.Click += OnMainPageApplicationBarPinButtonClick;
+			
+			var mainPageApplicationBarAboutMenuItem = new ApplicationBarMenuItem {
+				Text = FreeCars.Resources.Strings.MainMenuAboutAppItemText,
+			};
+			mainPageApplicationBarAboutMenuItem.Click += OnMainPageApplicationBarAboutMenuItemClick;
+
 			ApplicationBar.Buttons.Add(mainPageApplicationBarCentermeButton);
 			ApplicationBar.Buttons.Add(mainPageApplicationBarReloadButton);
 			ApplicationBar.Buttons.Add(mainPageApplicationBarSettingsButton);
+			ApplicationBar.Buttons.Add(mainPageApplicationBarPinButton);
+			ApplicationBar.MenuItems.Add(mainPageApplicationBarAboutMenuItem);
+
 		}
 
 		void OnMainPageApplicationBarCentermeButtonClick(object sender, EventArgs e) {
@@ -121,6 +158,12 @@ namespace FreeCars {
 		void OnMainPageApplicationBarReloadButtonClick(object sender, EventArgs e) {
 			((App)Application.Current).ReloadPOIs();
 		}
+		private void OnMainPageApplicationBarPinButtonClick(object sender, EventArgs e) {
+			pinCurrentMapCenterAsSecondaryTile();
+		}
+		void OnMainPageApplicationBarAboutMenuItemClick(object sender, EventArgs e) {
+			NavigationService.Navigate(new Uri("/About.xaml", UriKind.RelativeOrAbsolute));
+		}
 		void OnMyPositionChanged(object sender, GeoPositionChangedEventArgs<GeoCoordinate> e) {
 			if (GeoPositionStatus.Ready != ((GeoCoordinateWatcher)sender).Status) return;
 			cw.Stop();
@@ -133,6 +176,11 @@ namespace FreeCars {
 			ShowMeAtLocation(e.Position.Location);
 			SDKAdControl.Latitude = e.Position.Location.Latitude;
 			SDKAdControl.Longitude = e.Position.Location.Longitude;
+			try {
+				if ((bool)IsolatedStorageSettings.ApplicationSettings["settings_allow_analytics"]) {
+					FlurryWP7SDK.Api.SetLocation(e.Position.Location.Latitude, e.Position.Location.Longitude, (float)e.Position.Location.HorizontalAccuracy);
+				}
+			} catch (KeyNotFoundException) { }
 		}
 		void ShowMeAtLocation(GeoCoordinate location) {
 			myLocationPushpin.Location = location;
@@ -148,6 +196,9 @@ namespace FreeCars {
 			if (sender.GetType() == typeof(DriveNow)) {
 				UpdateDriveNowLayer((DriveNow)sender);
 			}
+			if (sender.GetType() == typeof(Car2Go)) {
+				UpdateCar2GoLayer((Car2Go)sender);
+			}
 		}
 		void UpdateDriveNowLayer(DriveNow driveNow) {
 			var centerLocation = map.Center;
@@ -155,13 +206,9 @@ namespace FreeCars {
 			var driveNowBrush = new SolidColorBrush(new Color { A = 255, R = 176, G = 105, B = 9 });
 			driveNowCarsLayer.Children.Clear();
 			foreach (var car in driveNow.DriveNowCars) {
-				var coordinate = new GeoCoordinate(
-						Double.Parse(car.position.latitude, cultureInfo.NumberFormat),
-						Double.Parse(car.position.longitude, cultureInfo.NumberFormat)
-				);
-				var distanceToMapCenter = (int)coordinate.GetDistanceTo(centerLocation);
+				var distanceToMapCenter = (int)car.position.GetDistanceTo(centerLocation);
 				if (1500 < distanceToMapCenter) continue;
-				var distance = (int)coordinate.GetDistanceTo(myLocationPushpin.Location);
+				var distance = (int)car.position.GetDistanceTo(myLocationPushpin.Location);
 				var pushpinContent = new Border {
 					Child = new StackPanel {
 						Orientation = System.Windows.Controls.Orientation.Vertical,
@@ -183,7 +230,7 @@ namespace FreeCars {
 					Visibility = Visibility.Collapsed,
 				};
 				var pushpin = new Pushpin {
-					Location = coordinate,
+					Location = car.position,
 					Name = car.licensePlate,
 					Background = driveNowBrush,
 					Opacity = .6,
@@ -201,16 +248,13 @@ namespace FreeCars {
 			var centerLocation = map.Center;
 			var cultureInfo = new CultureInfo("en-US");
 			var multcityCarsBrush = new SolidColorBrush(Colors.Red);
-			var multcityChargersBrush = new SolidColorBrush(Colors.Blue);
+			var multcityChargersBrush = new SolidColorBrush(Colors.Green);
 			multicityCarsLayer.Children.Clear();
 			var tempList = new List<Pushpin>();
 			foreach (var car in multicity.MulticityCars) {
 				try {
-					var coordinate = new GeoCoordinate(
-							Double.Parse(car.lat, cultureInfo.NumberFormat),
-							Double.Parse(car.lng, cultureInfo.NumberFormat));
-					var distanceToMapCenter = (int)coordinate.GetDistanceTo(centerLocation);
-					var fuelTextBlock = new TextBlock { Text = (null != car.fuelState && "" != car.fuelState) ? car.fuelState + "%" : "", };
+					var distanceToMapCenter = (int)car.position.GetDistanceTo(centerLocation);
+					var fuelTextBlock = new TextBlock { Text = !string.IsNullOrEmpty(car.fuelState) ? car.fuelState + "%" : "", };
 
 					if (1500 < distanceToMapCenter) continue;
 
@@ -247,7 +291,7 @@ namespace FreeCars {
 						Visibility = Visibility.Collapsed,
 					};
 					var pushpin = new Pushpin() {
-						Location = coordinate,
+						Location = car.position,
 						Name = car.hal2option.tooltip,
 						Opacity = .6,
 						Background = multcityCarsBrush,
@@ -292,6 +336,48 @@ namespace FreeCars {
 				} catch (ArgumentException) { }
 			}
 
+		}
+		void UpdateCar2GoLayer(Car2Go car2Go) {
+			var usCultureInfo = new CultureInfo("en-US");
+			var car2GoCarsBrush = new SolidColorBrush(new Color {A = 255, R = 0, G = 159, B = 228,});
+			var centerLocation = map.Center;
+			car2goCarsLayer.Children.Clear();
+			foreach (var car in car2Go.Car2GoCars) {
+				try {
+					var distanceToMapCenter = (int)car.position.GetDistanceTo(centerLocation);
+
+					if (1500 < distanceToMapCenter) continue;
+					var pushpinContent = new Border {
+						Child = new StackPanel {
+							Orientation = System.Windows.Controls.Orientation.Vertical,
+							Children = {
+							new TextBlock { Text = car.model, },
+							new TextBlock { Text = car.licensePlate, },
+							new StackPanel {
+								Orientation = System.Windows.Controls.Orientation.Horizontal,
+								Children = {
+									new Image {
+										Source = new BitmapImage(new Uri("/Resources/fuel28x28.png", UriKind.Relative)), 
+										Margin = new Thickness(0, 0, 12, 0),
+									},
+									new TextBlock { Text = car.fuelState + "%", },
+								},
+							},
+						},
+						},
+						Visibility = Visibility.Collapsed,
+					};
+					var pushpin = new Pushpin {
+						Location = car.position,
+						Background =  car2GoCarsBrush,
+						Opacity = .6,
+						Content = pushpinContent,
+						Tag = car,
+					};
+					car2goCarsLayer.Children.Add(pushpin);
+					pushpin.Tap += OnPushpinTap;
+				} catch { }
+			}
 		}
 		void OnPushpinTap(object sender, System.Windows.Input.GestureEventArgs e) {
 			if (null != ((Pushpin)sender).Tag && typeof(MulticityChargerMarker) == ((Pushpin)sender).Tag.GetType()) return;
@@ -340,12 +426,66 @@ namespace FreeCars {
 
 		}
 
-		private void OnMapTap(object sender, System.Windows.Input.GestureEventArgs e) {
+		private void pinCurrentMapCenterAsSecondaryTile() {
+			try {
+
+				/*
+				MessageBox.Show(FreeCars.Resources.Strings.PinToStartQuestionHeader,
+				                FreeCars.Resources.Strings.PinToStartQuestionBody, MessageBoxButton.OKCancel);
+				*/
+
+				var usCultureInfo = new CultureInfo("en-US");
+				var latitude = map.Center.Latitude.ToString(usCultureInfo.NumberFormat);
+				var longitude = map.Center.Longitude.ToString(usCultureInfo.NumberFormat);
+				var zoom = map.ZoomLevel.ToString(usCultureInfo.NumberFormat);
+				var tileParam = "Lat=" + latitude + "&Lon=" + longitude + "&Zoom=" + zoom;
+				if (null != App.CheckIfTileExist(tileParam)) return;
+
+				using (var store = IsolatedStorageFile.GetUserStoreForApplication()) {
+					using (var saveFileStream = new IsolatedStorageFileStream("/Shared/ShellContent/" + tileParam + ".jpg", FileMode.Create, store)) {
+						
+						foreach (var layer in map.Children.OfType<MapLayer>()) {
+							layer.Visibility = Visibility.Collapsed;
+						}
+						var mapHeight = map.Height;
+						var mapWidth = map.Width;
+						map.Height = 173;
+						map.Width = 173;
+						var b = new WriteableBitmap(map, null);
+						b.SaveJpeg(saveFileStream, b.PixelWidth, b.PixelHeight, 0, 100);
+						map.Height = mapHeight;
+						map.Width = mapWidth;
+						foreach (var layer in map.Children.OfType<MapLayer>()) {
+							layer.Visibility = Visibility.Visible;
+						}
+					}
+				}
+				
+				ShellTile.Create(
+					new Uri("/MainPage.xaml?" + tileParam, UriKind.Relative),
+					new StandardTileData {
+						//Title = "FreeCars",
+						BackTitle = "FreeCars",
+						//SBackContent = "Locations Name with something",
+						Count = 0,
+						BackgroundImage = new Uri("isostore:/Shared/ShellContent/" + tileParam + ".jpg", UriKind.Absolute),
+						//BackBackgroundImage = new Uri("", UriKind.Relative),
+					});
+			} catch (Exception e) {
+				return;
+			}
+		}
+
+		private void OnMapTap(object sender, GestureEventArgs e) {
 			foreach (var pushpin in activeLayer.Children.ToArray()) {
 				if (pushpin.GetType() == typeof(Pushpin)) {
 					DeactivatePushpin(pushpin as Pushpin);
 				}
 			}
+			e.Handled = true;
+		}
+		private void OnMapHold(object sender, GestureEventArgs e) {
+			pinCurrentMapCenterAsSecondaryTile();
 			e.Handled = true;
 		}
 

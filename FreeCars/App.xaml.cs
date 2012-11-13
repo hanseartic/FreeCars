@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO.IsolatedStorage;
 using System.Linq;
 using System.Net;
 using System.Windows;
@@ -10,6 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Xml;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using System.IO;
@@ -81,7 +83,23 @@ namespace FreeCars {
 			driveNow.Updated += OnLayerUpdated;
 			driveNow.LoadPOIs();
 			this.Resources.Add("driveNow", driveNow);
+
+	        var car2Go = new Car2Go();
+	        car2Go.Updated += OnLayerUpdated;
+			car2Go.LoadPOIs();
+			this.Resources.Add("car2go", car2Go);
+			StartFlurry();
         }
+		private void StartFlurry() {
+			try {
+				if (false == (bool)IsolatedStorageSettings.ApplicationSettings["settings_allow_analytics"]) return;
+			} catch (KeyNotFoundException) { }
+			// only use flurry if the user has allowed it.
+			FlurryWP7SDK.Api.SetSecureTransportEnabled();
+			FlurryWP7SDK.Api.SetSessionContinueSeconds(120);
+			FlurryWP7SDK.Api.SetVersion(GetAppAttribute("Version"));
+			FlurryWP7SDK.Api.StartSession("QSJ5BJB37BNTT862WT8G");
+		}
         private void OnLayerUpdated(object sender, EventArgs e) {
             TriggerCarsUpdated(sender);
         }
@@ -94,7 +112,7 @@ namespace FreeCars {
 					TriggerCarsUpdated(Resources["driveNow"] as DriveNow);
 			} catch { }
 			try {
-					//TriggerCarsUpdated(Resources["car2go"] as Car2Go);
+					TriggerCarsUpdated(Resources["car2go"] as Car2Go);
 			} catch { }
 		}
 		public void ReloadPOIs() {
@@ -105,7 +123,7 @@ namespace FreeCars {
 					(Resources["driveNow"] as DriveNow).LoadPOIs();
 			} catch { }
 			try {
-					//(Resources["car2go"] as Car2Go).LoadPOIs();
+					(Resources["car2go"] as Car2Go).LoadPOIs();
 			} catch { }
 		}
         public event EventHandler CarsUpdated;
@@ -114,6 +132,7 @@ namespace FreeCars {
         // This code will not execute when the application is first launched
         private void Application_Activated(object sender, ActivatedEventArgs e) {
 			ValidateTrialMode();
+			StartFlurry();
         }
 		private void TriggerCarsUpdated(object sender) {
 			if (null != CarsUpdated) {
@@ -124,6 +143,11 @@ namespace FreeCars {
 			if (null != TrialModeChanged) {
 				TrialModeChanged(this, null);
 			}
+		}
+		public static ShellTile CheckIfTileExist(string tileUri) {
+			var shellTile = ShellTile.ActiveTiles.FirstOrDefault(
+				tile => tile.NavigationUri.ToString().Contains(tileUri));
+			return shellTile;
 		}
         // Code to execute when the application is deactivated (sent to background)
         // This code will not execute when the application is closing
@@ -149,7 +173,25 @@ namespace FreeCars {
                 // An unhandled exception has occurred; break into the debugger
                 System.Diagnostics.Debugger.Break();
             }
+			FlurryWP7SDK.Api.LogError("Uncaught Exception occured", e.ExceptionObject);
+	        //e.Handled = true;
         }
+
+		internal static string GetAppAttribute(string attributeName) {
+			string appManifestName = "WMAppManifest.xml";
+			string appNodeName = "App";
+
+			var settings = new XmlReaderSettings();
+			settings.XmlResolver = new XmlXapResolver();
+
+			using (XmlReader rdr = XmlReader.Create(appManifestName, settings)) {
+				rdr.ReadToDescendant(appNodeName);
+				if (!rdr.IsStartElement()) {
+					throw new System.FormatException(appManifestName + " is missing " + appNodeName);
+				}
+				return rdr.GetAttribute(attributeName);
+			}
+		}
 
         #region Phone application initialization
 

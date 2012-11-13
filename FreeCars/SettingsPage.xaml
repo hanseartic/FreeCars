@@ -8,50 +8,80 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
-    mc:Ignorable="d" d:DesignWidth="480" d:DesignHeight="768"
+    xmlns:local="clr-namespace:FreeCars" mc:Ignorable="d" d:DesignWidth="480" d:DesignHeight="768"
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
     Foreground="{StaticResource PhoneForegroundBrush}"
     SupportedOrientations="Portrait"  Orientation="Portrait"
     shell:SystemTray.IsVisible="True" Loaded="OnSettingsPageLoaded">
-
-    <!--LayoutRoot is the root grid where all page content is placed-->
+	<phone:PhoneApplicationPage.Resources>
+		<local:BoolToVisibilityConverter x:Key="boolToVisibilityConverter" />
+	</phone:PhoneApplicationPage.Resources>
+		<!--LayoutRoot is the root grid where all page content is placed-->
     <Grid x:Name="LayoutRoot" Background="Transparent">
         <!--Pivot Control-->
         <controls:Pivot Title="{Binding LocalizedStrings.SettingsPageTitle, Source={StaticResource ResourceAccess}}">
             <!--Pivot item general application settings-->
             <controls:PivotItem Header="{Binding LocalizedStrings.SettingsGeneralTitle, Source={StaticResource ResourceAccess}}">
-                <Grid>
-                    <StackPanel>
-                        <toolkit:ToggleSwitch Header="{Binding LocalizedStrings.SettingsPageUseGPSHeader, Source={StaticResource ResourceAccess}}" Checked="OnGPSToggleSwitchChanged" Unchecked="OnGPSToggleSwitchChanged" Loaded="OnGPSToggleSwitchLoaded" Content="{Binding LocalizedStrings.ToggleSwitchOff, Source={StaticResource ResourceAccess}}" />
-                        <TextBlock Text="{Binding LocalizedStrings.SettingsPageUseGPSText, Source={StaticResource ResourceAccess}}" Width="456" Height="Auto" TextWrapping="Wrap" />
-						<toolkit:ToggleSwitch x:Name="ShowAdsToggleSwitch" Header="{Binding LocalizedStrings.ShowAds, Source={StaticResource ResourceAccess}}" Content="{Binding LocalizedStrings.ToggleSwitchOff, Source={StaticResource ResourceAccess}}" Checked="OnShowAdsToggleSwitchChanged" Unchecked="OnShowAdsToggleSwitchChanged" Loaded="OnShowAdsToggleSwitchLoaded" Visibility="Collapsed"  />
-					</StackPanel>
-                </Grid>
-            </controls:PivotItem>
-
+				<Grid>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="*" />
+						<RowDefinition Height="35" />
+					</Grid.RowDefinitions>
+					<ScrollViewer>
+						<StackPanel>
+							<toolkit:ToggleSwitch Header="{Binding LocalizedStrings.SettingsPageUseGPSHeader, Source={StaticResource ResourceAccess}}" Checked="OnGPSToggleSwitchChanged" Unchecked="OnGPSToggleSwitchChanged" Loaded="OnGPSToggleSwitchLoaded" Content="{Binding LocalizedStrings.ToggleSwitchOff, Source={StaticResource ResourceAccess}}" />
+							<TextBlock Text="{Binding LocalizedStrings.SettingsPageUseGPSText, Source={StaticResource ResourceAccess}}" Width="456" Height="Auto" TextWrapping="Wrap" />
+							<toolkit:ToggleSwitch x:Name="AllowAnalyticsSwitch" Header="{Binding LocalizedStrings.AllowAnalytics, Source={StaticResource ResourceAccess}}" Content="{Binding LocalizedStrings.ToggleSwitchOff, Source={StaticResource ResourceAccess}}" Checked="OnAllowAnalyticsToggleSwitchChanged" Unchecked="OnAllowAnalyticsToggleSwitchChanged" Loaded="OnAllowAnalyticsToggleSwitchLoaded" />
+							<TextBlock TextWrapping="Wrap" Text="{Binding LocalizedStrings.AllowAnalyticsDisclaimer, Source={StaticResource ResourceAccess}}" Visibility="{Binding ElementName=AllowAnalyticsSwitch, Path=IsChecked, Converter={StaticResource boolToVisibilityConverter}, ConverterParameter=Invert}" />
+							<toolkit:ToggleSwitch x:Name="ShowAdsToggleSwitch" Header="{Binding LocalizedStrings.ShowAds, Source={StaticResource ResourceAccess}}" Content="{Binding LocalizedStrings.ToggleSwitchOff, Source={StaticResource ResourceAccess}}" Checked="OnShowAdsToggleSwitchChanged" Unchecked="OnShowAdsToggleSwitchChanged" Loaded="OnShowAdsToggleSwitchLoaded" Visibility="Collapsed" />
+						</StackPanel>
+					</ScrollViewer>
+					<Grid Grid.Row="1" />
+				</Grid>
+			</controls:PivotItem>
+			<!--Pivot item car2go-->
+			<controls:PivotItem Header="{Binding LocalizedStrings.SettingsCar2goTitle, Source={StaticResource ResourceAccess}}">
+				<ScrollViewer>
+					<Grid>
+						<StackPanel Margin="0,8">
+							<toolkit:ToggleSwitch Header="{Binding LocalizedStrings.SettingsPageShowCar2goCars, Source={StaticResource ResourceAccess}}" Checked="OnCar2GoCarsToggleSwitchChanged" Unchecked="OnCar2GoCarsToggleSwitchChanged" Loaded="OnCar2GoCarsToggleSwitchLoaded" Content="{Binding LocalizedStrings.ToggleSwitchOff, Source={StaticResource ResourceAccess}}" SwitchForeground="#FF009FE4" />
+							<toolkit:ListPicker Header="City">
+								<toolkit:ListPickerItem>Berlin</toolkit:ListPickerItem>
+							</toolkit:ListPicker>
+						</StackPanel>
+					</Grid>
+				</ScrollViewer>
+			</controls:PivotItem>
+			<!--Pivot item DriveNow-->
+			<controls:PivotItem Header="{Binding LocalizedStrings.SettingsDriveNowTitle, Source={StaticResource ResourceAccess}}">
+				<ScrollViewer>
+					<Grid>
+						<StackPanel Margin="0,8">
+							<toolkit:ToggleSwitch Header="{Binding LocalizedStrings.SettingsPageShowDriveNowCars, Source={StaticResource ResourceAccess}}" Checked="OnDriveNowCarsToggleSwitchChanged" Unchecked="OnDriveNowCarsToggleSwitchChanged" Loaded="OnDriveNowCarsToggleSwitchLoaded" Content="{Binding LocalizedStrings.ToggleSwitchOff, Source={StaticResource ResourceAccess}}" SwitchForeground="#FFB06909" />
+							<TextBlock Text="{Binding LocalizedStrings.SettingsPageCallDrivenowHeader, Source={StaticResource ResourceAccess}}" Tap="OnCallDriveNowTap"  Style="{StaticResource PhoneTextTitle3Style}" Margin="0" />
+							<TextBlock Text="{Binding LocalizedStrings.SettingsPageCallDrivenowPhoneNumberToDial, Source={StaticResource ResourceAccess}}" Tap="OnCallDriveNowTap" Style="{StaticResource PhoneTextTitle2Style}" Margin="0" TextAlignment="Center" />
+							<TextBlock Text="{Binding LocalizedStrings.SettingsPageRedeemDrivenowPromoCodeHeader, Source={StaticResource ResourceAccess}}" Style="{StaticResource PhoneTextTitle3Style}" Margin="0,8" />
+							<TextBlock Text="{Binding LocalizedStrings.SettingsPageRedeemDrivenowPromoCodeText, Source={StaticResource ResourceAccess}}" TextWrapping="Wrap" />
+							<StackPanel Orientation="Vertical">
+								<Button Content="{Binding LocalizedStrings.SettingsPageRedeemDrivenowPromocodeWebButton, Source={StaticResource ResourceAccess}}" Tap="OnRedeemDrivenowPromoViaWebButtonTap"></Button>
+								<Button Content="{Binding LocalizedStrings.SettingsPageRedeemDrivenowPromocodeMailButton, Source={StaticResource ResourceAccess}}" Tap="OnRedeemDrivenowPromoViaMailButtonTap"></Button>
+							</StackPanel>
+						</StackPanel>
+					</Grid>
+				</ScrollViewer>
+			</controls:PivotItem>
             <!--Pivot item multicity-->
             <controls:PivotItem Header="{Binding LocalizedStrings.SettingsMulticityTitle, Source={StaticResource ResourceAccess}}">
                 <Grid>
                     <StackPanel>
                         <toolkit:ToggleSwitch Header="{Binding LocalizedStrings.SettingsPageShowMulticityCars, Source={StaticResource ResourceAccess}}" Checked="OnMulticityCarsToggleSwitchChanged" Unchecked="OnMulticityCarsToggleSwitchChanged" Loaded="OnMulticityCarsToggleSwitchLoaded" Content="{Binding LocalizedStrings.ToggleSwitchOff, Source={StaticResource ResourceAccess}}" SwitchForeground="Red" />
-						<toolkit:ToggleSwitch Header="{Binding LocalizedStrings.SettingsPageShowMulticityChargers, Source={StaticResource ResourceAccess}}" Checked="OnMulticityChargersToggleSwitchChanged" Unchecked="OnMulticityChargersToggleSwitchChanged" Loaded="OnMulticityChargersToggleSwitchLoaded" Content="{Binding LocalizedStrings.ToggleSwitchOff, Source={StaticResource ResourceAccess}}" SwitchForeground="Blue" />
-						<TextBlock Text="{Binding LocalizedStrings.SettingsPageCallMulticityHeader, Source={StaticResource ResourceAccess}}" Tap="OnCallMulticityTap" />
-						<TextBlock Text="{Binding LocalizedStrings.SettingsPageCallMulticityPhoneNumber, Source={StaticResource ResourceAccess}}" Style="{StaticResource PhoneTextTitle2Style}" Margin="0" Tap="OnCallMulticityTap" />
+						<toolkit:ToggleSwitch Header="{Binding LocalizedStrings.SettingsPageShowMulticityChargers, Source={StaticResource ResourceAccess}}" Checked="OnMulticityChargersToggleSwitchChanged" Unchecked="OnMulticityChargersToggleSwitchChanged" Loaded="OnMulticityChargersToggleSwitchLoaded" Content="{Binding LocalizedStrings.ToggleSwitchOff, Source={StaticResource ResourceAccess}}" SwitchForeground="Green" />
+						<TextBlock Text="{Binding LocalizedStrings.SettingsPageCallMulticityHeader, Source={StaticResource ResourceAccess}}" Tap="OnCallMulticityTap" Style="{StaticResource PhoneTextTitle3Style}" Margin="0" />
+						<TextBlock Text="{Binding LocalizedStrings.SettingsPageCallMulticityPhoneNumber, Source={StaticResource ResourceAccess}}" Style="{StaticResource PhoneTextTitle2Style}" Margin="0" Tap="OnCallMulticityTap" HorizontalAlignment="Center"/>
 					</StackPanel>
                 </Grid>
             </controls:PivotItem>
-			<controls:PivotItem Header="{Binding LocalizedStrings.SettingsDriveNowTitle, Source={StaticResource ResourceAccess}}">
-				<Grid>
-					<StackPanel>
-						<toolkit:ToggleSwitch Header="{Binding LocalizedStrings.SettingsPageShowDriveNowCars, Source={StaticResource ResourceAccess}}" Checked="OnDriveNowCarsToggleSwitchChanged" Unchecked="OnDriveNowCarsToggleSwitchChanged" Loaded="OnDriveNowCarsToggleSwitchLoaded" Content="{Binding LocalizedStrings.ToggleSwitchOff, Source={StaticResource ResourceAccess}}" SwitchForeground="#FFB06909" />
-						<!--
-						<TextBlock Text="{Binding LocalizedStrings.SettingsPageCallDrivenowHeader, Source={StaticResource ResourceAccess}}" Tap="OnCallDriveNowTap" />
-						<TextBlock Text="{Binding LocalizedStrings.SettingsPageCallDrivenowPhoneNumber, Source={StaticResource ResourceAccess}}" Tap="OnCallDriveNowTap" />					
-					    -->
-					</StackPanel>
-				</Grid>
-			</controls:PivotItem>
 		</controls:Pivot>
     </Grid>
     

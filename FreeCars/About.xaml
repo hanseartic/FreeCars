@@ -19,6 +19,7 @@
 
 		<controls:Pivot Title="{Binding LocalizedStrings.ApplicationName, Source={StaticResource ResourceAccess}}">
 			<controls:PivotItem Header="{Binding LocalizedStrings.AboutPageTitle, Source={StaticResource ResourceAccess}}">
+				<ScrollViewer>
 				<Grid>
 					<StackPanel>
 						<StackPanel Orientation="Vertical">
@@ -26,6 +27,7 @@
 							<TextBlock Text="{Binding Version}" TextWrapping="Wrap"></TextBlock>
 							<TextBlock Text="{Binding LocalizedStrings.AboutPageDisclaimer, Source={StaticResource ResourceAccess}}" TextWrapping="Wrap"></TextBlock>
 							<TextBlock Text="{Binding LocalizedStrings.AboutPageContactHeader, Source={StaticResource ResourceAccess}}" TextWrapping="Wrap" Style="{StaticResource PhoneTextTitle2Style}" Margin="0,12,0,0" />
+							<TextBlock Text="{Binding LocalizedStrings.AboutPageContactText, Source={StaticResource ResourceAccess}}" TextWrapping="Wrap" />
 							<Grid>
 								<Grid.ColumnDefinitions>
 									<ColumnDefinition Width="*"/>
@@ -52,11 +54,21 @@
 								<TextBlock Grid.Column="0" Grid.Row="3"
 									Text="{Binding LocalizedStrings.AboutPageContactViaUservoice, Source={StaticResource ResourceAccess}}" TextWrapping="Wrap" Margin="0,8" VerticalAlignment="Center" />
 								<Button Grid.Column="1" Grid.Row="3" 
-									Content="{Binding LocalizedStrings.AboutPageGotoUservoiceSite, Source={StaticResource ResourceAccess}}" />
+									Content="{Binding LocalizedStrings.AboutPageGotoUservoiceSite, Source={StaticResource ResourceAccess}}" Tap="OnGotoUservoiceTap" />
 							</Grid>
 						</StackPanel>
 					</StackPanel>
 				</Grid>
+				</ScrollViewer>
+			</controls:PivotItem>
+			<controls:PivotItem Header="{Binding LocalizedStrings.ChangelogPageTitle, Source={StaticResource ResourceAccess}}" Visibility="Collapsed">
+				<ScrollViewer>
+					<Grid>
+						<StackPanel Orientation="Vertical">
+							<TextBlock Text="{Binding LocalizedStrings.ChangelogPageBody, Source={StaticResource ResourceAccess}}" TextWrapping="Wrap" />	
+						</StackPanel>
+					</Grid>
+				</ScrollViewer>
 			</controls:PivotItem>
 			<!--
 			<controls:PivotItem Header="{Binding LocalizedStrings.HelpPageTitle, Source={StaticResource ResourceAccess}}">
@@ -67,13 +79,7 @@
 				</Grid>	
 			</controls:PivotItem>
 			
-			<controls:PivotItem Header="change log" Visibility="Collapsed">
-				<Grid>
-					<StackPanel Orientation="Vertical">
-						
-					</StackPanel>
-				</Grid>
-			</controls:PivotItem>
+
 			-->
 		</controls:Pivot>
     </Grid>

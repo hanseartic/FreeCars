@@ -39,7 +39,7 @@ namespace FreeCars {
 		[DataContract]
 		public class DriveNowCarInformation : Marker {
 				[DataMember(Name = "position")]
-				public DriveNowPosition position { get; set; }
+				public DriveNowPosition dn_position { get; set; }
 				[DataMember(Name = "auto")]
 				public String auto { get; set; }
 				[DataMember(Name = "fuelType")]
