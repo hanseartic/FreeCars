@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 using AdDuplex;
 using Microsoft.Advertising;
@@ -20,6 +23,7 @@ using Microsoft.Phone.Shell;
 using System.IO.IsolatedStorage;
 using FreeCars.Resources;
 using System.Windows.Media.Imaging;
+using GestureEventArgs = System.Windows.Input.GestureEventArgs;
 
 namespace FreeCars {
 	public partial class MainPage : PhoneApplicationPage {
@@ -45,24 +49,42 @@ namespace FreeCars {
 			CheckTrialAndAds();
 		}
 		void OnMainPageLoaded(object sender, RoutedEventArgs e) {
-			try {
-				gpsAllowed = (bool)IsolatedStorageSettings.ApplicationSettings["settings_use_GPS"];
-			} catch (KeyNotFoundException) {
-				checkForGPSUsage();
-			}
-			if (gpsAllowed) {
+			((App)App.Current).TrialModeChanged += OnAppTrialModeChanged;
+		}
+		protected override void OnNavigatedTo(NavigationEventArgs e) {
+			base.OnNavigatedTo(e);
+			CheckTrialAndAds();
+			((App)Application.Current).ReloadPOIs();
+
+			if (NavigationContext.QueryString.ContainsKey("Lat") && NavigationContext.QueryString.ContainsKey("Lon") && NavigationContext.QueryString.ContainsKey("Zoom")) {
 				try {
-					var position = (GeoPosition<GeoCoordinate>)IsolatedStorageSettings.ApplicationSettings["my_last_location"];
-					ShowMeAtLocation(position.Location);
-				} catch (KeyNotFoundException) { }
-			} else {
-				try {
-					IsolatedStorageSettings.ApplicationSettings.Remove("my_last_location");
+					var usCultureInformation = new CultureInfo("en-US");
+					var latitude = double.Parse(NavigationContext.QueryString["Lat"], usCultureInformation.NumberFormat);
+					var longitude = double.Parse(NavigationContext.QueryString["Lon"], usCultureInformation.NumberFormat);
+					var zoom = double.Parse(NavigationContext.QueryString["Zoom"], usCultureInformation.NumberFormat);
+					map.ZoomLevel = zoom;
+					map.Center = new GeoCoordinate(latitude, longitude);
+					return;
 				} catch { }
 			}
-			((App)Application.Current).ReloadPOIs();
-			CheckTrialAndAds();
-			((App)App.Current).TrialModeChanged += OnAppTrialModeChanged;
+
+			if (NavigationMode.Back != e.NavigationMode) {
+				try {
+					gpsAllowed = (bool)IsolatedStorageSettings.ApplicationSettings["settings_use_GPS"];
+				} catch (KeyNotFoundException) {
+					checkForGPSUsage();
+				}
+				if (gpsAllowed) {
+					try {
+						var position = (GeoPosition<GeoCoordinate>)IsolatedStorageSettings.ApplicationSettings["my_last_location"];
+						ShowMeAtLocation(position.Location);
+					} catch (KeyNotFoundException) { }
+				} else {
+					try {
+						IsolatedStorageSettings.ApplicationSettings.Remove("my_last_location");
+					} catch { }
+				}
+			}
 		}
 		bool checkForGPSUsage() {
 			var gpsOK = MessageBox.Show(Strings.WelcomeAskGPSBody1 + Environment.NewLine + Strings.WelcomeAskGPSBody2, Strings.WelcomeAskGPSHeader, MessageBoxButton.OKCancel);
@@ -94,7 +116,7 @@ namespace FreeCars {
 			mainPageApplicationBarCentermeButton.Click += OnMainPageApplicationBarCentermeButtonClick;
 
 			var mainPageApplicationBarSettingsButton = new ApplicationBarIconButton {
-				IconUri = new Uri("/Resources/dark_appbar.feature.settings.rest.png", UriKind.Relative),
+				IconUri = new Uri("/Resources/appbar.cogs.png", UriKind.Relative),
 				Text = FreeCars.Resources.Strings.MainPageBarSettings,
 			};
 			mainPageApplicationBarSettingsButton.Click += OnMainPageApplicationBarSettingsButtonClick;
@@ -104,15 +126,22 @@ namespace FreeCars {
 				Text = FreeCars.Resources.Strings.MainPageBarReload,
 			};
 			mainPageApplicationBarReloadButton.Click += OnMainPageApplicationBarReloadButtonClick;
+
+			var mainPageApplicationBarPinButton = new ApplicationBarIconButton {
+				IconUri = new Uri("/Resources/appbar.deeplink.round.png", UriKind.Relative),
+				Text = FreeCars.Resources.Strings.PinMapAsSecondaryTile,
+			};
+			mainPageApplicationBarPinButton.Click += OnMainPageApplicationBarPinButtonClick;
+			
 			var mainPageApplicationBarAboutMenuItem = new ApplicationBarMenuItem {
 				Text = FreeCars.Resources.Strings.MainMenuAboutAppItemText,
 			};
 			mainPageApplicationBarAboutMenuItem.Click += OnMainPageApplicationBarAboutMenuItemClick;
 
-
 			ApplicationBar.Buttons.Add(mainPageApplicationBarCentermeButton);
 			ApplicationBar.Buttons.Add(mainPageApplicationBarReloadButton);
 			ApplicationBar.Buttons.Add(mainPageApplicationBarSettingsButton);
+			ApplicationBar.Buttons.Add(mainPageApplicationBarPinButton);
 			ApplicationBar.MenuItems.Add(mainPageApplicationBarAboutMenuItem);
 
 		}
@@ -127,6 +156,9 @@ namespace FreeCars {
 		}
 		void OnMainPageApplicationBarReloadButtonClick(object sender, EventArgs e) {
 			((App)Application.Current).ReloadPOIs();
+		}
+		private void OnMainPageApplicationBarPinButtonClick(object sender, EventArgs e) {
+			pinCurrentMapCenterAsSecondaryTile();
 		}
 		void OnMainPageApplicationBarAboutMenuItemClick(object sender, EventArgs e) {
 			NavigationService.Navigate(new Uri("/About.xaml", UriKind.RelativeOrAbsolute));
@@ -143,6 +175,11 @@ namespace FreeCars {
 			ShowMeAtLocation(e.Position.Location);
 			SDKAdControl.Latitude = e.Position.Location.Latitude;
 			SDKAdControl.Longitude = e.Position.Location.Longitude;
+			try {
+				if ((bool)IsolatedStorageSettings.ApplicationSettings["settings_allow_analytics"]) {
+					FlurryWP7SDK.Api.SetLocation(e.Position.Location.Latitude, e.Position.Location.Longitude, (float)e.Position.Location.HorizontalAccuracy);
+				}
+			} catch (KeyNotFoundException) { }
 		}
 		void ShowMeAtLocation(GeoCoordinate location) {
 			myLocationPushpin.Location = location;
@@ -388,12 +425,66 @@ namespace FreeCars {
 
 		}
 
-		private void OnMapTap(object sender, System.Windows.Input.GestureEventArgs e) {
+		private void pinCurrentMapCenterAsSecondaryTile() {
+			try {
+
+				/*
+				MessageBox.Show(FreeCars.Resources.Strings.PinToStartQuestionHeader,
+				                FreeCars.Resources.Strings.PinToStartQuestionBody, MessageBoxButton.OKCancel);
+				*/
+
+				var usCultureInfo = new CultureInfo("en-US");
+				var latitude = map.Center.Latitude.ToString(usCultureInfo.NumberFormat);
+				var longitude = map.Center.Longitude.ToString(usCultureInfo.NumberFormat);
+				var zoom = map.ZoomLevel.ToString(usCultureInfo.NumberFormat);
+				var tileParam = "Lat=" + latitude + "&Lon=" + longitude + "&Zoom=" + zoom;
+				if (null != App.CheckIfTileExist(tileParam)) return;
+
+				using (var store = IsolatedStorageFile.GetUserStoreForApplication()) {
+					using (var saveFileStream = new IsolatedStorageFileStream("/Shared/ShellContent/" + tileParam + ".jpg", FileMode.Create, store)) {
+						
+						foreach (var layer in map.Children.OfType<MapLayer>()) {
+							layer.Visibility = Visibility.Collapsed;
+						}
+						var mapHeight = map.Height;
+						var mapWidth = map.Width;
+						map.Height = 173;
+						map.Width = 173;
+						var b = new WriteableBitmap(map, null);
+						b.SaveJpeg(saveFileStream, b.PixelWidth, b.PixelHeight, 0, 100);
+						map.Height = mapHeight;
+						map.Width = mapWidth;
+						foreach (var layer in map.Children.OfType<MapLayer>()) {
+							layer.Visibility = Visibility.Visible;
+						}
+					}
+				}
+				
+				ShellTile.Create(
+					new Uri("/MainPage.xaml?" + tileParam, UriKind.Relative),
+					new StandardTileData {
+						//Title = "FreeCars",
+						BackTitle = "FreeCars",
+						BackContent = "Locations Name with something",
+						Count = 0,
+						BackgroundImage = new Uri("isostore:/Shared/ShellContent/" + tileParam + ".jpg", UriKind.Absolute),
+						//BackBackgroundImage = new Uri("", UriKind.Relative),
+					});
+			} catch (Exception e) {
+				return;
+			}
+		}
+
+		private void OnMapTap(object sender, GestureEventArgs e) {
 			foreach (var pushpin in activeLayer.Children.ToArray()) {
 				if (pushpin.GetType() == typeof(Pushpin)) {
 					DeactivatePushpin(pushpin as Pushpin);
 				}
 			}
+			e.Handled = true;
+		}
+		private void OnMapHold(object sender, GestureEventArgs e) {
+			pinCurrentMapCenterAsSecondaryTile();
 			e.Handled = true;
 		}
 

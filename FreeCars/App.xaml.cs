@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO.IsolatedStorage;
 using System.Linq;
 using System.Net;
 using System.Windows;
@@ -143,6 +144,11 @@ namespace FreeCars {
 			if (null != TrialModeChanged) {
 				TrialModeChanged(this, null);
 			}
+		}
+		public static ShellTile CheckIfTileExist(string tileUri) {
+			var shellTile = ShellTile.ActiveTiles.FirstOrDefault(
+				tile => tile.NavigationUri.ToString().Contains(tileUri));
+			return shellTile;
 		}
         // Code to execute when the application is deactivated (sent to background)
         // This code will not execute when the application is closing

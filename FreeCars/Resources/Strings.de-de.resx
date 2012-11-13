@@ -359,4 +359,14 @@ Die Daten enthalten keine persönlichen Daten und werden nicht für Werbung (Tri
 
 Die ID des Telefons wird genutzt um verschiedene Nutzungsverhalten zu erkennen; Sie sind darüber nicht persönlich identifizierbar.</value>
   </data>
+  <data name="PinMapAsSecondaryTile" xml:space="preserve">
+    <value>Ausschnitt anheften</value>
+  </data>
+  <data name="PinToStartQuestionBody" xml:space="preserve">
+    <value>Möchten Sie den aktuellen Ausschnitt auf den Startscreen 
+Geben Sie eine Beschreibung für den aktuellen Ausschnitt an.</value>
+  </data>
+  <data name="PinToStartQuestionHeader" xml:space="preserve">
+    <value>Auf den Startbildschirm</value>
+  </data>
 </root>

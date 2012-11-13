@@ -143,6 +143,8 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\about48x48.png" />
+    <Content Include="Resources\appbar.cogs.png" />
+    <Content Include="Resources\appbar.deeplink.round.png" />
     <Content Include="Resources\appbar.map.centerme.rest.png" />
     <Content Include="Resources\appbar.transport.repeat.rest.png" />
     <Content Include="Resources\battery28x28.png" />
