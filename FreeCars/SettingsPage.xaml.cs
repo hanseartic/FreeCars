@@ -109,7 +109,7 @@ namespace FreeCars {
 		private void OnAllowAnalyticsToggleSwitchLoaded(object sender, RoutedEventArgs e) {
 			try {
 				((ToggleSwitch)sender).IsChecked = (true == (bool)IsolatedStorageSettings.ApplicationSettings["settings_allow_analytics"]);
-			} catch (KeyNotFoundException) { ((ToggleSwitch)sender).IsChecked = false; }
+			} catch (KeyNotFoundException) { ((ToggleSwitch)sender).IsChecked = true; }
 			OnToggleSwitchChanged((ToggleSwitch)sender);
 		}
 		private void OnShowAdsToggleSwitchLoaded(object sender, RoutedEventArgs e) {

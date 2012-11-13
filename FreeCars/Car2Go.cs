@@ -42,7 +42,7 @@ namespace FreeCars {
 				}
 			} catch (KeyNotFoundException) { }
 			var wc = new WebClient();
-			var callUri = "https://www.car2go.com/api/v2.1/vehicles?loc=berlin&format=json&oauth_consumer_key=";
+			var callUri = "https://www.car2go.com/api/v2.1/vehicles?loc=berlin&format=json&oauth_consumer_key=JohannesRuth";
 
 			wc.OpenReadCompleted += OnCar2GoCarsOpenReadCompleted;
 			wc.OpenReadAsync(new Uri(callUri));

@@ -48,12 +48,14 @@
 		</Grid>
 		<Grid x:Name="AdsGrid" Grid.Row="2" Visibility="Collapsed">
 			<adduplex:AdControl
-				x:Name="AdDuplexAdControl" Visibility="Visible" 
+				x:Name="AdDuplexAdControl" Visibility="Visible"
+				AppId="23527"
 				AdLoadingError="OnAdduplexAddControlErrorOccured"
 				AdLoaded="OnAdduplexAddControlAdRefreshed" 
 				RefreshInterval="30" />
 			<my:AdControl
 				x:Name="SDKAdControl" Visibility="Visible"
+				ApplicationId="1e220ae2-a6af-4bb3-a0c8-919d80531e85" AdUnitId="10047728"
 				ErrorOccurred="OnSDKAddControlErrorOccured" 
 				AdRefreshed="OnSDKAddControlAdRefreshed"
 				IsAutoRefreshEnabled="True"

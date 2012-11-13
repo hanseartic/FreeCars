@@ -41,7 +41,7 @@ namespace FreeCars {
 		}
 
 		private void CheckTrialAndAds() {
-			AdsGrid.Visibility = App.IsInTrialMode
+			AdsGrid.Visibility = App.IsInTrialMode || true
 				? Visibility.Visible
 				: Visibility.Collapsed;
 		}
@@ -466,7 +466,7 @@ namespace FreeCars {
 					new StandardTileData {
 						//Title = "FreeCars",
 						BackTitle = "FreeCars",
-						BackContent = "Locations Name with something",
+						//SBackContent = "Locations Name with something",
 						Count = 0,
 						BackgroundImage = new Uri("isostore:/Shared/ShellContent/" + tileParam + ".jpg", UriKind.Absolute),
 						//BackBackgroundImage = new Uri("", UriKind.Relative),
