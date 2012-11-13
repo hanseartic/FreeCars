@@ -90,8 +90,15 @@ namespace FreeCars {
 			StartFlurry();
         }
 		private void StartFlurry() {
-			FlurryWP7SDK.Api.SetVersion(GetAppAttribute("Version"));
-			FlurryWP7SDK.Api.StartSession("QSJ5BJB37BNTT862WT8G");
+			try {
+				if (false == (bool)IsolatedStorageSettings.ApplicationSettings["settings_allow_analytics"]) return;
+
+				// only use flurry if the user has allowed it.
+				FlurryWP7SDK.Api.SetSecureTransportEnabled();
+				FlurryWP7SDK.Api.SetSessionContinueSeconds(120);
+				FlurryWP7SDK.Api.SetVersion(GetAppAttribute("Version"));
+				FlurryWP7SDK.Api.StartSession("QSJ5BJB37BNTT862WT8G");
+			} catch (KeyNotFoundException) { }
 		}
         private void OnLayerUpdated(object sender, EventArgs e) {
             TriggerCarsUpdated(sender);
@@ -161,6 +168,8 @@ namespace FreeCars {
                 // An unhandled exception has occurred; break into the debugger
                 System.Diagnostics.Debugger.Break();
             }
+			FlurryWP7SDK.Api.LogError("Uncaught Exception occured", e.ExceptionObject);
+	        //e.Handled = true;
         }
 
 		internal static string GetAppAttribute(string attributeName) {

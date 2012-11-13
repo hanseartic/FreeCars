@@ -349,4 +349,14 @@ Einmalige Anmeldegebühr 9,98 € statt 29,– €</value>
   <data name="SettingsPageCallDrivenowPhoneNumberToDial" xml:space="preserve">
     <value>0800/72 340 70</value>
   </data>
+  <data name="AllowAnalytics" xml:space="preserve">
+    <value>Analysedaten senden</value>
+  </data>
+  <data name="AllowAnalyticsDisclaimer" xml:space="preserve">
+    <value>Wenn Sie das Senden von Analysedaten erlauben, helfen Sie mit FreeCars besser zu machen.
+
+Die Daten enthalten keine persönlichen Daten und werden nicht für Werbung (TrialVersion) genutzt, sondern aussließlich, um Fehler zu erkennen und viel genutzte Features zu verbessern.
+
+Die ID des Telefons wird genutzt um verschiedene Nutzungsverhalten zu erkennen; Sie sind darüber nicht persönlich identifizierbar.</value>
+  </data>
 </root>

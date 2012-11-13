@@ -60,6 +60,10 @@ namespace FreeCars {
 			SaveToggleSwitch("settings_show_car2go_cars", ((ToggleSwitch)sender).IsChecked);
 			OnToggleSwitchChanged((ToggleSwitch)sender);
 		}
+		private void OnAllowAnalyticsToggleSwitchChanged(object sender, RoutedEventArgs e) {
+			SaveToggleSwitch("settings_allow_analytics", ((ToggleSwitch)sender).IsChecked);
+			OnToggleSwitchChanged((ToggleSwitch)sender);
+		}
 		private void OnShowAdsToggleSwitchChanged(object sender, RoutedEventArgs e) {
 			if (false == ((ToggleSwitch)sender).IsChecked) {
 				var buyAppNow = MessageBox.Show(Strings.SettingsPageBuyText, Strings.SettingsPageBuyCaption, MessageBoxButton.OKCancel);
@@ -101,6 +105,12 @@ namespace FreeCars {
 					((ToggleSwitch)sender).IsChecked = (true == (bool)IsolatedStorageSettings.ApplicationSettings["settings_show_drivenow_cars"]);
 				} catch (KeyNotFoundException) { ((ToggleSwitch)sender).IsChecked = true; }
 				OnToggleSwitchChanged((ToggleSwitch)sender);
+		}
+		private void OnAllowAnalyticsToggleSwitchLoaded(object sender, RoutedEventArgs e) {
+			try {
+				((ToggleSwitch)sender).IsChecked = (true == (bool)IsolatedStorageSettings.ApplicationSettings["settings_allow_analytics"]);
+			} catch (KeyNotFoundException) { ((ToggleSwitch)sender).IsChecked = false; }
+			OnToggleSwitchChanged((ToggleSwitch)sender);
 		}
 		private void OnShowAdsToggleSwitchLoaded(object sender, RoutedEventArgs e) {
 			((ToggleSwitch)sender).IsChecked = App.IsInTrialMode;

@@ -348,4 +348,14 @@ Pay only 9,98 € instead of 29,– € on the registration and get credited wit
   <data name="SettingsPageCallDrivenowPhoneNumberToDial" xml:space="preserve">
     <value>+49 800 723 40 70</value>
   </data>
+  <data name="AllowAnalytics" xml:space="preserve">
+    <value>Help to improve FreeCars</value>
+  </data>
+  <data name="AllowAnalyticsDisclaimer" xml:space="preserve">
+    <value>By allowing to send data for analytics, you help to improve FreeCars.
+
+Your privacy is not at stake and the submitted data will not be used for anything else then understanding errors and preferred features of the users and to improve FreeCars by responding to the collected results.
+
+I am not able to personally identify you by means of the submitted data.</value>
+  </data>
 </root>
