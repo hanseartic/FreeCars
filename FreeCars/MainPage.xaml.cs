@@ -41,7 +41,7 @@ namespace FreeCars {
 		}
 
 		private void CheckTrialAndAds() {
-			AdsGrid.Visibility = App.IsInTrialMode || true
+			AdsGrid.Visibility = App.IsInTrialMode
 				? Visibility.Visible
 				: Visibility.Collapsed;
 		}
