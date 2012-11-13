@@ -204,9 +204,7 @@
   <data name="AboutPageDisclaimer" xml:space="preserve">
     <value>FreeCars shows you free rides of the carsharing companies DriveNow and multicity as well as electrical charging-units nearby.
 
-At the moment you cannot reserve cars via this app.
-
-Integration of car2go is in progress.</value>
+At the moment you cannot reserve cars via this app.</value>
   </data>
   <data name="AboutPageVersionInfo" xml:space="preserve">
     <value>Version</value>
@@ -289,8 +287,12 @@ Please use one of the following options to get in touch with me for critics, sug
 I will answer every request!</value>
   </data>
   <data name="ChangelogPageBody" xml:space="preserve">
-    <value>1.3:
-* supports car2go by now
+    <value>1.4:
+* Secondary tiles for arbritrary locations
+* Analytics
+
+1.3:
+* supports car2go (only Berlin, yet) by now
 * improve map-performance
 
 1.2:
