@@ -49,7 +49,7 @@
 		<Grid x:Name="AdsGrid" Grid.Row="2" Visibility="Collapsed">
 			<adduplex:AdControl
 				x:Name="AdDuplexAdControl" Visibility="Visible"
-				AppId="23527"
+				AppId="23411"
 				AdLoadingError="OnAdduplexAddControlErrorOccured"
 				AdLoaded="OnAdduplexAddControlAdRefreshed" 
 				RefreshInterval="30" />

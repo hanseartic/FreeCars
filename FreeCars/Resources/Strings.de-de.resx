@@ -202,11 +202,11 @@
     <value>@fraggedreality</value>
   </data>
   <data name="AboutPageDisclaimer" xml:space="preserve">
-    <value>FreeCars zeigt freie Fahrzeuge der Carsharing-Anbieter DriveNow und multicity sowie Ladesäulen in der Umgebung an.
-	
-Derzeit ist noch keine Vorreservierung der Fahrzeuge über die App möglich.
+    <value>FreeCars zeigt freie Fahrzeuge der Carsharing-Anbieter car2go (derzeit nur Berlin), DriveNow und multicity sowie elektrische Ladesäulen in der Umgebung an.
 
-Die Integration von car2go ist in Vorbereitung.</value>
+Über secondary-Tiles können beliebige Suchorte auf den Startbildschirm gepinnt werden.
+	
+Derzeit ist noch keine Vorreservierung der Fahrzeuge über die App möglich.</value>
   </data>
   <data name="AboutPageVersionInfo" xml:space="preserve">
     <value>Version</value>
@@ -293,8 +293,13 @@ Bitte nutzen Sie eine der folgenden Kontaktmöglichkeiten bei Kritik, Verbesseru
 Jede Anfrage wird beantwortet!</value>
   </data>
   <data name="ChangelogPageBody" xml:space="preserve">
-    <value>1.3:
-* Unterstützung für car2go
+    <value>1.4:
+* Secondary Tiles um beliebige Orte an den Startscreen zu pinnen
+* Analytics
+* kostenlose DriveNow-Nummer
+
+1.3 (nur Beta-release):
+* Unterstützung für car2go (zunächst nur Berlin)
 * Performance-Verbesserungen in der Map
 
 1.2:
