@@ -56,6 +56,12 @@ namespace FreeCars {
 			CheckTrialAndAds();
 			((App)Application.Current).ReloadPOIs();
 
+			try {
+				gpsAllowed = (bool)IsolatedStorageSettings.ApplicationSettings["settings_use_GPS"];
+			} catch (KeyNotFoundException) {
+				checkForGPSUsage();
+			}
+
 			if (NavigationContext.QueryString.ContainsKey("Lat") && NavigationContext.QueryString.ContainsKey("Lon") && NavigationContext.QueryString.ContainsKey("Zoom")) {
 				try {
 					var usCultureInformation = new CultureInfo("en-US");
@@ -69,11 +75,6 @@ namespace FreeCars {
 			}
 
 			if (NavigationMode.Back != e.NavigationMode) {
-				try {
-					gpsAllowed = (bool)IsolatedStorageSettings.ApplicationSettings["settings_use_GPS"];
-				} catch (KeyNotFoundException) {
-					checkForGPSUsage();
-				}
 				if (gpsAllowed) {
 					try {
 						var position = (GeoPosition<GeoCoordinate>)IsolatedStorageSettings.ApplicationSettings["my_last_location"];
