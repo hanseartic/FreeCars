@@ -13,6 +13,7 @@ using System.Windows.Media.Animation;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using AdDuplex;
+using GoogleMaps.Geocode;
 using Microsoft.Advertising;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Controls.Maps;
@@ -436,47 +437,73 @@ namespace FreeCars {
 				var usCultureInfo = new CultureInfo("en-US");
 				var latitude = map.Center.Latitude.ToString(usCultureInfo.NumberFormat);
 				var longitude = map.Center.Longitude.ToString(usCultureInfo.NumberFormat);
-				var zoom = map.ZoomLevel.ToString(usCultureInfo.NumberFormat);
-				var tileParam = "Lat=" + latitude + "&Lon=" + longitude + "&Zoom=" + zoom;
-				if (null != App.CheckIfTileExist(tileParam)) return;
-
-				using (var store = IsolatedStorageFile.GetUserStoreForApplication()) {
-					var fileName = "/Shared/ShellContent/" + tileParam + ".jpg";
-					if (store.FileExists(fileName)) {
-						store.DeleteFile(fileName);
-					}
-					foreach (var layer in map.Children.OfType<MapLayer>()) {
-						layer.Visibility = Visibility.Collapsed;
-					}
-					using (var saveFileStream = new IsolatedStorageFileStream(fileName, FileMode.Create, store)) {
-						var b = new WriteableBitmap(173, 173);
-						var offsetX = (map.ActualWidth - 173)/2;
-						var offsetY = (map.ActualHeight - 173)/2;
-						b.Render(map, new TranslateTransform {
-							X = -offsetX,
-							Y = -offsetY,
-						});
-						b.Invalidate();
-						b.SaveJpeg(saveFileStream, b.PixelWidth, b.PixelHeight, 0, 100);
-					}
-					foreach (var layer in map.Children.OfType<MapLayer>()) {
-						layer.Visibility = Visibility.Visible;
-					}
-				}
 				
-				ShellTile.Create(
+
+				var reverseGeocode = new ReverseGeocode(true);
+				reverseGeocode.Updated += OnReverseGeocodeUpdated;
+				reverseGeocode.QueryAsync(new Location {lat = latitude, lng = longitude,});
+
+
+				
+			} catch (Exception e) {
+				return;
+			}
+		}
+
+		private void OnReverseGeocodeUpdated(object sender, EventArgs e) {
+			map.Dispatcher.BeginInvoke(() => {
+				                           
+			                           
+			var usCultureInfo = new CultureInfo("en-US");
+			var latitude = map.Center.Latitude.ToString(usCultureInfo.NumberFormat);
+			var longitude = map.Center.Longitude.ToString(usCultureInfo.NumberFormat);
+			var zoom = map.ZoomLevel.ToString(usCultureInfo.NumberFormat);
+			var tileParam = "Lat=" + latitude + "&Lon=" + longitude + "&Zoom=" + zoom;
+			if (null != App.CheckIfTileExist(tileParam)) return;
+
+			using (var store = IsolatedStorageFile.GetUserStoreForApplication()) {
+				var fileName = "/Shared/ShellContent/" + tileParam + ".jpg";
+				if (store.FileExists(fileName)) {
+					store.DeleteFile(fileName);
+				}
+				foreach (var layer in map.Children.OfType<MapLayer>()) {
+					layer.Visibility = Visibility.Collapsed;
+				}
+				using (var saveFileStream = new IsolatedStorageFileStream(fileName, FileMode.Create, store)) {
+					var b = new WriteableBitmap(173, 173);
+					var offsetX = (map.ActualWidth - 173) / 2;
+					var offsetY = (map.ActualHeight - 173) / 2;
+					b.Render(map, new TranslateTransform {
+						X = -offsetX,
+						Y = -offsetY,
+					});
+					b.Invalidate();
+					b.SaveJpeg(saveFileStream, b.PixelWidth, b.PixelHeight, 0, 100);
+				}
+				foreach (var layer in map.Children.OfType<MapLayer>()) {
+					layer.Visibility = Visibility.Visible;
+				}
+			}
+
+			var response = sender as ReverseGeocodeResults;
+
+			var localityName = "";
+			foreach (var address_component in response.results.SelectMany(result => result.address_components.Where(address_component => address_component.types.Contains("locality") && address_component.types.Contains("political")))) {
+				localityName = address_component.long_name;
+				break;
+			}
+
+			ShellTile.Create(
 					new Uri("/MainPage.xaml?" + tileParam, UriKind.Relative),
 					new StandardTileData {
 						//Title = "FreeCars",
 						BackTitle = "FreeCars",
-						//SBackContent = "Locations Name with something",
+						BackContent = localityName,
 						Count = 0,
 						BackgroundImage = new Uri("isostore:/Shared/ShellContent/" + tileParam + ".jpg", UriKind.Absolute),
 						//BackBackgroundImage = new Uri("", UriKind.Relative),
 					});
-			} catch (Exception e) {
-				return;
-			}
+			});
 		}
 
 		private void OnMapTap(object sender, GestureEventArgs e) {
