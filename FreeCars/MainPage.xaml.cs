@@ -208,7 +208,7 @@ namespace FreeCars {
 			foreach (var car in driveNow.DriveNowCars) {
 				var distanceToMapCenter = (int)car.position.GetDistanceTo(centerLocation);
 				if (1500 < distanceToMapCenter) continue;
-				var distance = (int)car.position.GetDistanceTo(myLocationPushpin.Location);
+				//var distance = (int)car.position.GetDistanceTo(myLocationPushpin.Location);
 				var pushpinContent = new Border {
 					Child = new StackPanel {
 						Orientation = System.Windows.Controls.Orientation.Vertical,
@@ -244,7 +244,7 @@ namespace FreeCars {
 			}
 		}
 		void UpdateMulticityLayers(Multicity multicity) {
-			var myLocation = myLocationPushpin.Location;
+			//var myLocation = myLocationPushpin.Location;
 			var centerLocation = map.Center;
 			var cultureInfo = new CultureInfo("en-US");
 			var multcityCarsBrush = new SolidColorBrush(Colors.Red);
@@ -338,7 +338,6 @@ namespace FreeCars {
 
 		}
 		void UpdateCar2GoLayer(Car2Go car2Go) {
-			var usCultureInfo = new CultureInfo("en-US");
 			var car2GoCarsBrush = new SolidColorBrush(new Color {A = 255, R = 0, G = 159, B = 228,});
 			var centerLocation = map.Center;
 			car2goCarsLayer.Children.Clear();
@@ -442,22 +441,26 @@ namespace FreeCars {
 				if (null != App.CheckIfTileExist(tileParam)) return;
 
 				using (var store = IsolatedStorageFile.GetUserStoreForApplication()) {
-					using (var saveFileStream = new IsolatedStorageFileStream("/Shared/ShellContent/" + tileParam + ".jpg", FileMode.Create, store)) {
-						
-						foreach (var layer in map.Children.OfType<MapLayer>()) {
-							layer.Visibility = Visibility.Collapsed;
-						}
-						var mapHeight = map.Height;
-						var mapWidth = map.Width;
-						map.Height = 173;
-						map.Width = 173;
-						var b = new WriteableBitmap(map, null);
+					var fileName = "/Shared/ShellContent/" + tileParam + ".jpg";
+					if (store.FileExists(fileName)) {
+						store.DeleteFile(fileName);
+					}
+					foreach (var layer in map.Children.OfType<MapLayer>()) {
+						layer.Visibility = Visibility.Collapsed;
+					}
+					using (var saveFileStream = new IsolatedStorageFileStream(fileName, FileMode.Create, store)) {
+						var b = new WriteableBitmap(173, 173);
+						var offsetX = (map.ActualWidth - 173)/2;
+						var offsetY = (map.ActualHeight - 173)/2;
+						b.Render(map, new TranslateTransform {
+							X = -offsetX,
+							Y = -offsetY,
+						});
+						b.Invalidate();
 						b.SaveJpeg(saveFileStream, b.PixelWidth, b.PixelHeight, 0, 100);
-						map.Height = mapHeight;
-						map.Width = mapWidth;
-						foreach (var layer in map.Children.OfType<MapLayer>()) {
-							layer.Visibility = Visibility.Visible;
-						}
+					}
+					foreach (var layer in map.Children.OfType<MapLayer>()) {
+						layer.Visibility = Visibility.Visible;
 					}
 				}
 				
