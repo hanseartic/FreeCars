@@ -6,3 +6,5 @@ obj
 *.designer.cs
 packages/*
 _ReSharper*
+
+.DS_Store
