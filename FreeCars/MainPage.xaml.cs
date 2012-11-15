@@ -63,7 +63,7 @@ namespace FreeCars {
 				checkForGPSUsage();
 			}
 
-			if (NavigationContext.QueryString.ContainsKey("Lat") && NavigationContext.QueryString.ContainsKey("Lon") && NavigationContext.QueryString.ContainsKey("Zoom")) {
+			if ((NavigationMode.New == e.NavigationMode) && NavigationContext.QueryString.ContainsKey("Lat") && NavigationContext.QueryString.ContainsKey("Lon") && NavigationContext.QueryString.ContainsKey("Zoom")) {
 				try {
 					var usCultureInformation = new CultureInfo("en-US");
 					var latitude = double.Parse(NavigationContext.QueryString["Lat"], usCultureInformation.NumberFormat);
@@ -428,81 +428,76 @@ namespace FreeCars {
 
 		private void pinCurrentMapCenterAsSecondaryTile() {
 			try {
-
-				/*
-				MessageBox.Show(FreeCars.Resources.Strings.PinToStartQuestionHeader,
-				                FreeCars.Resources.Strings.PinToStartQuestionBody, MessageBoxButton.OKCancel);
-				*/
-
 				var usCultureInfo = new CultureInfo("en-US");
 				var latitude = map.Center.Latitude.ToString(usCultureInfo.NumberFormat);
 				var longitude = map.Center.Longitude.ToString(usCultureInfo.NumberFormat);
-				
 
 				var reverseGeocode = new ReverseGeocode(true);
 				reverseGeocode.Updated += OnReverseGeocodeUpdated;
-				reverseGeocode.QueryAsync(new Location {lat = latitude, lng = longitude,});
-
-
+				reverseGeocode.QueryAsync(latitude, longitude, CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.ToUpper());
 				
-			} catch (Exception e) {
-				return;
-			}
+			} catch (Exception) { }
 		}
 
 		private void OnReverseGeocodeUpdated(object sender, EventArgs e) {
 			map.Dispatcher.BeginInvoke(() => {
-				                           
-			                           
-			var usCultureInfo = new CultureInfo("en-US");
-			var latitude = map.Center.Latitude.ToString(usCultureInfo.NumberFormat);
-			var longitude = map.Center.Longitude.ToString(usCultureInfo.NumberFormat);
-			var zoom = map.ZoomLevel.ToString(usCultureInfo.NumberFormat);
-			var tileParam = "Lat=" + latitude + "&Lon=" + longitude + "&Zoom=" + zoom;
-			if (null != App.CheckIfTileExist(tileParam)) return;
+				var usCultureInfo = new CultureInfo("en-US");
+				var latitude = map.Center.Latitude.ToString(usCultureInfo.NumberFormat);
+				var longitude = map.Center.Longitude.ToString(usCultureInfo.NumberFormat);
+				var zoom = map.ZoomLevel.ToString(usCultureInfo.NumberFormat);
+				var tileParam = "Lat=" + latitude + "&Lon=" + longitude + "&Zoom=" + zoom;
+				if (null != App.CheckIfTileExist(tileParam)) return;
 
-			using (var store = IsolatedStorageFile.GetUserStoreForApplication()) {
-				var fileName = "/Shared/ShellContent/" + tileParam + ".jpg";
-				if (store.FileExists(fileName)) {
-					store.DeleteFile(fileName);
+				using (var store = IsolatedStorageFile.GetUserStoreForApplication()) {
+					var fileName = "/Shared/ShellContent/" + tileParam + ".jpg";
+					if (store.FileExists(fileName)) {
+						store.DeleteFile(fileName);
+					}
+					foreach (var layer in map.Children.OfType<MapLayer>()) {
+						layer.Visibility = Visibility.Collapsed;
+					}
+					using (var saveFileStream = new IsolatedStorageFileStream(fileName, FileMode.Create, store)) {
+						var b = new WriteableBitmap(173, 173);
+						var offsetX = (map.ActualWidth - 173) / 2;
+						var offsetY = (map.ActualHeight - 173) / 2;
+						b.Render(map, new TranslateTransform {
+							X = -offsetX,
+							Y = -offsetY,
+						});
+						b.Invalidate();
+						b.SaveJpeg(saveFileStream, b.PixelWidth, b.PixelHeight, 0, 100);
+					}
+					foreach (var layer in map.Children.OfType<MapLayer>()) {
+						layer.Visibility = Visibility.Visible;
+					}
 				}
-				foreach (var layer in map.Children.OfType<MapLayer>()) {
-					layer.Visibility = Visibility.Collapsed;
-				}
-				using (var saveFileStream = new IsolatedStorageFileStream(fileName, FileMode.Create, store)) {
-					var b = new WriteableBitmap(173, 173);
-					var offsetX = (map.ActualWidth - 173) / 2;
-					var offsetY = (map.ActualHeight - 173) / 2;
-					b.Render(map, new TranslateTransform {
-						X = -offsetX,
-						Y = -offsetY,
-					});
-					b.Invalidate();
-					b.SaveJpeg(saveFileStream, b.PixelWidth, b.PixelHeight, 0, 100);
-				}
-				foreach (var layer in map.Children.OfType<MapLayer>()) {
-					layer.Visibility = Visibility.Visible;
-				}
-			}
 
-			var response = sender as ReverseGeocodeResults;
+				var response = (sender as ReverseGeocode).Results;
 
-			var localityName = "";
-			foreach (var address_component in response.results.SelectMany(result => result.address_components.Where(address_component => address_component.types.Contains("locality") && address_component.types.Contains("political")))) {
-				localityName = address_component.long_name;
-				break;
-			}
+				var localityName = "";
+				if (null != response) {
+					
+					foreach (var result in response.Where(result => result.types.Contains("sublocality") && result.types.Contains("political"))) {
+						localityName = result.formatted_address;
+						break;
+					}
+					if ("" == localityName) {
+						foreach (var address_component in response.SelectMany(result => result.address_components.Where(
+						address_component => address_component.types.Contains("locality") && address_component.types.Contains("political")))) {
+							localityName = address_component.long_name;
+							break;
+						}
+					}
+				}
 
-			ShellTile.Create(
+				ShellTile.Create(
 					new Uri("/MainPage.xaml?" + tileParam, UriKind.Relative),
 					new StandardTileData {
-						//Title = "FreeCars",
 						BackTitle = "FreeCars",
 						BackContent = localityName,
 						Count = 0,
 						BackgroundImage = new Uri("isostore:/Shared/ShellContent/" + tileParam + ".jpg", UriKind.Absolute),
-						//BackBackgroundImage = new Uri("", UriKind.Relative),
-					});
+				});
 			});
 		}
 
@@ -521,6 +516,46 @@ namespace FreeCars {
 
 		private void OnMapViewChangeEnd(object sender, MapEventArgs e) {
 			((App)Application.Current).RefreshPOIs();
+
+			if (IsolatedStorageSettings.ApplicationSettings.Contains("car2goSelectedCity")) {
+				if ("autodetect" != ((string)IsolatedStorageSettings.ApplicationSettings["car2goSelectedCity"]).ToLower()) return;
+			}
+
+			var usCultureInfo = new CultureInfo("en-US");
+
+			var latitude = map.Center.Latitude.ToString(usCultureInfo.NumberFormat);
+			var longitude = map.Center.Longitude.ToString(usCultureInfo.NumberFormat);
+
+			var reverseGeocode = new ReverseGeocode(true);
+			reverseGeocode.Updated += delegate(object o, EventArgs args) {
+				
+				var response = (o as ReverseGeocode).Results;
+				var localityName = "";
+				if (null != response) {
+					if ("" == localityName) {
+						foreach (var address_component in response.SelectMany(result => result.address_components.Where(
+						address_component => address_component.types.Contains("locality") && address_component.types.Contains("political")))) {
+							localityName = address_component.long_name.ToLower();
+							break;
+						}
+					}
+				}
+				if ((IsolatedStorageSettings.ApplicationSettings.Contains("current_map_city") &&
+					((string)IsolatedStorageSettings.ApplicationSettings["current_map_city"] != localityName)) || !IsolatedStorageSettings.ApplicationSettings.Contains("current_map_city")) {
+					try {
+						IsolatedStorageSettings.ApplicationSettings.Add("current_map_city", localityName);
+					} catch (ArgumentException) {
+						IsolatedStorageSettings.ApplicationSettings["current_map_city"] = localityName;
+					}
+					IsolatedStorageSettings.ApplicationSettings.Save();
+					((App)Application.Current).RootFrame.Dispatcher.BeginInvoke(() => {
+						try {
+						(App.Current.Resources["car2go"] as Car2Go).LoadPOIs();
+						} catch {}
+					});
+				}
+			};
+			reverseGeocode.QueryAsync(latitude, longitude);
 		}
 
 		private void OnSDKAddControlErrorOccured(object sender, AdErrorEventArgs e) {

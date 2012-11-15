@@ -139,7 +139,9 @@ namespace FreeCars {
             } catch (DecoderFallbackException) { } catch (NullReferenceException) { }
         }
         private void OnMulticityChargersOpenReadCompleted(object sender, OpenReadCompletedEventArgs e) {
-            SerializeChargers(e.Result);
+			try {
+				SerializeChargers(e.Result);
+			} catch (WebException) { }
         }
         public event EventHandler Updated;
 		private void TriggerUpdated() {
