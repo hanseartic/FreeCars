@@ -35,4 +35,25 @@ namespace FreeCars {
 		[DataMember(Name = "vin")]
 		public string vin;
 	}
+
+	[DataContract]
+	public struct Car2GoLocations {
+		[DataMember]
+		public Car2GoLocation[] location { get; set; }
+	} 
+	
+	[DataContract]
+	public class Car2GoLocation {
+		[DataMember]
+		public string countryCode { get; set; }
+		[DataMember]
+		public int locationId { get; set; }
+		[DataMember]
+		public string locationName { get; set; }
+		[DataMember]
+		public string defaultLanguage { get; set; }
+		public override string ToString() {
+			return locationName;
+		}
+	}
 }
