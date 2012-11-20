@@ -15,12 +15,15 @@ using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 
 namespace FreeCars {
-	public class Car2Go {
+	public class Car2Go : DependencyObject{
 		public List<Car2GoInformation> Car2GoCars { get; private set; }
 		public Car2Go() {
 			Car2GoCars = new List<Car2GoInformation>();
+			LoadCities();
 		}
+
 		private GeoPosition<GeoCoordinate> position;
+		private const string consumerkey = "JohannesRuth";
 		public void LoadPOIs() {
 			try {
 				position = (GeoPosition<GeoCoordinate>)IsolatedStorageSettings.ApplicationSettings["my_last_location"];
@@ -41,8 +44,24 @@ namespace FreeCars {
 					return;
 				}
 			} catch (KeyNotFoundException) { }
+			var city = "ulm"; // fallback
+			try {
+				string preferred_city = "";
+				if (IsolatedStorageSettings.ApplicationSettings.Contains("car2goSelectedCity")) {
+					preferred_city = (string)IsolatedStorageSettings.ApplicationSettings["car2goSelectedCity"];
+					if ("Autodetect" == preferred_city) {
+						preferred_city = "";
+					}
+				}
+				if ("" == preferred_city) {
+					city = (string)IsolatedStorageSettings.ApplicationSettings["current_map_city"];
+				} else {
+					city = preferred_city.ToLower();
+				}
+				
+			} catch (KeyNotFoundException) { }
 			var wc = new WebClient();
-			var callUri = "https://www.car2go.com/api/v2.1/vehicles?loc=berlin&format=json&oauth_consumer_key=JohannesRuth";
+			var callUri = "https://www.car2go.com/api/v2.1/vehicles?loc="+city+"&format=json&oauth_consumer_key=" + consumerkey;
 
 			wc.OpenReadCompleted += OnCar2GoCarsOpenReadCompleted;
 			wc.OpenReadAsync(new Uri(callUri));
@@ -79,6 +98,35 @@ namespace FreeCars {
 				}
 			} catch (WebException) { }
 		}
+		private void LoadCities() {
+			var wc = new WebClient();
+			var callUri = "https://www.car2go.com/api/v2.1/locations?&format=json&oauth_consumer_key=" + consumerkey;
+
+			wc.OpenReadCompleted +=
+				delegate(object o, OpenReadCompletedEventArgs e) {
+					var cities = new List<Car2GoLocation>();
+					try {
+						var serializer = new DataContractJsonSerializer(typeof(Car2GoLocations));
+					    cities = new List<Car2GoLocation>(((Car2GoLocations)serializer.ReadObject(e.Result)).location);
+						
+					} catch (WebException) { } catch (NullReferenceException) { }
+					cities.Insert(0, new Car2GoLocation { locationName = "Autodetect", locationId = 0, });
+					cities.Insert(0, null);
+					Cities = cities;
+				};
+			wc.OpenReadAsync(new Uri(callUri));
+		}
+		public static readonly DependencyProperty CitiesProperty = DependencyProperty.Register(
+			"Cities",
+			typeof(List<Car2GoLocation>),
+			typeof(Car2Go),
+			new PropertyMetadata(new List<Car2GoLocation>())
+		);
+
+		public List<Car2GoLocation> Cities {
+			get { return (List<Car2GoLocation>)GetValue(CitiesProperty); }
+			set { SetValue(CitiesProperty, value); }
+		} 
 
 		public event EventHandler Updated;
 	}

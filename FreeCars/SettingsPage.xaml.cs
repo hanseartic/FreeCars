@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using GoogleMaps.Geocode;
 using Microsoft.Phone.Controls;
 using System.IO.IsolatedStorage;
 using FreeCars.Resources;
@@ -15,8 +19,16 @@ namespace FreeCars {
 		public SettingsPage() {
             InitializeComponent();
 			LoadAppBar();
-        }
-		private void AppOnTrialModeChanged(object sender, EventArgs e) {
+			LoadCar2GoCities();
+		}
+
+	    private void LoadCar2GoCities() {
+		    car2goCitiesList.DataContext = App.Current.Resources["car2go"] as Car2Go;
+
+		    var binding = new Binding("Cities") {Source = App.Current.Resources["car2go"] as Car2Go};
+		    BindingOperations.SetBinding(car2goCitiesList, ListPicker.ItemsSourceProperty, binding);
+	    }
+	    private void AppOnTrialModeChanged(object sender, EventArgs e) {
 			if (App.IsInTrialMode) {
 				ShowAdsToggleSwitch.Visibility = Visibility.Visible;
 			}
@@ -38,7 +50,6 @@ namespace FreeCars {
             }
             IsolatedStorageSettings.ApplicationSettings.Save();
         }
-        
         private void OnGPSToggleSwitchChanged(object sender, RoutedEventArgs e) {
             SaveToggleSwitch("settings_use_GPS", ((ToggleSwitch)sender).IsChecked);
             OnToggleSwitchChanged((ToggleSwitch)sender);
@@ -63,6 +74,23 @@ namespace FreeCars {
 		private void OnAllowAnalyticsToggleSwitchChanged(object sender, RoutedEventArgs e) {
 			SaveToggleSwitch("settings_allow_analytics", ((ToggleSwitch)sender).IsChecked);
 			OnToggleSwitchChanged((ToggleSwitch)sender);
+		}
+		private void OnCar2goCitySelected(object sender, SelectionChangedEventArgs e) {
+			try {
+				var selectedItem = (sender as ListPicker).SelectedItem as Car2GoLocation;
+				if (0 == selectedItem.locationId) {
+					try {
+						IsolatedStorageSettings.ApplicationSettings.Remove("car2goSelectedCity");
+					} catch (Exception) {}
+				} else {
+					try {
+						IsolatedStorageSettings.ApplicationSettings.Add("car2goSelectedCity", selectedItem.locationName);
+					} catch (ArgumentException) {
+						IsolatedStorageSettings.ApplicationSettings["car2goSelectedCity"] = selectedItem.locationName;
+					}
+				}
+				IsolatedStorageSettings.ApplicationSettings.Save();
+			} catch (NullReferenceException) { }
 		}
 		private void OnShowAdsToggleSwitchChanged(object sender, RoutedEventArgs e) {
 			if (false == ((ToggleSwitch)sender).IsChecked) {
@@ -115,6 +143,15 @@ namespace FreeCars {
 		private void OnShowAdsToggleSwitchLoaded(object sender, RoutedEventArgs e) {
 			((ToggleSwitch)sender).IsChecked = App.IsInTrialMode;
 			OnToggleSwitchChanged((ToggleSwitch)sender);
+		}
+		private void OnCar2goCitySelectLoaded(object sender, RoutedEventArgs e) {
+			try {
+				var selectedCityName = (string)IsolatedStorageSettings.ApplicationSettings["car2goSelectedCity"];
+				foreach (Car2GoLocation cityLocation in from Car2GoLocation cityLocation in (sender as ListPicker).Items where null != cityLocation where cityLocation.locationName == selectedCityName select cityLocation) {
+					(sender as ListPicker).SelectedItem = cityLocation;
+					return;
+				}
+			} catch (KeyNotFoundException) { }
 		}
         private void LoadAppBar() {
 			ApplicationBar = new ApplicationBar {

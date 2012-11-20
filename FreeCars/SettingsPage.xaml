@@ -1,28 +1,28 @@
 ﻿<phone:PhoneApplicationPage 
-    x:Class="FreeCars.SettingsPage"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
-    xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
-    xmlns:controls="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-    xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
-    xmlns:local="clr-namespace:FreeCars" mc:Ignorable="d" d:DesignWidth="480" d:DesignHeight="768"
-    FontFamily="{StaticResource PhoneFontFamilyNormal}"
-    FontSize="{StaticResource PhoneFontSizeNormal}"
-    Foreground="{StaticResource PhoneForegroundBrush}"
-    SupportedOrientations="Portrait"  Orientation="Portrait"
-    shell:SystemTray.IsVisible="True" Loaded="OnSettingsPageLoaded">
+	x:Class="FreeCars.SettingsPage"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
+	xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+	xmlns:controls="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+	xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
+	xmlns:local="clr-namespace:FreeCars" xmlns:System="clr-namespace:System;assembly=mscorlib" mc:Ignorable="d" d:DesignWidth="480" d:DesignHeight="768"
+	FontFamily="{StaticResource PhoneFontFamilyNormal}"
+	FontSize="{StaticResource PhoneFontSizeNormal}"
+	Foreground="{StaticResource PhoneForegroundBrush}"
+	SupportedOrientations="Portrait"  Orientation="Portrait"
+	shell:SystemTray.IsVisible="True" Loaded="OnSettingsPageLoaded">
 	<phone:PhoneApplicationPage.Resources>
 		<local:BoolToVisibilityConverter x:Key="boolToVisibilityConverter" />
 	</phone:PhoneApplicationPage.Resources>
 		<!--LayoutRoot is the root grid where all page content is placed-->
-    <Grid x:Name="LayoutRoot" Background="Transparent">
-        <!--Pivot Control-->
-        <controls:Pivot Title="{Binding LocalizedStrings.SettingsPageTitle, Source={StaticResource ResourceAccess}}">
-            <!--Pivot item general application settings-->
-            <controls:PivotItem Header="{Binding LocalizedStrings.SettingsGeneralTitle, Source={StaticResource ResourceAccess}}">
+	<Grid x:Name="LayoutRoot" Background="Transparent">
+		<!--Pivot Control-->
+		<controls:Pivot Title="{Binding LocalizedStrings.SettingsPageTitle, Source={StaticResource ResourceAccess}}">
+			<!--Pivot item general application settings-->
+			<controls:PivotItem Header="{Binding LocalizedStrings.SettingsGeneralTitle, Source={StaticResource ResourceAccess}}">
 				<Grid>
 					<Grid.RowDefinitions>
 						<RowDefinition Height="*" />
@@ -46,8 +46,8 @@
 					<Grid>
 						<StackPanel Margin="0,8">
 							<toolkit:ToggleSwitch Header="{Binding LocalizedStrings.SettingsPageShowCar2goCars, Source={StaticResource ResourceAccess}}" Checked="OnCar2GoCarsToggleSwitchChanged" Unchecked="OnCar2GoCarsToggleSwitchChanged" Loaded="OnCar2GoCarsToggleSwitchLoaded" Content="{Binding LocalizedStrings.ToggleSwitchOff, Source={StaticResource ResourceAccess}}" SwitchForeground="#FF009FE4" />
-							<toolkit:ListPicker Header="City">
-								<toolkit:ListPickerItem>Berlin</toolkit:ListPickerItem>
+							<toolkit:ListPicker x:Name="car2goCitiesList" Header="City" SelectionChanged="OnCar2goCitySelected" Loaded="OnCar2goCitySelectLoaded">
+								
 							</toolkit:ListPicker>
 						</StackPanel>
 					</Grid>
@@ -71,18 +71,18 @@
 					</Grid>
 				</ScrollViewer>
 			</controls:PivotItem>
-            <!--Pivot item multicity-->
-            <controls:PivotItem Header="{Binding LocalizedStrings.SettingsMulticityTitle, Source={StaticResource ResourceAccess}}">
-                <Grid>
-                    <StackPanel>
-                        <toolkit:ToggleSwitch Header="{Binding LocalizedStrings.SettingsPageShowMulticityCars, Source={StaticResource ResourceAccess}}" Checked="OnMulticityCarsToggleSwitchChanged" Unchecked="OnMulticityCarsToggleSwitchChanged" Loaded="OnMulticityCarsToggleSwitchLoaded" Content="{Binding LocalizedStrings.ToggleSwitchOff, Source={StaticResource ResourceAccess}}" SwitchForeground="Red" />
+			<!--Pivot item multicity-->
+			<controls:PivotItem Header="{Binding LocalizedStrings.SettingsMulticityTitle, Source={StaticResource ResourceAccess}}">
+				<Grid>
+					<StackPanel>
+						<toolkit:ToggleSwitch Header="{Binding LocalizedStrings.SettingsPageShowMulticityCars, Source={StaticResource ResourceAccess}}" Checked="OnMulticityCarsToggleSwitchChanged" Unchecked="OnMulticityCarsToggleSwitchChanged" Loaded="OnMulticityCarsToggleSwitchLoaded" Content="{Binding LocalizedStrings.ToggleSwitchOff, Source={StaticResource ResourceAccess}}" SwitchForeground="Red" />
 						<toolkit:ToggleSwitch Header="{Binding LocalizedStrings.SettingsPageShowMulticityChargers, Source={StaticResource ResourceAccess}}" Checked="OnMulticityChargersToggleSwitchChanged" Unchecked="OnMulticityChargersToggleSwitchChanged" Loaded="OnMulticityChargersToggleSwitchLoaded" Content="{Binding LocalizedStrings.ToggleSwitchOff, Source={StaticResource ResourceAccess}}" SwitchForeground="Green" />
 						<TextBlock Text="{Binding LocalizedStrings.SettingsPageCallMulticityHeader, Source={StaticResource ResourceAccess}}" Tap="OnCallMulticityTap" Style="{StaticResource PhoneTextTitle3Style}" Margin="0" />
 						<TextBlock Text="{Binding LocalizedStrings.SettingsPageCallMulticityPhoneNumber, Source={StaticResource ResourceAccess}}" Style="{StaticResource PhoneTextTitle2Style}" Margin="0" Tap="OnCallMulticityTap" HorizontalAlignment="Center"/>
 					</StackPanel>
-                </Grid>
-            </controls:PivotItem>
+				</Grid>
+			</controls:PivotItem>
 		</controls:Pivot>
-    </Grid>
-    
+	</Grid>
+	
 </phone:PhoneApplicationPage>
