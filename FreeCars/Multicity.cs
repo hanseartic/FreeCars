@@ -122,21 +122,25 @@ namespace FreeCars {
         }
         private void SerializeChargers(Stream inputStream) {
             if (0 == inputStream.Length) return;
-            try {
-                var dataStream = ConvertStream(inputStream, Encoding.UTF8, Encoding.GetEncoding("iso-8859-1"));
-                inputStream.Close();
+			try {
+				var dataStream = ConvertStream(inputStream, Encoding.UTF8, Encoding.GetEncoding("iso-8859-1"));
+				inputStream.Close();
 
-                var serializer = new DataContractJsonSerializer(typeof(MulticityChargerData));
-                var objects = (MulticityChargerData)serializer.ReadObject(dataStream);
-                var multicity_chargers = new List<MulticityChargerMarker>();
-                foreach (var marker in objects.marker) {
-                    if ("rwemarker_crowded" == marker.hal2option.objectname || "rwemarker_vacant" == marker.hal2option.objectname) {
-                        multicity_chargers.Add(marker);
-                    }
-                }
-                MulticityChargers = multicity_chargers;
-                TriggerUpdated();
-            } catch (DecoderFallbackException) { } catch (NullReferenceException) { }
+				var serializer = new DataContractJsonSerializer(typeof(MulticityChargerData));
+				var objects = (MulticityChargerData)serializer.ReadObject(dataStream);
+				var multicity_chargers = new List<MulticityChargerMarker>();
+				foreach (var marker in objects.marker) {
+					if ("rwemarker_crowded" == marker.hal2option.objectname || "rwemarker_vacant" == marker.hal2option.objectname) {
+						multicity_chargers.Add(marker);
+					}
+				}
+				MulticityChargers = multicity_chargers;
+				TriggerUpdated();
+			} catch (DecoderFallbackException) { } catch (NullReferenceException) { } catch {
+				// TODO: repair correctly
+				// there is something nasty going on in WP8
+				// this does the job for now
+			}
         }
         private void OnMulticityChargersOpenReadCompleted(object sender, OpenReadCompletedEventArgs e) {
 			try {
