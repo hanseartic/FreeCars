@@ -312,6 +312,10 @@ namespace FreeCars {
 					var coordinate = new GeoCoordinate(
 							Double.Parse(station.lat, cultureInfo.NumberFormat),
 							Double.Parse(station.lng, cultureInfo.NumberFormat));
+
+					var distanceToMapCenter = (int)(coordinate.GetDistanceTo(centerLocation));
+					if (1500 < distanceToMapCenter) continue;
+					
 					var pushpin = new Pushpin() {
 						Location = coordinate,
 						Name = station.hal2option.tooltip,
