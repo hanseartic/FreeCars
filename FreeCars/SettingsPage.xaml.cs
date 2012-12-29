@@ -24,7 +24,6 @@ namespace FreeCars {
 
 	    private void LoadCar2GoCities() {
 		    car2goCitiesList.DataContext = App.Current.Resources["car2go"] as Car2Go;
-
 		    var binding = new Binding("Cities") {Source = App.Current.Resources["car2go"] as Car2Go};
 		    BindingOperations.SetBinding(car2goCitiesList, ListPicker.ItemsSourceProperty, binding);
 	    }

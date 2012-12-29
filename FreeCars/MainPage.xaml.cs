@@ -421,6 +421,8 @@ namespace FreeCars {
 					multicityChargingLayer.Children.Add(pushpin);
 				} else if (typeof(DriveNowCarInformation) == pushpin.Tag.GetType()) {
 					driveNowCarsLayer.Children.Add(pushpin);
+				} else if (typeof(Car2GoInformation) == pushpin.Tag.GetType()) {
+					car2goCarsLayer.Children.Add(pushpin);
 				}
 			}
 			((Border)pushpin.Content).Visibility = Visibility.Collapsed;
