@@ -293,7 +293,10 @@ Bitte nutzen Sie eine der folgenden Kontaktmöglichkeiten bei Kritik, Verbesseru
 Jede Anfrage wird beantwortet!</value>
   </data>
   <data name="ChangelogPageBody" xml:space="preserve">
-    <value>1.4.1.1:
+    <value>1.4.1.2:
+* car2go-Marker verschwanden bei'm Schließen - jetzt nicht mehr
+
+1.4.1.1:
 * Alle Städte für car2go (mit autodetect)
 * Springt bei Rücknavigation nicht mehr auf Startposition der Secondary-Tile
 * Besserer Bildausschnitt für Secondary Tile

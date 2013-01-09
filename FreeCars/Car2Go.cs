@@ -1,3 +1,4 @@
+
 using System;
 using System.Collections.Generic;
 using System.Device.Location;
@@ -15,7 +16,7 @@ using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 
 namespace FreeCars {
-	public class Car2Go : DependencyObject{
+	public class Car2Go : DependencyObject {
 		public List<Car2GoInformation> Car2GoCars { get; private set; }
 		public Car2Go() {
 			Car2GoCars = new List<Car2GoInformation>();
@@ -23,7 +24,7 @@ namespace FreeCars {
 		}
 
 		private GeoPosition<GeoCoordinate> position;
-		private const string consumerkey = "JohannesRuth";
+		private const string consumerkey = FreeCarsCredentials.Car2Go.ConsumerKey;
 		public void LoadPOIs() {
 			try {
 				position = (GeoPosition<GeoCoordinate>)IsolatedStorageSettings.ApplicationSettings["my_last_location"];
