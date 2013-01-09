@@ -54,8 +54,8 @@
     <Reference Include="FlurryWP7SDK">
       <HintPath>Lib\FlurryWP7SDK.dll</HintPath>
     </Reference>
-    <Reference Include="GoogleMaps">
-      <HintPath>Lib\GoogleMaps.dll</HintPath>
+    <Reference Include="GoogleMaps.Portable">
+      <HintPath>Lib\GoogleMaps.Portable.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Advertising.Mobile, Version=6.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
     <Reference Include="Microsoft.Advertising.Mobile.UI, Version=6.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
@@ -83,6 +83,9 @@
     <Reference Include="mscorlib.extensions" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\FreeCarsCredentials\FreeCarsCredentials\Credentials.cs">
+      <Link>Credentials.cs</Link>
+    </Compile>
     <Compile Include="About.xaml.cs">
       <DependentUpon>About.xaml</DependentUpon>
     </Compile>
