@@ -34,7 +34,7 @@
 
 		<!--ContentPanel - place additional content here-->
 		<Grid x:Name="ContentPanel" Grid.Row="1">
-			<map:Map HorizontalAlignment="Left" Name="map" VerticalAlignment="Top" Height="800" Width="480" CredentialsProvider="AsD4awUEo6H7hWplpv4yrTfqDS2NmKfxFFRxZv8Nl1fBm0gv5d7z_ySqquJqdKLG" Tap="OnMapTap" Hold="OnMapHold" ViewChangeEnd="OnMapViewChangeEnd">
+			<map:Map HorizontalAlignment="Left" Name="map" VerticalAlignment="Top" Height="800" Width="480" Tap="OnMapTap" Hold="OnMapHold" ViewChangeEnd="OnMapViewChangeEnd">
                 <map:MapLayer x:Name="myLocationLayer">
                     <map:Pushpin x:Name="myLocationPushpin" Template="{StaticResource MyPositionPushpinTemplate}" Margin="-14, 0, -14, 0" Opacity="0.9"  Visibility="Collapsed"  />
                 </map:MapLayer>
@@ -49,13 +49,11 @@
 		<Grid x:Name="AdsGrid" Grid.Row="2" Visibility="Collapsed">
 			<adduplex:AdControl
 				x:Name="AdDuplexAdControl" Visibility="Visible"
-				AppId="23411"
 				AdLoadingError="OnAdduplexAddControlErrorOccured"
 				AdLoaded="OnAdduplexAddControlAdRefreshed" 
 				RefreshInterval="30" />
 			<my:AdControl
 				x:Name="SDKAdControl" Visibility="Visible"
-				ApplicationId="1e220ae2-a6af-4bb3-a0c8-919d80531e85" AdUnitId="10047728"
 				ErrorOccurred="OnSDKAddControlErrorOccured" 
 				AdRefreshed="OnSDKAddControlAdRefreshed"
 				IsAutoRefreshEnabled="True"
