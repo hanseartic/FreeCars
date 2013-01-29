@@ -376,4 +376,13 @@ Geben Sie eine Beschreibung für den aktuellen Ausschnitt an.</value>
   <data name="PinToStartQuestionHeader" xml:space="preserve">
     <value>Auf den Startbildschirm</value>
   </data>
+  <data name="AboutPageConnectFacebook" xml:space="preserve">
+    <value>Like on Facebook</value>
+  </data>
+  <data name="AboutPageContactViaFacebook" xml:space="preserve">
+    <value>Facebook:</value>
+  </data>
+  <data name="AboutPageFacebookAddress" xml:space="preserve">
+    <value>http://www.facebook.com/FreeCarsWP</value>
+  </data>
 </root>
