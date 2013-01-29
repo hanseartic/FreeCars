@@ -49,7 +49,11 @@
 							<toolkit:ListPicker x:Name="car2goCitiesList" Header="City" SelectionChanged="OnCar2goCitySelected" Loaded="OnCar2goCitySelectLoaded">
 								
 							</toolkit:ListPicker>
+							<Button x:Name="connectToCar2GoButton" Click="OnConnectToCar2GoClicked" Visibility="{Binding ShowConnectCar2GoApiButton}">FreeCars mit car2go verbinden</Button>
 						</StackPanel>
+						<phone:WebBrowser x:Name="c2gAuthBrowser" Visibility="Collapsed" IsScriptEnabled="True" Navigated="Onc2gAuthBrowserNavigated">
+							
+						</phone:WebBrowser>
 					</Grid>
 				</ScrollViewer>
 			</controls:PivotItem>
