@@ -139,7 +139,7 @@
     <value>GPS aktivieren</value>
   </data>
   <data name="SettingsPageUseGPSText" xml:space="preserve">
-    <value>Benutzen Sie GPS, um die eigene Position auf der Karte anzuzeigen und verfügbare Fahrzeuge in der Nähe zu finden.</value>
+    <value>Benutze GPS, um die eigene Position auf der Karte anzuzeigen und verfügbare Fahrzeuge in der Nähe zu finden.</value>
   </data>
   <data name="ButtonCancel" xml:space="preserve">
     <value>Verweigern</value>
@@ -154,10 +154,10 @@
     <value>An</value>
   </data>
   <data name="WelcomeAskGPSBody1" xml:space="preserve">
-    <value>Diese Anwendung möchte auf Ihre aktuelle Position zugreifen, um Ihnen freie Fahrzeuge in Ihrer Umgebung anzeigen zu können. Diese Anwendung speichert ihren jeweils letzten Standort, um bei den folgen Starts bessere Suchergebnisse zu erzielen. Wenn Sie der Nutzung Ihrer Positionsdaten zustimmen, werden diese Daten unter Umständen auch an Microsoft übertragen.</value>
+    <value>Diese Anwendung möchte auf die aktuelle Position Deines Telefons zugreifen, um Dir freie Fahrzeuge in Deiner Umgebung anzeigen zu können. Diese Anwendung speichert Deinen jeweils letzten Standort, um bei den folgen Starts bessere Suchergebnisse zu erzielen. Wenn Du der Nutzung Deiner Positionsdaten zustimmst, werden diese Daten unter Umständen auch an Microsoft übertragen.</value>
   </data>
   <data name="WelcomeAskGPSBody2" xml:space="preserve">
-    <value>Möchten Sie der Nutzung Ihrer Standortdaten zustimmen? Sie können diese Einstellung jederzeit auf der Einstellungsseite ändern.</value>
+    <value>Möchtest Du der Nutzung Deiner Standortdaten zustimmen? Du kannst diese Einstellung jederzeit auf der Einstellungsseite ändern.</value>
   </data>
   <data name="WelcomeAskGPSHeader" xml:space="preserve">
     <value>Ortung erlauben?</value>
@@ -206,7 +206,7 @@
 
 Über secondary-Tiles können beliebige Suchorte auf den Startbildschirm gepinnt werden.
 	
-Derzeit ist noch keine Vorreservierung der Fahrzeuge über die App möglich.</value>
+Derzeit ist nur die Vorreservierung der Fahrzeuge von car2go über die App möglich.</value>
   </data>
   <data name="AboutPageVersionInfo" xml:space="preserve">
     <value>Version</value>
@@ -286,9 +286,9 @@ Sie brauchen sie App nicht erneut herunterzuladen – nach dem Kauf ist und blei
     <value>PromoCode online einlösen</value>
   </data>
   <data name="AboutPageContactText" xml:space="preserve">
-    <value>Ihre Meinung ist mir wichtig!
+    <value>Deine Meinung ist mir wichtig!
 
-Bitte nutzen Sie eine der folgenden Kontaktmöglichkeiten bei Kritik, Verbesserungsvorschlägen oder Änderungswünschen, statt eine schlechte Bewertung abzugeben.
+Bitte nutze eine der folgenden Kontaktmöglichkeiten bei Kritik, Verbesserungsvorschlägen oder Änderungswünschen, statt eine schlechte Bewertung abzugeben.
 
 Jede Anfrage wird beantwortet!</value>
   </data>
@@ -345,7 +345,7 @@ https://de.drive-now.com/php/metropolis/registration?language=de_DE&amp;L=2&amp;
     <value>Über FreeCars</value>
   </data>
   <data name="SettingsPageRedeemDrivenowPromoCodeText" xml:space="preserve">
-    <value>Sparen Sie 19,– € Anmeldegebühren und erhalten Sie zusätzlich 15 Freiminuten mit dem folgenden PromoCode:
+    <value>Spare 19,– € Anmeldegebühren und erhalte zusätzlich 15 Freiminuten mit dem folgenden PromoCode:
 
 ZNEUATHQJA
 
@@ -364,17 +364,17 @@ Einmalige Anmeldegebühr 9,98 € statt 29,– €</value>
     <value>Analysedaten senden</value>
   </data>
   <data name="AllowAnalyticsDisclaimer" xml:space="preserve">
-    <value>Wenn Sie das Senden von Analysedaten erlauben, helfen Sie mit FreeCars besser zu machen.
+    <value>Wenn Du das Senden von Analysedaten erlaubst, hilfst Du mit FreeCars besser zu machen.
 
 Die Daten enthalten keine persönlichen Daten und werden nicht für Werbung (TrialVersion) genutzt, sondern aussließlich, um Fehler zu erkennen und viel genutzte Features zu verbessern.
 
-Die ID des Telefons wird genutzt um verschiedene Nutzungsverhalten zu erkennen; Sie sind darüber nicht persönlich identifizierbar.</value>
+Die ID des Telefons wird genutzt um verschiedene Nutzungsverhalten zu erkennen; Du bist darüber nicht persönlich identifizierbar.</value>
   </data>
   <data name="PinMapAsSecondaryTile" xml:space="preserve">
     <value>Ausschnitt anheften</value>
   </data>
   <data name="PinToStartQuestionBody" xml:space="preserve">
-    <value>Möchten Sie den aktuellen Ausschnitt auf den Startscreen 
+    <value>Möchtest Du den aktuellen Ausschnitt auf den Startscreen heften?
 Geben Sie eine Beschreibung für den aktuellen Ausschnitt an.</value>
   </data>
   <data name="PinToStartQuestionHeader" xml:space="preserve">
