@@ -53,8 +53,10 @@ namespace FreeCars {
 			((App)App.Current).TrialModeChanged += OnAppTrialModeChanged;
 			map.CredentialsProvider = new Microsoft.Phone.Controls.Maps.ApplicationIdCredentialsProvider(FreeCarsCredentials.Maps.CredentialsWP);
 			AdDuplexAdControl.AppId = FreeCarsCredentials.AdDuplex.WindowsPhone.AppId;
-			SDKAdControl.AdUnitId = FreeCarsCredentials.PubCenter.WindowsPhone.ApplicationId;
-			SDKAdControl.ApplicationId = FreeCarsCredentials.PubCenter.WindowsPhone.ApplicationId;
+			try {
+				SDKAdControl.AdUnitId = FreeCarsCredentials.PubCenter.WindowsPhone.ApplicationId;
+				SDKAdControl.ApplicationId = FreeCarsCredentials.PubCenter.WindowsPhone.ApplicationId;
+			} catch (InvalidOperationException) { }
 		}
 		protected override void OnNavigatedTo(NavigationEventArgs e) {
 			base.OnNavigatedTo(e);
