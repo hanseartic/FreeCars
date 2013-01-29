@@ -34,6 +34,8 @@ namespace FreeCars {
 		public string name;
 		[DataMember(Name = "vin")]
 		public string vin;
+		[DataMember(Name = "engineType")]
+		public string engineType;
 	}
 
 	[DataContract]

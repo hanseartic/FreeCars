@@ -82,7 +82,7 @@ namespace FreeCars {
 								double.Parse(car.coordinates[0], usCultureInfo.NumberFormat));
 						} catch {}
 						var carInfo = new Car2GoInformation {
-							model = "Smart ForTwo",
+							model = ("CE" == car.engineType) ? "C-Smart" : "Smart ElectricDrive",
 							fuelState = car.fuel,
 						    position = carPosition,
              				licensePlate = car.name,

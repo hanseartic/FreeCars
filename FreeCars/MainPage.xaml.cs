@@ -366,8 +366,12 @@ namespace FreeCars {
 							new StackPanel {
 								Orientation = System.Windows.Controls.Orientation.Horizontal,
 								Children = {
+									
 									new Image {
-										Source = new BitmapImage(new Uri("/Resources/fuel28x28.png", UriKind.Relative)), 
+										Source = new BitmapImage
+											(new Uri((car.model.IndexOf("Electric") < 0)
+												? "/Resources/fuel28x28.png"
+												: "/Resources/battery28x28.png", UriKind.Relative)), 
 										Margin = new Thickness(0, 0, 12, 0),
 									},
 									new TextBlock { Text = car.fuelState + "%", },
