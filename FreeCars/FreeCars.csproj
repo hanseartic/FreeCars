@@ -100,6 +100,7 @@
     <Compile Include="Converters.cs" />
     <Compile Include="DriveNow.cs" />
     <Compile Include="DriveNowSerialization.cs" />
+    <Compile Include="Helpers.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>

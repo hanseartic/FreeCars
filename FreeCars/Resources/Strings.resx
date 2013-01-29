@@ -385,4 +385,16 @@ Geben Sie eine Beschreibung für den aktuellen Ausschnitt an.</value>
   <data name="AboutPageFacebookAddress" xml:space="preserve">
     <value>http://www.facebook.com/FreeCarsWP</value>
   </data>
+  <data name="SettingsPageCar2GoAuthHeader" xml:space="preserve">
+    <value>car2go Account</value>
+  </data>
+  <data name="SettingsPageCar2GoAuthStatusError" xml:space="preserve">
+    <value>FreeCars can access the car2go-API but cannot find a valid account for the location {0}.</value>
+  </data>
+  <data name="SettingsPageCar2GoAuthStatusOK" xml:space="preserve">
+    <value>FreeCars can access your car2go-account
+{0}
+for this location:
+{1}.</value>
+  </data>
 </root>

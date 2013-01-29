@@ -14,6 +14,8 @@ using System.Threading;
 using System.Globalization;
 using System.Net;
 using OAuth;
+using System.Runtime.Serialization.Json;
+using System.IO;
 
 namespace FreeCars {
     public partial class SettingsPage : PhoneApplicationPage {
@@ -277,10 +279,30 @@ namespace FreeCars {
 					delegate(object client, DownloadStringCompletedEventArgs arguments) {
 						string[] results = { };
 						if (null == arguments.Error) {
-							results = arguments.Result.Split(new char[] { '&' }, StringSplitOptions.None);
-							ShowConnectCar2GoApiButton = Visibility.Collapsed;
-							//App.SetAppSetting("car2go.oauth_token", results[0].Split(new char[] { '=' })[1]);
-							//App.SetAppSetting("car2go.oauth_token_secret", results[1].Split(new char[] { '=' })[1]);
+							//results = arguments.Result.Split(new char[] { '&' }, StringSplitOptions.None);
+							using (Stream resultStream = Helpers.GenerateStreamFromString(arguments.Result)) {
+								var serializer = new DataContractJsonSerializer(typeof(ResultAccounts));
+								var resultAccounts = (ResultAccounts)serializer.ReadObject(resultStream);
+								switch (resultAccounts.ReturnValue.Code) { 
+									case 0:
+										c2gAuthText.Text = String.Format(
+											Strings.SettingsPageCar2GoAuthStatusOK,
+											new string[] { resultAccounts.Account[0].Description, Car2Go.City });
+										break;
+									case 1:
+										goto default;
+									case 2:
+										goto default;
+									case 3:
+										goto default;
+									default:
+										c2gAuthText.Text = String.Format(
+											Strings.SettingsPageCar2GoAuthStatusError,
+											new string[] { Car2Go.City });
+										break;
+								}
+								ShowConnectCar2GoApiButton = Visibility.Collapsed;
+							}
 						}
 						client = null;
 					}
@@ -305,6 +327,7 @@ namespace FreeCars {
 			parameters.Add("oauth_nonce", OAuthTools.GetNonce());
 			parameters.Add("format", "json");
 			parameters.Add("loc", Car2Go.City);
+			//parameters.Add("test", "1");
 			var signatureBase = OAuthTools.ConcatenateRequestElements("GET", car2GoRequestEndpoint, parameters);
 			var signature = OAuthTools.GetSignature(OAuthSignatureMethod.HmacSha1, OAuthSignatureTreatment.Escaped, signatureBase, FreeCarsCredentials.Car2Go.SharedSecred, token_secret);
 
@@ -351,14 +374,17 @@ namespace FreeCars {
 
 		private void Onc2gAuthBrowserNavigated(object sender, System.Windows.Navigation.NavigationEventArgs e) {
 			var browser = (sender as WebBrowser);
-			browser.InvokeScript("eval",
-				"var script = document.createElement('script');" +
-				"script.src = \"https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.9.0.min.js\";" +
-				"document.body.appendChild(script);" +
-				"$('body').css('transform-origin', '0 0');" +
-				"$('body').css('transform', 'scale(2.5)');"				
-			);
-
+			try {
+				browser.InvokeScript("eval",
+					"var script = document.createElement('script');" +
+					"script.src = \"https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.9.0.min.js\";" +
+					"document.body.appendChild(script);" +
+					"$('body').css('transform-origin', '0 0');" +
+					"$('body').css('transform', 'scale(2.5)');"
+				);
+			} catch (Exception ex) {
+				e = null;
+			}
 			switch (e.Uri.AbsolutePath) {
 				case "/api/authorize/granted.jsp":
 					var tokenData = new string[2];

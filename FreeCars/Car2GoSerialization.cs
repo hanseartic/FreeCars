@@ -56,4 +56,30 @@ namespace FreeCars {
 			return locationName;
 		}
 	}
+
+#region car2go API
+	// {"returnValue":{"code":0,"description":"Operation successful."},"account":[{"accountId":994,"description":"Max Mustermann11585"}]}
+	[DataContract]
+	public class ResultAccounts {
+		[DataMember(Name = "returnValue")]
+		public APIReturnValue ReturnValue;
+		[DataMember(Name = "account")]
+		public APIReturnValue[] Account;
+	}
+
+	[DataContract]
+	public class APIAccount {
+		[DataMember(Name = "accountId")]
+		public int AccountId;
+		[DataMember(Name = "description")]
+		public string Description;
+	}
+	[DataContract]
+	public class APIReturnValue {
+		[DataMember(Name = "code")]
+		public int Code;
+		[DataMember(Name = "description")]
+		public string Description;
+	}
+#endregion
 }
