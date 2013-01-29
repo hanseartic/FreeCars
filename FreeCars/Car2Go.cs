@@ -45,29 +45,27 @@ namespace FreeCars {
 					return;
 				}
 			} catch (KeyNotFoundException) { }
-			var city = "ulm"; // fallback
-			try {
-				string preferred_city = "";
-				if (IsolatedStorageSettings.ApplicationSettings.Contains("car2goSelectedCity")) {
-					preferred_city = (string)IsolatedStorageSettings.ApplicationSettings["car2goSelectedCity"];
-					if ("Autodetect" == preferred_city) {
-						preferred_city = "";
-					}
-				}
-				if ("" == preferred_city) {
-					city = (string)IsolatedStorageSettings.ApplicationSettings["current_map_city"];
-				} else {
-					city = preferred_city.ToLower();
-				}
-				
-			} catch (KeyNotFoundException) { }
+			
 			var wc = new WebClient();
-			var callUri = "https://www.car2go.com/api/v2.1/vehicles?loc="+city+"&format=json&oauth_consumer_key=" + consumerkey;
+			var callUri = "https://www.car2go.com/api/v2.1/vehicles?loc="+City+"&format=json&oauth_consumer_key=" + consumerkey;
 
 			wc.OpenReadCompleted += OnCar2GoCarsOpenReadCompleted;
 			wc.OpenReadAsync(new Uri(callUri));
 		}
 
+		public static string City {
+			get {
+				var city = "ulm"; // fallback
+				var setCity = (string)App.GetAppSetting("car2goSelectedCity");
+				if (null == setCity || "Autodetect" == setCity) {
+					setCity = (string)App.GetAppSetting("current_map_city");
+				}
+				city = (null != setCity)
+					? setCity.ToLower()
+					: city;
+				return city;
+			}
+		}
 		private void OnCar2GoCarsOpenReadCompleted(object sender, OpenReadCompletedEventArgs e) {
 			try {
 				if (0 == e.Result.Length) return;
