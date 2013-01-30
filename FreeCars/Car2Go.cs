@@ -86,6 +86,7 @@ namespace FreeCars {
 							fuelState = car.fuel,
 						    position = carPosition,
              				licensePlate = car.name,
+							ID = car.vin,
 						};
 						car2GoCars.Add(carInfo);
 					}

@@ -30,5 +30,6 @@ namespace FreeCars {
 						Updated(this, null);
 			}
 		}
+		public String ID { get; set; }
     }
 }
