@@ -95,6 +95,9 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="BookingControl.xaml.cs">
+      <DependentUpon>BookingControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Car2Go.cs" />
     <Compile Include="Car2GoSerialization.cs" />
     <Compile Include="Converters.cs" />
@@ -127,6 +130,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="BookingControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -156,6 +163,7 @@
     <Content Include="Resources\appbar.cogs.png" />
     <Content Include="Resources\appbar.deeplink.round.png" />
     <Content Include="Resources\appbar.map.centerme.rest.png" />
+    <Content Include="Resources\appbar.timer.check.png" />
     <Content Include="Resources\appbar.transport.repeat.rest.png" />
     <Content Include="Resources\battery28x28.png" />
     <Content Include="Resources\fuel28x28.png" />

@@ -109,6 +109,7 @@ namespace FreeCars {
 			IsolatedStorageSettings.ApplicationSettings.Save();
 			return gpsAllowed;
 		}
+		ApplicationBarIconButton mainPageApplicationBarBookCarButton;
 		void SetAppBar() {
 			ApplicationBar = new ApplicationBar {
 				Mode = ApplicationBarMode.Default,
@@ -140,7 +141,19 @@ namespace FreeCars {
 				Text = FreeCars.Resources.Strings.PinMapAsSecondaryTile,
 			};
 			mainPageApplicationBarPinButton.Click += OnMainPageApplicationBarPinButtonClick;
-			
+
+			mainPageApplicationBarBookCarButton = new ApplicationBarIconButton {
+				IconUri = new Uri("/Resources/appbar.timer.check.png", UriKind.Relative),
+				Text = FreeCars.Resources.Strings.CreateBooking,
+				IsEnabled = false,
+			};
+			mainPageApplicationBarBookCarButton.Click += OnMainPageApplicationBarBookCarButtonClick;
+
+			var mainPageApplicationBarSettingstMenuItem = new ApplicationBarMenuItem {
+				Text = FreeCars.Resources.Strings.MainPageBarSettings,
+			};
+			mainPageApplicationBarSettingstMenuItem.Click += OnMainPageApplicationBarSettingsButtonClick;
+
 			var mainPageApplicationBarAboutMenuItem = new ApplicationBarMenuItem {
 				Text = FreeCars.Resources.Strings.MainMenuAboutAppItemText,
 			};
@@ -148,10 +161,23 @@ namespace FreeCars {
 
 			ApplicationBar.Buttons.Add(mainPageApplicationBarCentermeButton);
 			ApplicationBar.Buttons.Add(mainPageApplicationBarReloadButton);
-			ApplicationBar.Buttons.Add(mainPageApplicationBarSettingsButton);
+			//ApplicationBar.Buttons.Add(mainPageApplicationBarSettingsButton);
 			ApplicationBar.Buttons.Add(mainPageApplicationBarPinButton);
+			ApplicationBar.Buttons.Add(mainPageApplicationBarBookCarButton);
+			ApplicationBar.MenuItems.Add(mainPageApplicationBarSettingstMenuItem);
 			ApplicationBar.MenuItems.Add(mainPageApplicationBarAboutMenuItem);
 
+			bookingControl.Closed += delegate(object closedSender, EventArgs closedArgs) {
+				ApplicationBar.IsVisible = true;
+			};
+		}
+
+		private void OnMainPageApplicationBarBookCarButtonClick(object sender, EventArgs e) {
+			Pushpin activePushpin = (Pushpin)(activeLayer.Children.First());
+			if (activePushpin.Tag is Car2GoInformation) {
+				bookingControl.Activate((Car2GoInformation)activePushpin.Tag);
+				ApplicationBar.IsVisible = false;
+			}
 		}
 
 		void OnMainPageApplicationBarCentermeButtonClick(object sender, EventArgs e) {
@@ -404,6 +430,11 @@ namespace FreeCars {
 							DeactivatePushpin(pushpin as Pushpin);
 						}
 					}
+
+					if (((Pushpin)sender).Tag is Car2GoInformation) {
+						mainPageApplicationBarBookCarButton.IsEnabled = true;
+						VisualStateManager.GoToState(bookingControl, "InactiveState", false);
+					}
 					var parentLayer = VisualTreeHelper.GetParent((Pushpin)sender) as MapLayer;
 					parentLayer.Children.Remove((Pushpin)sender);
 					activeLayer.Children.Add((Pushpin)sender);
@@ -435,6 +466,7 @@ namespace FreeCars {
 					car2goCarsLayer.Children.Add(pushpin);
 				}
 			}
+			mainPageApplicationBarBookCarButton.IsEnabled = false;
 			((Border)pushpin.Content).Visibility = Visibility.Collapsed;
 			pushpin.Opacity = .6;
 		}
@@ -523,6 +555,7 @@ namespace FreeCars {
 					DeactivatePushpin(pushpin as Pushpin);
 				}
 			}
+			mainPageApplicationBarBookCarButton.IsEnabled = false;
 			e.Handled = true;
 		}
 		private void OnMapHold(object sender, GestureEventArgs e) {
