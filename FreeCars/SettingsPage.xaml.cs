@@ -383,7 +383,7 @@ namespace FreeCars {
 					"$('body').css('transform', 'scale(2.5)');"
 				);
 			} catch (Exception ex) {
-				e = null;
+				ex = null;
 			}
 			switch (e.Uri.AbsolutePath) {
 				case "/api/authorize/granted.jsp":
