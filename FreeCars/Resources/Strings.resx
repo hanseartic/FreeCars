@@ -287,7 +287,17 @@ Please use one of the following options to get in touch with me for critics, sug
 I will answer every request!</value>
   </data>
   <data name="ChangelogPageBody" xml:space="preserve">
-    <value>1.4.0.1:
+    <value>1.5.0.0:
+* connect to car2go account
+* bookings for car2go
+* differenciate between elektric drive and combustion engines with car2go
+* performace improvements
+* add facebook button
+
+1.4.1.2:
+* car2go markers used to disappear on closing - fixed
+
+1.4.1.1:
 * All cities for car2go (with autodetect)
 * Does not jump back to Secondary Tile's location on in-app-backnavigation
 * Improved screenshot of the map
@@ -374,6 +384,45 @@ I am not able to personally identify you by means of the submitted data.</value>
 Geben Sie eine Beschreibung für den aktuellen Ausschnitt an.</value>
   </data>
   <data name="PinToStartQuestionHeader" xml:space="preserve">
-    <value>Auf den Startbildschirm</value>
+    <value>To Home screen</value>
+  </data>
+  <data name="AboutPageConnectFacebook" xml:space="preserve">
+    <value>Like on Facebook</value>
+  </data>
+  <data name="AboutPageContactViaFacebook" xml:space="preserve">
+    <value>Facebook:</value>
+  </data>
+  <data name="AboutPageFacebookAddress" xml:space="preserve">
+    <value>http://www.facebook.com/FreeCarsWP</value>
+  </data>
+  <data name="CreateBooking" xml:space="preserve">
+    <value>book car</value>
+  </data>
+  <data name="SettingsPageCar2GoAuthHeader" xml:space="preserve">
+    <value>car2go Account</value>
+  </data>
+  <data name="SettingsPageCar2GoAuthStatusError" xml:space="preserve">
+    <value>FreeCars can access the car2go-API but cannot find a valid account for the location {0}.</value>
+  </data>
+  <data name="SettingsPageCar2GoAuthStatusOK" xml:space="preserve">
+    <value>FreeCars can access your car2go-account
+{0}
+for this location:
+{1}.</value>
+  </data>
+  <data name="BookingPageExterior" xml:space="preserve">
+    <value>Exterior condition</value>
+  </data>
+  <data name="BookingPageHeadline" xml:space="preserve">
+    <value>Create booking</value>
+  </data>
+  <data name="BookingPageInterior" xml:space="preserve">
+    <value>Interior condition</value>
+  </data>
+  <data name="BookingPagQuestion" xml:space="preserve">
+    <value>Do you want to create a booking for this car?</value>
+  </data>
+  <data name="SettingsPageCar2GoConnectButton" xml:space="preserve">
+    <value>connect FreeCars to car2go</value>
   </data>
 </root>

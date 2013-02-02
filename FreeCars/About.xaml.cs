@@ -71,5 +71,14 @@ namespace FreeCars {
 				webBrowserTask.Show();
 			} catch { }
 		}
+
+		private void OnConnectFacebookTap(object sender, System.Windows.Input.GestureEventArgs e) {
+			try {
+				var webBrowserTask = new WebBrowserTask {
+					Uri = new Uri("http://www.facebook.com/FreeCarsWP"),
+				};
+				webBrowserTask.Show();
+			} catch { }
+		}
 	}
 }

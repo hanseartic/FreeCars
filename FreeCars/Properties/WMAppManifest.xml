@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Deployment xmlns="http://schemas.microsoft.com/windowsphone/2009/deployment" AppPlatformVersion="7.1">
-  <App xmlns="" ProductID="{f84f04f9-da10-4ad9-a360-3342417dc201}" Title="FreeCars" RuntimeType="Silverlight" Version="1.4.0.1" Genre="apps.normal" Author="Paul Schütte" Description="Find free carsharing-rides around you" Publisher="Hanseartic">
+  <App xmlns="" ProductID="{f84f04f9-da10-4ad9-a360-3342417dc201}" Title="FreeCars" RuntimeType="Silverlight" Version="1.5.0.0" Genre="apps.normal" Author="Paul Schütte" Description="Find free carsharing-rides around you" Publisher="Hanseartic">
     <IconPath IsRelative="true" IsResource="false">ApplicationIcon.png</IconPath>
     <Capabilities>
       <Capability Name="ID_CAP_IDENTITY_DEVICE" />

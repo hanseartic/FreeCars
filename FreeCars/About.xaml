@@ -38,7 +38,8 @@
 									<RowDefinition />
 									<RowDefinition />
 									<RowDefinition />
-								</Grid.RowDefinitions>
+									<RowDefinition />
+									</Grid.RowDefinitions>
 								<TextBlock Grid.Column="0" Grid.Row="0"
 									Text="{Binding LocalizedStrings.AboutPageContactViaStore, Source={StaticResource ResourceAccess}}" TextWrapping="Wrap" Tap="OnRateTap" Margin="0,8" VerticalAlignment="Center" />
 								<Button Grid.Column="1" Grid.Row="0" 
@@ -55,7 +56,11 @@
 									Text="{Binding LocalizedStrings.AboutPageContactViaUservoice, Source={StaticResource ResourceAccess}}" TextWrapping="Wrap" Margin="0,8" VerticalAlignment="Center" />
 								<Button Grid.Column="1" Grid.Row="3" 
 									Content="{Binding LocalizedStrings.AboutPageGotoUservoiceSite, Source={StaticResource ResourceAccess}}" Tap="OnGotoUservoiceTap" />
-							</Grid>
+								<TextBlock Grid.Column="0" Grid.Row="4"
+									Text="{Binding LocalizedStrings.AboutPageContactViaFacebook, Source={StaticResource ResourceAccess}}" TextWrapping="Wrap" Margin="0,8" VerticalAlignment="Center" />
+								<Button Grid.Column="1" Grid.Row="4" 
+									Content="{Binding LocalizedStrings.AboutPageConnectFacebook, Source={StaticResource ResourceAccess}}" Tap="OnConnectFacebookTap" />
+								</Grid>
 						</StackPanel>
 					</StackPanel>
 				</Grid>

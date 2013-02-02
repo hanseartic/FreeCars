@@ -9,6 +9,7 @@
 	xmlns:map="clr-namespace:Microsoft.Phone.Controls.Maps;assembly=Microsoft.Phone.Controls.Maps"
 	xmlns:adduplex="clr-namespace:AdDuplex;assembly=AdDuplex.WindowsPhone"
 	xmlns:my="clr-namespace:Microsoft.Advertising.Mobile.UI;assembly=Microsoft.Advertising.Mobile.UI"
+	xmlns:local="clr-namespace:FreeCars"
 	mc:Ignorable="d" d:DesignWidth="480" d:DesignHeight="800"
 	FontFamily="{StaticResource PhoneFontFamilyNormal}"
 	FontSize="{StaticResource PhoneFontSizeNormal}"
@@ -34,7 +35,7 @@
 
 		<!--ContentPanel - place additional content here-->
 		<Grid x:Name="ContentPanel" Grid.Row="1">
-			<map:Map HorizontalAlignment="Left" Name="map" VerticalAlignment="Top" Height="800" Width="480" CredentialsProvider="AsD4awUEo6H7hWplpv4yrTfqDS2NmKfxFFRxZv8Nl1fBm0gv5d7z_ySqquJqdKLG" Tap="OnMapTap" Hold="OnMapHold" ViewChangeEnd="OnMapViewChangeEnd">
+			<map:Map HorizontalAlignment="Left" Name="map" VerticalAlignment="Top" Height="800" Width="480" Tap="OnMapTap" Hold="OnMapHold" ViewChangeEnd="OnMapViewChangeEnd">
                 <map:MapLayer x:Name="myLocationLayer">
                     <map:Pushpin x:Name="myLocationPushpin" Template="{StaticResource MyPositionPushpinTemplate}" Margin="-14, 0, -14, 0" Opacity="0.9"  Visibility="Collapsed"  />
                 </map:MapLayer>
@@ -45,17 +46,18 @@
                 <map:MapLayer x:Name="car2goCarsLayer"></map:MapLayer>
 				<map:MapLayer x:Name="activeLayer"></map:MapLayer>
             </map:Map>
+			<Grid x:Name="bookingControlGrid" Visibility="Collapsed" Margin="0">
+				<local:BookingControl x:Name="bookingControl" Visibility="Visible" Margin="22" RenderTransformOrigin="0.5,0.5" />
+			</Grid>
 		</Grid>
 		<Grid x:Name="AdsGrid" Grid.Row="2" Visibility="Collapsed">
 			<adduplex:AdControl
 				x:Name="AdDuplexAdControl" Visibility="Visible"
-				AppId="23411"
 				AdLoadingError="OnAdduplexAddControlErrorOccured"
 				AdLoaded="OnAdduplexAddControlAdRefreshed" 
 				RefreshInterval="30" />
 			<my:AdControl
 				x:Name="SDKAdControl" Visibility="Visible"
-				ApplicationId="1e220ae2-a6af-4bb3-a0c8-919d80531e85" AdUnitId="10047728"
 				ErrorOccurred="OnSDKAddControlErrorOccured" 
 				AdRefreshed="OnSDKAddControlAdRefreshed"
 				IsAutoRefreshEnabled="True"

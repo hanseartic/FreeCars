@@ -30,5 +30,8 @@ namespace FreeCars {
 						Updated(this, null);
 			}
 		}
+		public String ID { get; set; }
+		public String exterior { get; set; }
+		public String interior { get; set; }
     }
 }

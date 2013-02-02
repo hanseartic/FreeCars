@@ -8,3 +8,8 @@ packages/*
 _ReSharper*
 
 .DS_Store
+
+FreeCars/PerfLogs/
+*.sap
+*Thumbs.db
+beta_testers.txt

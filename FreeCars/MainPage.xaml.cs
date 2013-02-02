@@ -25,6 +25,7 @@ using System.IO.IsolatedStorage;
 using FreeCars.Resources;
 using System.Windows.Media.Imaging;
 using GestureEventArgs = System.Windows.Input.GestureEventArgs;
+using System.ComponentModel;
 
 namespace FreeCars {
 	public partial class MainPage : PhoneApplicationPage {
@@ -51,6 +52,21 @@ namespace FreeCars {
 		}
 		void OnMainPageLoaded(object sender, RoutedEventArgs e) {
 			((App)App.Current).TrialModeChanged += OnAppTrialModeChanged;
+			map.CredentialsProvider = new Microsoft.Phone.Controls.Maps.ApplicationIdCredentialsProvider(FreeCarsCredentials.Maps.CredentialsWP);
+			AdDuplexAdControl.AppId = FreeCarsCredentials.AdDuplex.WindowsPhone.AppId;
+			try {
+				SDKAdControl.AdUnitId = FreeCarsCredentials.PubCenter.WindowsPhone.ApplicationId;
+				SDKAdControl.ApplicationId = FreeCarsCredentials.PubCenter.WindowsPhone.ApplicationId;
+			} catch (InvalidOperationException) { }
+			VisualStateManager.GoToState(bookingControl, "InactiveState", false);
+			//bookingControl.Deactivate();
+			bookingControlGrid.Visibility = Visibility.Visible;
+		}
+		protected override void OnBackKeyPress(CancelEventArgs e) {
+			if (bookingControl.IsActive) {
+				bookingControl.Deactivate();
+				e.Cancel = true;
+			}
 		}
 		protected override void OnNavigatedTo(NavigationEventArgs e) {
 			base.OnNavigatedTo(e);
@@ -103,6 +119,7 @@ namespace FreeCars {
 			IsolatedStorageSettings.ApplicationSettings.Save();
 			return gpsAllowed;
 		}
+		ApplicationBarIconButton mainPageApplicationBarBookCarButton;
 		void SetAppBar() {
 			ApplicationBar = new ApplicationBar {
 				Mode = ApplicationBarMode.Default,
@@ -134,7 +151,19 @@ namespace FreeCars {
 				Text = FreeCars.Resources.Strings.PinMapAsSecondaryTile,
 			};
 			mainPageApplicationBarPinButton.Click += OnMainPageApplicationBarPinButtonClick;
-			
+
+			mainPageApplicationBarBookCarButton = new ApplicationBarIconButton {
+				IconUri = new Uri("/Resources/appbar.timer.check.png", UriKind.Relative),
+				Text = FreeCars.Resources.Strings.CreateBooking,
+				IsEnabled = false,
+			};
+			mainPageApplicationBarBookCarButton.Click += OnMainPageApplicationBarBookCarButtonClick;
+
+			var mainPageApplicationBarSettingstMenuItem = new ApplicationBarMenuItem {
+				Text = FreeCars.Resources.Strings.MainPageBarSettings,
+			};
+			mainPageApplicationBarSettingstMenuItem.Click += OnMainPageApplicationBarSettingsButtonClick;
+
 			var mainPageApplicationBarAboutMenuItem = new ApplicationBarMenuItem {
 				Text = FreeCars.Resources.Strings.MainMenuAboutAppItemText,
 			};
@@ -142,10 +171,23 @@ namespace FreeCars {
 
 			ApplicationBar.Buttons.Add(mainPageApplicationBarCentermeButton);
 			ApplicationBar.Buttons.Add(mainPageApplicationBarReloadButton);
-			ApplicationBar.Buttons.Add(mainPageApplicationBarSettingsButton);
+			//ApplicationBar.Buttons.Add(mainPageApplicationBarSettingsButton);
 			ApplicationBar.Buttons.Add(mainPageApplicationBarPinButton);
+			ApplicationBar.Buttons.Add(mainPageApplicationBarBookCarButton);
+			ApplicationBar.MenuItems.Add(mainPageApplicationBarSettingstMenuItem);
 			ApplicationBar.MenuItems.Add(mainPageApplicationBarAboutMenuItem);
 
+			bookingControl.Closed += delegate(object closedSender, EventArgs closedArgs) {
+				ApplicationBar.IsVisible = true;
+			};
+		}
+
+		private void OnMainPageApplicationBarBookCarButtonClick(object sender, EventArgs e) {
+			Pushpin activePushpin = (Pushpin)(activeLayer.Children.First());
+			if (activePushpin.Tag is Car2GoInformation) {
+				bookingControl.Activate((Car2GoInformation)activePushpin.Tag);
+				ApplicationBar.IsVisible = false;
+			}
 		}
 
 		void OnMainPageApplicationBarCentermeButtonClick(object sender, EventArgs e) {
@@ -355,19 +397,22 @@ namespace FreeCars {
 						Child = new StackPanel {
 							Orientation = System.Windows.Controls.Orientation.Vertical,
 							Children = {
-							new TextBlock { Text = car.model, },
-							new TextBlock { Text = car.licensePlate, },
-							new StackPanel {
-								Orientation = System.Windows.Controls.Orientation.Horizontal,
-								Children = {
-									new Image {
-										Source = new BitmapImage(new Uri("/Resources/fuel28x28.png", UriKind.Relative)), 
-										Margin = new Thickness(0, 0, 12, 0),
+								new TextBlock { Text = car.model, },
+								new TextBlock { Text = car.licensePlate, },
+								new StackPanel {
+									Orientation = System.Windows.Controls.Orientation.Horizontal,
+									Children = {
+										new Image {
+											Source = new BitmapImage
+												(new Uri((car.model.IndexOf("Electric") < 0)
+													? "/Resources/fuel28x28.png"
+													: "/Resources/battery28x28.png", UriKind.Relative)), 
+											Margin = new Thickness(0, 0, 12, 0),
+										},
+										new TextBlock { Text = car.fuelState + "%", },
 									},
-									new TextBlock { Text = car.fuelState + "%", },
 								},
 							},
-						},
 						},
 						Visibility = Visibility.Collapsed,
 					};
@@ -394,6 +439,11 @@ namespace FreeCars {
 							DeactivatePushpin(pushpin as Pushpin);
 						}
 					}
+
+					if (((Pushpin)sender).Tag is Car2GoInformation) {
+						mainPageApplicationBarBookCarButton.IsEnabled = true;
+						bookingControl.Deactivate();
+					}
 					var parentLayer = VisualTreeHelper.GetParent((Pushpin)sender) as MapLayer;
 					parentLayer.Children.Remove((Pushpin)sender);
 					activeLayer.Children.Add((Pushpin)sender);
@@ -407,7 +457,6 @@ namespace FreeCars {
 					DeactivatePushpin(sender as Pushpin);
 				}
 			}
-
 		}
 		void loadMulticityChargeState(Pushpin pushpin) {
 
@@ -421,8 +470,11 @@ namespace FreeCars {
 					multicityChargingLayer.Children.Add(pushpin);
 				} else if (typeof(DriveNowCarInformation) == pushpin.Tag.GetType()) {
 					driveNowCarsLayer.Children.Add(pushpin);
+				} else if (typeof(Car2GoInformation) == pushpin.Tag.GetType()) {
+					car2goCarsLayer.Children.Add(pushpin);
 				}
 			}
+			mainPageApplicationBarBookCarButton.IsEnabled = false;
 			((Border)pushpin.Content).Visibility = Visibility.Collapsed;
 			pushpin.Opacity = .6;
 		}
@@ -511,6 +563,8 @@ namespace FreeCars {
 					DeactivatePushpin(pushpin as Pushpin);
 				}
 			}
+			bookingControl.Deactivate();
+			mainPageApplicationBarBookCarButton.IsEnabled = false;
 			e.Handled = true;
 		}
 		private void OnMapHold(object sender, GestureEventArgs e) {

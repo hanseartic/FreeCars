@@ -46,10 +46,13 @@
 					<Grid>
 						<StackPanel Margin="0,8">
 							<toolkit:ToggleSwitch Header="{Binding LocalizedStrings.SettingsPageShowCar2goCars, Source={StaticResource ResourceAccess}}" Checked="OnCar2GoCarsToggleSwitchChanged" Unchecked="OnCar2GoCarsToggleSwitchChanged" Loaded="OnCar2GoCarsToggleSwitchLoaded" Content="{Binding LocalizedStrings.ToggleSwitchOff, Source={StaticResource ResourceAccess}}" SwitchForeground="#FF009FE4" />
-							<toolkit:ListPicker x:Name="car2goCitiesList" Header="City" SelectionChanged="OnCar2goCitySelected" Loaded="OnCar2goCitySelectLoaded">
-								
-							</toolkit:ListPicker>
+							<toolkit:ListPicker x:Name="car2goCitiesList" Header="City" SelectionChanged="OnCar2goCitySelected" Loaded="OnCar2goCitySelectLoaded" />
+							<TextBlock Text="{Binding LocalizedStrings.SettingsPageCar2GoAuthHeader, Source={StaticResource ResourceAccess}}" Style="{StaticResource PhoneTextTitle3Style}" Margin="0,8" />
+							<Button x:Name="connectToCar2GoButton" Click="OnConnectToCar2GoClicked" Content="{Binding LocalizedStrings.SettingsPageCar2GoConnectButton, Source={StaticResource ResourceAccess}}" Visibility="{Binding ShowConnectCar2GoApiButton}" />
+							<TextBlock x:Name="c2gAuthText" TextWrapping="Wrap" />
 						</StackPanel>
+						<phone:WebBrowser x:Name="c2gAuthBrowser" Visibility="Collapsed" IsScriptEnabled="True" Navigated="Onc2gAuthBrowserNavigated">
+						</phone:WebBrowser>
 					</Grid>
 				</ScrollViewer>
 			</controls:PivotItem>

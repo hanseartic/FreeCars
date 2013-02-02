@@ -49,28 +49,29 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="AdDuplex.WindowsPhone">
-      <HintPath>..\packages\AdDuplexWP7.2.7.0.2\lib\sl4-windowsphone71\AdDuplex.WindowsPhone.dll</HintPath>
+      <HintPath>..\packages\AdDuplexWP7.2.7.0.3\lib\sl4-windowsphone71\AdDuplex.WindowsPhone.dll</HintPath>
     </Reference>
     <Reference Include="FlurryWP7SDK">
       <HintPath>Lib\FlurryWP7SDK.dll</HintPath>
     </Reference>
-    <Reference Include="GoogleMaps">
-      <HintPath>Lib\GoogleMaps.dll</HintPath>
+    <Reference Include="GoogleMaps.Portable">
+      <HintPath>Lib\GoogleMaps.Portable.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Advertising.Mobile, Version=6.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
     <Reference Include="Microsoft.Advertising.Mobile.UI, Version=6.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
     <Reference Include="Microsoft.Devices.Sensors" />
     <Reference Include="Microsoft.Phone" />
     <Reference Include="Microsoft.Phone.Controls, Version=7.0.0.0, Culture=neutral, PublicKeyToken=24eec0d8c86cda1e, processorArchitecture=MSIL" />
-    <Reference Include="Microsoft.Phone.Controls.Maps, Version=7.0.0.0, Culture=neutral, PublicKeyToken=24eec0d8c86cda1e" />
-    <Reference Include="Microsoft.Phone.Controls.Toolkit, Version=7.0.0.0, Culture=neutral, PublicKeyToken=b772ad94eb9ca604, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\SilverlightToolkitWP.4.2012.10.9\lib\sl4-windowsphone71\Microsoft.Phone.Controls.Toolkit.dll</HintPath>
+    <Reference Include="Microsoft.Phone.Controls.Maps, Version=7.0.0.0, Culture=neutral, PublicKeyToken=24eec0d8c86cda1e, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.Phone.Controls.Toolkit">
+      <HintPath>..\packages\WPtoolkit.4.2012.10.30\lib\sl4-windowsphone71\Microsoft.Phone.Controls.Toolkit.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Phone.Interop" />
     <Reference Include="Microsoft.Xna.Framework" />
+    <Reference Include="OAuth.WindowsPhone.Mango">
+      <HintPath>..\packages\OAuth.1.0.3\lib\sl4-wp71\OAuth.WindowsPhone.Mango.dll</HintPath>
+    </Reference>
     <Reference Include="System.Data.Linq" />
-    <Reference Include="System.Data.Services.Client, Version=7.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Device" />
     <Reference Include="System.Observable" />
     <Reference Include="System.Runtime.Serialization" />
@@ -85,17 +86,24 @@
     <Reference Include="mscorlib.extensions" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\FreeCarsCredentials\FreeCarsCredentials\Credentials.cs">
+      <Link>Credentials.cs</Link>
+    </Compile>
     <Compile Include="About.xaml.cs">
       <DependentUpon>About.xaml</DependentUpon>
     </Compile>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="BookingControl.xaml.cs">
+      <DependentUpon>BookingControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Car2Go.cs" />
     <Compile Include="Car2GoSerialization.cs" />
     <Compile Include="Converters.cs" />
     <Compile Include="DriveNow.cs" />
     <Compile Include="DriveNowSerialization.cs" />
+    <Compile Include="Helpers.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -122,6 +130,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="BookingControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -132,6 +144,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <None Include="FreeCars.licenseheader" />
     <None Include="packages.config" />
     <None Include="Properties\AppManifest.xml">
       <SubType>Designer</SubType>
@@ -145,13 +158,17 @@
     <Content Include="Background.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="README_FIRST.txt" />
     <Content Include="Resources\about48x48.png" />
     <Content Include="Resources\appbar.cogs.png" />
     <Content Include="Resources\appbar.deeplink.round.png" />
     <Content Include="Resources\appbar.map.centerme.rest.png" />
+    <Content Include="Resources\appbar.timer.check.png" />
     <Content Include="Resources\appbar.transport.repeat.rest.png" />
     <Content Include="Resources\battery28x28.png" />
     <Content Include="Resources\fuel28x28.png" />
+    <Content Include="Resources\ib_condition_good.png" />
+    <Content Include="Resources\ib_condition_unacceptable.png" />
     <Content Include="Resources\light_appbar.feature.settings.rest.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
