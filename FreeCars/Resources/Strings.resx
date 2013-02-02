@@ -287,7 +287,7 @@ Please use one of the following options to get in touch with me for critics, sug
 I will answer every request!</value>
   </data>
   <data name="ChangelogPageBody" xml:space="preserve">
-    <value>1.5.1.0:
+    <value>1.5.0.0:
 * connect to car2go account
 * bookings for car2go
 * differenciate between elektric drive and combustion engines with car2go
