@@ -177,6 +177,22 @@ namespace FreeCars {
 	        //e.Handled = true;
         }
 
+		internal static void SetAppSetting(string key, object value) {
+			try {
+				IsolatedStorageSettings.ApplicationSettings.Add(key, value);
+			} catch (ArgumentException) {
+				IsolatedStorageSettings.ApplicationSettings[key] = value;
+			}
+		}
+
+		internal static object GetAppSetting(string key) {
+			try { 
+				return IsolatedStorageSettings.ApplicationSettings[key];
+			} catch (KeyNotFoundException) {
+				return null;
+			}
+		}
+
 		internal static string GetAppAttribute(string attributeName) {
 			string appManifestName = "WMAppManifest.xml";
 			string appNodeName = "App";

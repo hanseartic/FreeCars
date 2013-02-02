@@ -68,6 +68,9 @@
     </Reference>
     <Reference Include="Microsoft.Phone.Interop" />
     <Reference Include="Microsoft.Xna.Framework" />
+    <Reference Include="OAuth.WindowsPhone.Mango">
+      <HintPath>..\packages\OAuth.1.0.3\lib\sl4-wp71\OAuth.WindowsPhone.Mango.dll</HintPath>
+    </Reference>
     <Reference Include="System.Data.Linq" />
     <Reference Include="System.Device" />
     <Reference Include="System.Observable" />
@@ -92,11 +95,15 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="BookingControl.xaml.cs">
+      <DependentUpon>BookingControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Car2Go.cs" />
     <Compile Include="Car2GoSerialization.cs" />
     <Compile Include="Converters.cs" />
     <Compile Include="DriveNow.cs" />
     <Compile Include="DriveNowSerialization.cs" />
+    <Compile Include="Helpers.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -120,6 +127,10 @@
       <Generator>MSBuild:Compile</Generator>
     </ApplicationDefinition>
     <Page Include="About.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="BookingControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -152,9 +163,12 @@
     <Content Include="Resources\appbar.cogs.png" />
     <Content Include="Resources\appbar.deeplink.round.png" />
     <Content Include="Resources\appbar.map.centerme.rest.png" />
+    <Content Include="Resources\appbar.timer.check.png" />
     <Content Include="Resources\appbar.transport.repeat.rest.png" />
     <Content Include="Resources\battery28x28.png" />
     <Content Include="Resources\fuel28x28.png" />
+    <Content Include="Resources\ib_condition_good.png" />
+    <Content Include="Resources\ib_condition_unacceptable.png" />
     <Content Include="Resources\light_appbar.feature.settings.rest.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

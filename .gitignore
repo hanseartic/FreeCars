@@ -11,3 +11,5 @@ _ReSharper*
 
 FreeCars/PerfLogs/
 *.sap
+*Thumbs.db
+beta_testers.txt
