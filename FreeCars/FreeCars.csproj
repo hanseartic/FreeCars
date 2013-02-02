@@ -167,6 +167,8 @@
     <Content Include="Resources\appbar.transport.repeat.rest.png" />
     <Content Include="Resources\battery28x28.png" />
     <Content Include="Resources\fuel28x28.png" />
+    <Content Include="Resources\ib_condition_good.png" />
+    <Content Include="Resources\ib_condition_unacceptable.png" />
     <Content Include="Resources\light_appbar.feature.settings.rest.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

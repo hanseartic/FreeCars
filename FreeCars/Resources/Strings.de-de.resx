@@ -404,10 +404,19 @@ Geben Sie eine Beschreibung für den aktuellen Ausschnitt an.</value>
 für diese Location zugreifen:
 {1}.</value>
   </data>
+  <data name="BookingPageExterior" xml:space="preserve">
+    <value>Zustand außen</value>
+  </data>
   <data name="BookingPageHeadline" xml:space="preserve">
     <value>Fahrzeug reservieren</value>
   </data>
+  <data name="BookingPageInterior" xml:space="preserve">
+    <value>Zustand innen</value>
+  </data>
   <data name="BookingPagQuestion" xml:space="preserve">
     <value>Möchtest Du das folgende Fahrzeug reservieren?</value>
+  </data>
+  <data name="SettingsPageCar2GoConnectButton" xml:space="preserve">
+    <value>FreeCars mit car2go verbinden</value>
   </data>
 </root>

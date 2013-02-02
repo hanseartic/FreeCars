@@ -84,9 +84,11 @@ namespace FreeCars {
 						var carInfo = new Car2GoInformation {
 							model = ("CE" == car.engineType) ? "C-Smart" : "Smart ElectricDrive",
 							fuelState = car.fuel,
-						    position = carPosition,
-             				licensePlate = car.name,
+							position = carPosition,
+							licensePlate = car.name,
 							ID = car.vin,
+							exterior = car.exterior,
+							interior = car.interior,
 						};
 						car2GoCars.Add(carInfo);
 					}
@@ -126,7 +128,7 @@ namespace FreeCars {
 		public List<Car2GoLocation> Cities {
 			get { return (List<Car2GoLocation>)GetValue(CitiesProperty); }
 			set { SetValue(CitiesProperty, value); }
-		} 
+		}
 
 		public event EventHandler Updated;
 	}
