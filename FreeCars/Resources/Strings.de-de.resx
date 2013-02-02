@@ -294,10 +294,12 @@ Jede Anfrage wird beantwortet!</value>
   </data>
   <data name="ChangelogPageBody" xml:space="preserve">
     <value>1.5.1.0:
-* Performance-Verbesserung
 * Verbinden mit car2go-Account
 * Buchungen für car2go
 * Unterscheidung zwischen Elektro und Verbrenner bei car2go
+* Performance-Verbesserung
+* Verbindung zu Facebook auf Info-Seite
+* Du statt Sie
 
 1.4.1.2:
 * car2go-Marker verschwanden bei'm Schließen - jetzt nicht mehr
