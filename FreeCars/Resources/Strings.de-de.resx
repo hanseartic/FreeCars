@@ -293,7 +293,13 @@ Bitte nutze eine der folgenden Kontaktmöglichkeiten bei Kritik, Verbesserungsvo
 Jede Anfrage wird beantwortet!</value>
   </data>
   <data name="ChangelogPageBody" xml:space="preserve">
-    <value>1.4.1.1:
+    <value>1.5.1.0:
+* Performance-Verbesserung
+* Verbinden mit car2go-Account
+* Buchungen für car2go
+* Unterscheidung zwischen Elektro und Verbrenner bei car2go
+
+1.4.1.1:
 * Alle Städte für car2go (mit autodetect)
 * Springt bei Rücknavigation nicht mehr auf Startposition der Secondary-Tile
 * Besserer Bildausschnitt für Secondary Tile

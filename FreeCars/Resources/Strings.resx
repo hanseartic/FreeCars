@@ -287,7 +287,13 @@ Please use one of the following options to get in touch with me for critics, sug
 I will answer every request!</value>
   </data>
   <data name="ChangelogPageBody" xml:space="preserve">
-    <value>1.4.1.1:
+    <value>1.5.1.0:
+* connect to car2go account
+* bookings for car2go
+* differenciate between elektric drive and combustion engines with car2go
+* performace improvements
+
+1.4.1.1:
 * All cities for car2go (with autodetect)
 * Does not jump back to Secondary Tile's location on in-app-backnavigation
 * Improved screenshot of the map
