@@ -25,6 +25,7 @@ using System.IO.IsolatedStorage;
 using FreeCars.Resources;
 using System.Windows.Media.Imaging;
 using GestureEventArgs = System.Windows.Input.GestureEventArgs;
+using System.ComponentModel;
 
 namespace FreeCars {
 	public partial class MainPage : PhoneApplicationPage {
@@ -57,6 +58,15 @@ namespace FreeCars {
 				SDKAdControl.AdUnitId = FreeCarsCredentials.PubCenter.WindowsPhone.ApplicationId;
 				SDKAdControl.ApplicationId = FreeCarsCredentials.PubCenter.WindowsPhone.ApplicationId;
 			} catch (InvalidOperationException) { }
+			VisualStateManager.GoToState(bookingControl, "InactiveState", false);
+			//bookingControl.Deactivate();
+			bookingControlGrid.Visibility = Visibility.Visible;
+		}
+		protected override void OnBackKeyPress(CancelEventArgs e) {
+			if (bookingControl.IsActive) {
+				bookingControl.Deactivate();
+				e.Cancel = true;
+			}
 		}
 		protected override void OnNavigatedTo(NavigationEventArgs e) {
 			base.OnNavigatedTo(e);
@@ -387,23 +397,22 @@ namespace FreeCars {
 						Child = new StackPanel {
 							Orientation = System.Windows.Controls.Orientation.Vertical,
 							Children = {
-							new TextBlock { Text = car.model, },
-							new TextBlock { Text = car.licensePlate, },
-							new StackPanel {
-								Orientation = System.Windows.Controls.Orientation.Horizontal,
-								Children = {
-									
-									new Image {
-										Source = new BitmapImage
-											(new Uri((car.model.IndexOf("Electric") < 0)
-												? "/Resources/fuel28x28.png"
-												: "/Resources/battery28x28.png", UriKind.Relative)), 
-										Margin = new Thickness(0, 0, 12, 0),
+								new TextBlock { Text = car.model, },
+								new TextBlock { Text = car.licensePlate, },
+								new StackPanel {
+									Orientation = System.Windows.Controls.Orientation.Horizontal,
+									Children = {
+										new Image {
+											Source = new BitmapImage
+												(new Uri((car.model.IndexOf("Electric") < 0)
+													? "/Resources/fuel28x28.png"
+													: "/Resources/battery28x28.png", UriKind.Relative)), 
+											Margin = new Thickness(0, 0, 12, 0),
+										},
+										new TextBlock { Text = car.fuelState + "%", },
 									},
-									new TextBlock { Text = car.fuelState + "%", },
 								},
 							},
-						},
 						},
 						Visibility = Visibility.Collapsed,
 					};
@@ -433,7 +442,7 @@ namespace FreeCars {
 
 					if (((Pushpin)sender).Tag is Car2GoInformation) {
 						mainPageApplicationBarBookCarButton.IsEnabled = true;
-						VisualStateManager.GoToState(bookingControl, "InactiveState", false);
+						bookingControl.Deactivate();
 					}
 					var parentLayer = VisualTreeHelper.GetParent((Pushpin)sender) as MapLayer;
 					parentLayer.Children.Remove((Pushpin)sender);
@@ -448,7 +457,6 @@ namespace FreeCars {
 					DeactivatePushpin(sender as Pushpin);
 				}
 			}
-
 		}
 		void loadMulticityChargeState(Pushpin pushpin) {
 
@@ -555,6 +563,7 @@ namespace FreeCars {
 					DeactivatePushpin(pushpin as Pushpin);
 				}
 			}
+			bookingControl.Deactivate();
 			mainPageApplicationBarBookCarButton.IsEnabled = false;
 			e.Handled = true;
 		}

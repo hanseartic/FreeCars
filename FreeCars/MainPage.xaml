@@ -46,7 +46,9 @@
                 <map:MapLayer x:Name="car2goCarsLayer"></map:MapLayer>
 				<map:MapLayer x:Name="activeLayer"></map:MapLayer>
             </map:Map>
-			<local:BookingControl x:Name="bookingControl" Visibility="Visible" Margin="22" RenderTransformOrigin="0.5,0.5" />
+			<Grid x:Name="bookingControlGrid" Visibility="Collapsed" Margin="0">
+				<local:BookingControl x:Name="bookingControl" Visibility="Visible" Margin="22" RenderTransformOrigin="0.5,0.5" />
+			</Grid>
 		</Grid>
 		<Grid x:Name="AdsGrid" Grid.Row="2" Visibility="Collapsed">
 			<adduplex:AdControl
