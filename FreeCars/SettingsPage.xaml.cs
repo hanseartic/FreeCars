@@ -18,21 +18,21 @@ using System.Runtime.Serialization.Json;
 using System.IO;
 
 namespace FreeCars {
-    public partial class SettingsPage : PhoneApplicationPage {
+	public partial class SettingsPage : PhoneApplicationPage {
 
 		public SettingsPage() {
-            InitializeComponent();
+			InitializeComponent();
 			LoadAppBar();
 			LoadCar2GoCities();
 			connectToCar2GoButton.DataContext = this;
 		}
 
-	    private void LoadCar2GoCities() {
-		    car2goCitiesList.DataContext = App.Current.Resources["car2go"] as Car2Go;
-		    var binding = new Binding("Cities") {Source = App.Current.Resources["car2go"] as Car2Go};
-		    BindingOperations.SetBinding(car2goCitiesList, ListPicker.ItemsSourceProperty, binding);
-	    }
-	    private void AppOnTrialModeChanged(object sender, EventArgs e) {
+		private void LoadCar2GoCities() {
+			car2goCitiesList.DataContext = App.Current.Resources["car2go"] as Car2Go;
+			var binding = new Binding("Cities") { Source = App.Current.Resources["car2go"] as Car2Go };
+			BindingOperations.SetBinding(car2goCitiesList, ListPicker.ItemsSourceProperty, binding);
+		}
+		private void AppOnTrialModeChanged(object sender, EventArgs e) {
 			if (App.IsInTrialMode) {
 				ShowAdsToggleSwitch.Visibility = Visibility.Visible;
 			}
@@ -43,35 +43,35 @@ namespace FreeCars {
 			CheckCar2GoApiAccess();
 		}
 
-        private void OnToggleSwitchChanged(ToggleSwitch sender) {
-            sender.Content = true == sender.IsChecked
-                ? Strings.ToggleSwitchOn
-                : Strings.ToggleSwitchOff;
-        }
-        private void SaveToggleSwitch(string setting, bool? isChecked) {
-            try {
-                IsolatedStorageSettings.ApplicationSettings.Add(setting, isChecked);
-            } catch (ArgumentException) {
-                IsolatedStorageSettings.ApplicationSettings[setting] = isChecked;
-            }
-            IsolatedStorageSettings.ApplicationSettings.Save();
-        }
-        private void OnGPSToggleSwitchChanged(object sender, RoutedEventArgs e) {
-            SaveToggleSwitch("settings_use_GPS", ((ToggleSwitch)sender).IsChecked);
-            OnToggleSwitchChanged((ToggleSwitch)sender);
-        }
-        private void OnMulticityCarsToggleSwitchChanged(object sender, RoutedEventArgs e) {
-            SaveToggleSwitch("settings_show_multicity_cars", ((ToggleSwitch)sender).IsChecked);
-            OnToggleSwitchChanged((ToggleSwitch)sender);
-        }
+		private void OnToggleSwitchChanged(ToggleSwitch sender) {
+			sender.Content = true == sender.IsChecked
+				? Strings.ToggleSwitchOn
+				: Strings.ToggleSwitchOff;
+		}
+		private void SaveToggleSwitch(string setting, bool? isChecked) {
+			try {
+				IsolatedStorageSettings.ApplicationSettings.Add(setting, isChecked);
+			} catch (ArgumentException) {
+				IsolatedStorageSettings.ApplicationSettings[setting] = isChecked;
+			}
+			IsolatedStorageSettings.ApplicationSettings.Save();
+		}
+		private void OnGPSToggleSwitchChanged(object sender, RoutedEventArgs e) {
+			SaveToggleSwitch("settings_use_GPS", ((ToggleSwitch)sender).IsChecked);
+			OnToggleSwitchChanged((ToggleSwitch)sender);
+		}
+		private void OnMulticityCarsToggleSwitchChanged(object sender, RoutedEventArgs e) {
+			SaveToggleSwitch("settings_show_multicity_cars", ((ToggleSwitch)sender).IsChecked);
+			OnToggleSwitchChanged((ToggleSwitch)sender);
+		}
 
-        private void OnMulticityChargersToggleSwitchChanged(object sender, RoutedEventArgs e) {
-            SaveToggleSwitch("settings_show_multicity_chargers", ((ToggleSwitch)sender).IsChecked);
-            OnToggleSwitchChanged((ToggleSwitch)sender);
-        }
+		private void OnMulticityChargersToggleSwitchChanged(object sender, RoutedEventArgs e) {
+			SaveToggleSwitch("settings_show_multicity_chargers", ((ToggleSwitch)sender).IsChecked);
+			OnToggleSwitchChanged((ToggleSwitch)sender);
+		}
 		private void OnDriveNowCarsToggleSwitchChanged(object sender, RoutedEventArgs e) {
-				SaveToggleSwitch("settings_show_drivenow_cars", ((ToggleSwitch)sender).IsChecked);
-				OnToggleSwitchChanged((ToggleSwitch)sender);
+			SaveToggleSwitch("settings_show_drivenow_cars", ((ToggleSwitch)sender).IsChecked);
+			OnToggleSwitchChanged((ToggleSwitch)sender);
 		}
 		private void OnCar2GoCarsToggleSwitchChanged(object sender, RoutedEventArgs e) {
 			SaveToggleSwitch("settings_show_car2go_cars", ((ToggleSwitch)sender).IsChecked);
@@ -87,7 +87,7 @@ namespace FreeCars {
 				if (0 == selectedItem.locationId) {
 					try {
 						IsolatedStorageSettings.ApplicationSettings.Remove("car2goSelectedCity");
-					} catch (Exception) {}
+					} catch (Exception) { }
 				} else {
 					try {
 						IsolatedStorageSettings.ApplicationSettings.Add("car2goSelectedCity", selectedItem.locationName);
@@ -110,35 +110,35 @@ namespace FreeCars {
 			}
 			OnToggleSwitchChanged((ToggleSwitch)sender);
 		}
-        private void OnGPSToggleSwitchLoaded(object sender, RoutedEventArgs e) {
-            try {
-                ((ToggleSwitch)sender).IsChecked = (true == (bool)IsolatedStorageSettings.ApplicationSettings["settings_use_GPS"]);
-            } catch (KeyNotFoundException) { }
-            OnToggleSwitchChanged((ToggleSwitch)sender);
-        }
+		private void OnGPSToggleSwitchLoaded(object sender, RoutedEventArgs e) {
+			try {
+				((ToggleSwitch)sender).IsChecked = (true == (bool)IsolatedStorageSettings.ApplicationSettings["settings_use_GPS"]);
+			} catch (KeyNotFoundException) { }
+			OnToggleSwitchChanged((ToggleSwitch)sender);
+		}
 		private void OnCar2GoCarsToggleSwitchLoaded(object sender, RoutedEventArgs e) {
 			try {
 				((ToggleSwitch)sender).IsChecked = (true == (bool)IsolatedStorageSettings.ApplicationSettings["settings_show_car2go_cars"]);
 			} catch (KeyNotFoundException) { ((ToggleSwitch)sender).IsChecked = true; }
 			OnToggleSwitchChanged((ToggleSwitch)sender);
 		}
-        private void OnMulticityCarsToggleSwitchLoaded(object sender, RoutedEventArgs e) {
-            try {
-                ((ToggleSwitch)sender).IsChecked = (true == (bool)IsolatedStorageSettings.ApplicationSettings["settings_show_multicity_cars"]);
-            } catch (KeyNotFoundException) { ((ToggleSwitch)sender).IsChecked = true; }
-            OnToggleSwitchChanged((ToggleSwitch)sender);
-        }
-        private void OnMulticityChargersToggleSwitchLoaded(object sender, RoutedEventArgs e) {
-            try {
-                ((ToggleSwitch)sender).IsChecked = (true == (bool)IsolatedStorageSettings.ApplicationSettings["settings_show_multicity_chargers"]);
-            } catch (KeyNotFoundException) { ((ToggleSwitch)sender).IsChecked = true;  }
-            OnToggleSwitchChanged((ToggleSwitch)sender);
-        }
+		private void OnMulticityCarsToggleSwitchLoaded(object sender, RoutedEventArgs e) {
+			try {
+				((ToggleSwitch)sender).IsChecked = (true == (bool)IsolatedStorageSettings.ApplicationSettings["settings_show_multicity_cars"]);
+			} catch (KeyNotFoundException) { ((ToggleSwitch)sender).IsChecked = true; }
+			OnToggleSwitchChanged((ToggleSwitch)sender);
+		}
+		private void OnMulticityChargersToggleSwitchLoaded(object sender, RoutedEventArgs e) {
+			try {
+				((ToggleSwitch)sender).IsChecked = (true == (bool)IsolatedStorageSettings.ApplicationSettings["settings_show_multicity_chargers"]);
+			} catch (KeyNotFoundException) { ((ToggleSwitch)sender).IsChecked = true; }
+			OnToggleSwitchChanged((ToggleSwitch)sender);
+		}
 		private void OnDriveNowCarsToggleSwitchLoaded(object sender, RoutedEventArgs e) {
-				try {
-					((ToggleSwitch)sender).IsChecked = (true == (bool)IsolatedStorageSettings.ApplicationSettings["settings_show_drivenow_cars"]);
-				} catch (KeyNotFoundException) { ((ToggleSwitch)sender).IsChecked = true; }
-				OnToggleSwitchChanged((ToggleSwitch)sender);
+			try {
+				((ToggleSwitch)sender).IsChecked = (true == (bool)IsolatedStorageSettings.ApplicationSettings["settings_show_drivenow_cars"]);
+			} catch (KeyNotFoundException) { ((ToggleSwitch)sender).IsChecked = true; }
+			OnToggleSwitchChanged((ToggleSwitch)sender);
 		}
 		private void OnAllowAnalyticsToggleSwitchLoaded(object sender, RoutedEventArgs e) {
 			try {
@@ -159,7 +159,7 @@ namespace FreeCars {
 				}
 			} catch (KeyNotFoundException) { }
 		}
-        private void LoadAppBar() {
+		private void LoadAppBar() {
 			ApplicationBar = new ApplicationBar {
 				Mode = ApplicationBarMode.Minimized,
 				Opacity = 0.8,
@@ -172,20 +172,20 @@ namespace FreeCars {
 				Text = FreeCars.Resources.Strings.SettingsAppbarAbout,
 			};
 			settingsPageApplicationBarInfoButton.Click += OnSettingsPageApplicationBarInfoButtonClick;
-			ApplicationBar.Buttons.Add(settingsPageApplicationBarInfoButton);		
-        }
+			ApplicationBar.Buttons.Add(settingsPageApplicationBarInfoButton);
+		}
 		private void OnSettingsPageApplicationBarInfoButtonClick(object sender, EventArgs e) {
 			NavigationService.Navigate(new Uri("/About.xaml", UriKind.RelativeOrAbsolute));
 		}
 
 		private void OnCallMulticityTap(object sender, System.Windows.Input.GestureEventArgs e) {
 			try {
-				var callTask = new PhoneCallTask { 
+				var callTask = new PhoneCallTask {
 					DisplayName = Strings.SettingsPageCallMulticityPhoneName,
 					PhoneNumber = Strings.SettingsPageCallMulticityPhoneNumber,
 				};
 				callTask.Show();
-			} catch {}
+			} catch { }
 		}
 
 		private void OnCallDriveNowTap(object sender, System.Windows.Input.GestureEventArgs e) {
@@ -200,7 +200,7 @@ namespace FreeCars {
 
 		private void OnRedeemDrivenowPromoViaMailButtonTap(object sender, System.Windows.Input.GestureEventArgs e) {
 			try {
-				var promoCodeMailTask = new EmailComposeTask { 
+				var promoCodeMailTask = new EmailComposeTask {
 					Subject = "",
 					Body = "",
 				};
@@ -283,11 +283,12 @@ namespace FreeCars {
 							using (Stream resultStream = Helpers.GenerateStreamFromString(arguments.Result)) {
 								var serializer = new DataContractJsonSerializer(typeof(ResultAccounts));
 								var resultAccounts = (ResultAccounts)serializer.ReadObject(resultStream);
-								switch (resultAccounts.ReturnValue.Code) { 
+								switch (resultAccounts.ReturnValue.Code) {
 									case 0:
 										c2gAuthText.Text = String.Format(
 											Strings.SettingsPageCar2GoAuthStatusOK,
 											new string[] { resultAccounts.Account[0].Description, Car2Go.City });
+										App.SetAppSetting("car2go.oauth_account_id", resultAccounts.Account[0].AccountId);
 										break;
 									case 1:
 										goto default;
@@ -333,11 +334,11 @@ namespace FreeCars {
 
 			var requestParameters = OAuthTools.NormalizeRequestParameters(parameters);
 			var requestUrl = new Uri(car2GoRequestEndpoint + "?" + requestParameters + "&oauth_signature=" + signature, UriKind.Absolute);
-			
+
 			var webClient = new WebClient();
 			webClient.DownloadStringCompleted += requestCallback;
-				
-			webClient.DownloadStringAsync(requestUrl);			
+
+			webClient.DownloadStringAsync(requestUrl);
 		}
 		private void getC2GAccessToken(string[] tokenData) {
 			var car2GoGetTokenEndpoint = "https://www.car2go.com/api/accesstoken";
@@ -358,7 +359,7 @@ namespace FreeCars {
 			};
 			var requestParameters = oauthRequest.GetAuthorizationQuery();
 			var requestUrl = new Uri(car2GoGetTokenEndpoint + "?" + requestParameters, UriKind.Absolute);
-			
+
 			var webClient = new WebClient();
 			webClient.DownloadStringCompleted += delegate(object client, DownloadStringCompletedEventArgs arguments) {
 				string[] results = { };
@@ -390,7 +391,7 @@ namespace FreeCars {
 					var tokenData = new string[2];
 					var tokenIndex = 0;
 					foreach (var data in e.Uri.Query.Substring(1).Split(new char[] { '&' })) {
-						tokenData[tokenIndex++] = data.Split(new char[]{'='})[1];
+						tokenData[tokenIndex++] = data.Split(new char[] { '=' })[1];
 					}
 					getC2GAccessToken(tokenData);
 					browser.Navigate(new Uri("https://" + e.Uri.Host + "/api/logout.jsp"));
@@ -400,9 +401,9 @@ namespace FreeCars {
 					CheckCar2GoApiAccess();
 					break;
 				default:
-					
+
 					break;
 			}
 		}
-    }
+	}
 }
