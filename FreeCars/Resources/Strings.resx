@@ -419,10 +419,18 @@ for this location:
   <data name="BookingPageInterior" xml:space="preserve">
     <value>Interior condition</value>
   </data>
-  <data name="BookingPagQuestion" xml:space="preserve">
+  <data name="BookingPageQuestion" xml:space="preserve">
     <value>Do you want to create a booking for this car?</value>
   </data>
   <data name="SettingsPageCar2GoConnectButton" xml:space="preserve">
     <value>connect FreeCars to car2go</value>
+  </data>
+  <data name="BookingPageCar2GoNotConnected" xml:space="preserve">
+    <value>FreeCars is not connected to your car2go-account, yet.
+
+Do you want to connect to your car2go account now? It only takes two minutes and your credentials are not stored in this App.</value>
+  </data>
+  <data name="NotConnected" xml:space="preserve">
+    <value>Not connected</value>
   </data>
 </root>

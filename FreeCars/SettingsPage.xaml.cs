@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Navigation;
 using GoogleMaps.Geocode;
 using Microsoft.Phone.Controls;
 using System.IO.IsolatedStorage;
@@ -221,6 +223,10 @@ namespace FreeCars {
 		}
 
 		private void OnConnectToCar2GoClicked(object sender, RoutedEventArgs e) {
+			connectCar2Go();
+		}
+
+		private void connectCar2Go() {
 			var car2GoGetTokenEndpoint = "https://www.car2go.com/api/reqtoken";
 
 			var oauthRequest = new OAuthRequest() {
@@ -361,18 +367,35 @@ namespace FreeCars {
 			var requestUrl = new Uri(car2GoGetTokenEndpoint + "?" + requestParameters, UriKind.Absolute);
 
 			var webClient = new WebClient();
-			webClient.DownloadStringCompleted += delegate(object client, DownloadStringCompletedEventArgs arguments) {
+			webClient.DownloadStringCompleted += (client, arguments) => {
 				string[] results = { };
 				if (null == arguments.Error) {
 					results = arguments.Result.Split(new char[] { '&' }, StringSplitOptions.None);
 					App.SetAppSetting("car2go.oauth_token", results[0].Split(new char[] { '=' })[1]);
 					App.SetAppSetting("car2go.oauth_token_secret", results[1].Split(new char[] { '=' })[1]);
 				}
-				client = null;
 			};
 			webClient.DownloadStringAsync(requestUrl);
 		}
 
+		protected override void OnNavigatedTo(NavigationEventArgs e) {
+			string tab = string.Empty;
+			string action = string.Empty;
+			if (NavigationContext.QueryString.TryGetValue("tab", out tab) && NavigationContext.QueryString.TryGetValue("action", out action)) {
+				var pivotItemToShow = settingsTabs.Items.Cast<PivotItem>().Single(i => i.Name == tab);
+				settingsTabs.SelectedItem = pivotItemToShow;
+				if ("connectCar2Go" == action) {
+					connectCar2Go();
+				}
+			}
+			base.OnNavigatedTo(e);
+		}
+		protected override void OnBackKeyPress(CancelEventArgs e) {
+			if (Visibility.Visible == c2gAuthBrowser.Visibility) {
+				c2gAuthBrowser.Visibility = Visibility.Collapsed;
+				e.Cancel = true;
+			}
+		}
 		private void Onc2gAuthBrowserNavigated(object sender, System.Windows.Navigation.NavigationEventArgs e) {
 			var browser = (sender as WebBrowser);
 			try {
@@ -383,9 +406,7 @@ namespace FreeCars {
 					"$('body').css('transform-origin', '0 0');" +
 					"$('body').css('transform', 'scale(2.5)');"
 				);
-			} catch (Exception ex) {
-				ex = null;
-			}
+			} catch { }
 			switch (e.Uri.AbsolutePath) {
 				case "/api/authorize/granted.jsp":
 					var tokenData = new string[2];

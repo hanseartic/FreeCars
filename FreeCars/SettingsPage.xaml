@@ -20,7 +20,7 @@
 		<!--LayoutRoot is the root grid where all page content is placed-->
 	<Grid x:Name="LayoutRoot" Background="Transparent">
 		<!--Pivot Control-->
-		<controls:Pivot Title="{Binding LocalizedStrings.SettingsPageTitle, Source={StaticResource ResourceAccess}}">
+		<controls:Pivot x:Name="settingsTabs" Title="{Binding LocalizedStrings.SettingsPageTitle, Source={StaticResource ResourceAccess}}">
 			<!--Pivot item general application settings-->
 			<controls:PivotItem Header="{Binding LocalizedStrings.SettingsGeneralTitle, Source={StaticResource ResourceAccess}}">
 				<Grid>
@@ -41,7 +41,7 @@
 				</Grid>
 			</controls:PivotItem>
 			<!--Pivot item car2go-->
-			<controls:PivotItem Header="{Binding LocalizedStrings.SettingsCar2goTitle, Source={StaticResource ResourceAccess}}">
+			<controls:PivotItem x:Name="car2goTab" Header="{Binding LocalizedStrings.SettingsCar2goTitle, Source={StaticResource ResourceAccess}}">
 				<ScrollViewer>
 					<Grid>
 						<StackPanel Margin="0,8">

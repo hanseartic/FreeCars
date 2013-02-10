@@ -424,10 +424,18 @@ für diese Location zugreifen:
   <data name="BookingPageInterior" xml:space="preserve">
     <value>Zustand innen</value>
   </data>
-  <data name="BookingPagQuestion" xml:space="preserve">
+  <data name="BookingPageQuestion" xml:space="preserve">
     <value>Möchtest Du das folgende Fahrzeug reservieren?</value>
   </data>
   <data name="SettingsPageCar2GoConnectButton" xml:space="preserve">
     <value>FreeCars mit car2go verbinden</value>
+  </data>
+  <data name="BookingPageCar2GoNotConnected" xml:space="preserve">
+    <value>FreeCars ist noch nicht mit Deinem car2go-Account verbunden.
+
+Möchtest Du FreeCars jetzt mit Deinem car2go-Account verbinden? Das dauert nur zwei Minuten und Deine Daten werden nicht in der FreeCars-App gespeichert.</value>
+  </data>
+  <data name="NotConnected" xml:space="preserve">
+    <value>Nicht verbunden</value>
   </data>
 </root>
