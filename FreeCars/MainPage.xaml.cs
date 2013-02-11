@@ -554,6 +554,11 @@ namespace FreeCars {
 			pinCurrentMapCenterAsSecondaryTile();
 			e.Handled = true;
 		}
+		private void OnMapViewChangeStart(object sender, MapEventArgs e) {
+			foreach (MapLayer layer in map.Children.OfType<MapLayer>().Where(layer => "myLocationLayer" != layer.Name).Where(layer => "activeLayer" != layer.Name)) {
+				(layer).Children.Clear();
+			}
+		}
 
 		private void OnMapViewChangeEnd(object sender, MapEventArgs e) {
 			((App)Application.Current).RefreshPOIs();
