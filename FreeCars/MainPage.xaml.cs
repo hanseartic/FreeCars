@@ -104,12 +104,7 @@ namespace FreeCars {
 			} else {
 				gpsAllowed = false;
 			}
-			try {
-				IsolatedStorageSettings.ApplicationSettings.Add("settings_use_GPS", gpsAllowed);
-			} catch (ArgumentException) {
-				IsolatedStorageSettings.ApplicationSettings["settings_use_GPS"] = gpsAllowed;
-			}
-			IsolatedStorageSettings.ApplicationSettings.Save();
+			App.SetAppSetting("settings_use_GPS", gpsAllowed);
 			return gpsAllowed;
 		}
 		ApplicationBarIconButton mainPageApplicationBarBookCarButton;
@@ -201,12 +196,8 @@ namespace FreeCars {
 		void OnMyPositionChanged(object sender, GeoPositionChangedEventArgs<GeoCoordinate> e) {
 			if (GeoPositionStatus.Ready != ((GeoCoordinateWatcher)sender).Status) return;
 			cw.Stop();
-			try {
-				IsolatedStorageSettings.ApplicationSettings.Add("my_last_location", e.Position);
-			} catch (ArgumentException) {
-				IsolatedStorageSettings.ApplicationSettings["my_last_location"] = e.Position;
-			}
-			IsolatedStorageSettings.ApplicationSettings.Save();
+			App.SetAppSetting("my_last_location", e.Position);
+			
 			ShowMeAtLocation(e.Position.Location);
 			SDKAdControl.Latitude = e.Position.Location.Latitude;
 			SDKAdControl.Longitude = e.Position.Location.Longitude;
@@ -591,12 +582,9 @@ namespace FreeCars {
 				}
 				if ((IsolatedStorageSettings.ApplicationSettings.Contains("current_map_city") &&
 					((string)IsolatedStorageSettings.ApplicationSettings["current_map_city"] != localityName)) || !IsolatedStorageSettings.ApplicationSettings.Contains("current_map_city")) {
-					try {
-						IsolatedStorageSettings.ApplicationSettings.Add("current_map_city", localityName);
-					} catch (ArgumentException) {
-						IsolatedStorageSettings.ApplicationSettings["current_map_city"] = localityName;
-					}
-					IsolatedStorageSettings.ApplicationSettings.Save();
+
+					App.SetAppSetting("current_map_city", localityName);
+					
 					((App)Application.Current).RootFrame.Dispatcher.BeginInvoke(() => {
 						try {
 						(App.Current.Resources["car2go"] as Car2Go).LoadPOIs();

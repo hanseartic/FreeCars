@@ -183,6 +183,10 @@ namespace FreeCars {
 			} catch (ArgumentException) {
 				IsolatedStorageSettings.ApplicationSettings[key] = value;
 			}
+			try {
+				IsolatedStorageSettings.ApplicationSettings.Save();
+			} catch (IsolatedStorageException) {
+			} catch (InvalidOperationException) {}
 		}
 
 		internal static object GetAppSetting(string key) {

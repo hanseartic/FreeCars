@@ -51,12 +51,7 @@ namespace FreeCars {
 				: Strings.ToggleSwitchOff;
 		}
 		private void SaveToggleSwitch(string setting, bool? isChecked) {
-			try {
-				IsolatedStorageSettings.ApplicationSettings.Add(setting, isChecked);
-			} catch (ArgumentException) {
-				IsolatedStorageSettings.ApplicationSettings[setting] = isChecked;
-			}
-			IsolatedStorageSettings.ApplicationSettings.Save();
+			App.SetAppSetting(setting, isChecked);
 		}
 		private void OnGPSToggleSwitchChanged(object sender, RoutedEventArgs e) {
 			SaveToggleSwitch("settings_use_GPS", ((ToggleSwitch)sender).IsChecked);
@@ -89,15 +84,11 @@ namespace FreeCars {
 				if (0 == selectedItem.locationId) {
 					try {
 						IsolatedStorageSettings.ApplicationSettings.Remove("car2goSelectedCity");
+						IsolatedStorageSettings.ApplicationSettings.Save();
 					} catch (Exception) { }
 				} else {
-					try {
-						IsolatedStorageSettings.ApplicationSettings.Add("car2goSelectedCity", selectedItem.locationName);
-					} catch (ArgumentException) {
-						IsolatedStorageSettings.ApplicationSettings["car2goSelectedCity"] = selectedItem.locationName;
-					}
+					App.SetAppSetting("car2goSelectedCity", selectedItem.locationName);
 				}
-				IsolatedStorageSettings.ApplicationSettings.Save();
 			} catch (NullReferenceException) { }
 		}
 		private void OnShowAdsToggleSwitchChanged(object sender, RoutedEventArgs e) {
