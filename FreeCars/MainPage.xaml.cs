@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -555,12 +556,39 @@ namespace FreeCars {
 			e.Handled = true;
 		}
 		private void OnMapViewChangeStart(object sender, MapEventArgs e) {
-			foreach (MapLayer layer in map.Children.OfType<MapLayer>().Where(layer => "myLocationLayer" != layer.Name).Where(layer => "activeLayer" != layer.Name)) {
+			if (!App.IsLowMemoryDevice) {
+				return;
+			}
+			foreach (
+				MapLayer layer in
+					map.Children.OfType<MapLayer>()
+					   .Where(layer => "myLocationLayer" != layer.Name)
+					   .Where(layer => "activeLayer" != layer.Name)) {
 				(layer).Children.Clear();
 			}
 		}
 
 		private void OnMapViewChangeEnd(object sender, MapEventArgs e) {
+			if (App.IsLowMemoryDevice)
+				refreshDelay = DateTime.Now.AddSeconds(0.4);
+			RefreshPOIsOnMap();
+		}
+		private DateTime refreshDelay = DateTime.Now;
+
+		private void RefreshPOIsOnMap() {
+			if (refreshDelay >= DateTime.Now) {
+				var bw = new BackgroundWorker();
+				bw.DoWork += (sender, args) => {
+					Thread.Sleep(100);
+					RefreshPOIsOnMap();
+				};
+				bw.RunWorkerAsync();
+				return;
+			}
+			if (!Dispatcher.CheckAccess()) {
+				Dispatcher.BeginInvoke(RefreshPOIsOnMap);
+				return;
+			}
 			((App)Application.Current).RefreshPOIs();
 
 			if (IsolatedStorageSettings.ApplicationSettings.Contains("car2goSelectedCity")) {
@@ -574,7 +602,7 @@ namespace FreeCars {
 
 			var reverseGeocode = new ReverseGeocode(true);
 			reverseGeocode.Updated += delegate(object o, EventArgs args) {
-				
+
 				var response = (o as ReverseGeocode).Results;
 				var localityName = "";
 				if (null != response) {
@@ -590,11 +618,11 @@ namespace FreeCars {
 					((string)IsolatedStorageSettings.ApplicationSettings["current_map_city"] != localityName)) || !IsolatedStorageSettings.ApplicationSettings.Contains("current_map_city")) {
 
 					App.SetAppSetting("current_map_city", localityName);
-					
+
 					((App)Application.Current).RootFrame.Dispatcher.BeginInvoke(() => {
 						try {
-						(App.Current.Resources["car2go"] as Car2Go).LoadPOIs();
-						} catch {}
+							(App.Current.Resources["car2go"] as Car2Go).LoadPOIs();
+						} catch { }
 					});
 				}
 			};
