@@ -61,7 +61,8 @@ namespace FreeCars {
                 // and consume battery power when the user is not using the phone.
                 // PhoneApplicationService.Current.UserIdleDetectionMode = IdleDetectionMode.Disabled;
             }
-			
+
+			PhoneApplicationService.Current.ApplicationIdleDetectionMode = IdleDetectionMode.Disabled;
         }
 		private void ValidateTrialMode() {
 			IsInTrialMode = new LicenseInformation().IsTrial();
@@ -178,7 +179,7 @@ namespace FreeCars {
 	        //e.Handled = true;
         }
 
-	    private static bool? isLowMemoryDevice = null;
+		private static bool? isLowMemoryDevice = null;
 		internal static bool IsLowMemoryDevice {
 			get {
 				if (null == isLowMemoryDevice) {

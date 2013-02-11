@@ -498,8 +498,8 @@ namespace FreeCars {
 					}
 					using (var saveFileStream = new IsolatedStorageFileStream(fileName, FileMode.Create, store)) {
 						var b = new WriteableBitmap(173, 173);
-						var offsetX = (map.ActualWidth - 173) / 2;
-						var offsetY = (map.ActualHeight - 173) / 2;
+						var offsetX = (map.ActualWidth - 173)/2;
+						var offsetY = (map.ActualHeight - 173)/2;
 						b.Render(map, new TranslateTransform {
 							X = -offsetX,
 							Y = -offsetY,
@@ -516,14 +516,17 @@ namespace FreeCars {
 
 				var localityName = "";
 				if (null != response) {
-					
-					foreach (var result in response.Where(result => result.types.Contains("sublocality") && result.types.Contains("political"))) {
+
+					foreach (
+						var result in
+							response.Where(result => result.types.Contains("sublocality") && result.types.Contains("political"))) {
 						localityName = result.formatted_address;
 						break;
 					}
 					if ("" == localityName) {
 						foreach (var address_component in response.SelectMany(result => result.address_components.Where(
-						address_component => address_component.types.Contains("locality") && address_component.types.Contains("political")))) {
+							address_component =>
+							address_component.types.Contains("locality") && address_component.types.Contains("political")))) {
 							localityName = address_component.long_name;
 							break;
 						}
@@ -537,7 +540,7 @@ namespace FreeCars {
 						BackContent = localityName,
 						Count = 0,
 						BackgroundImage = new Uri("isostore:/Shared/ShellContent/" + tileParam + ".jpg", UriKind.Absolute),
-				});
+					});
 			});
 		}
 
