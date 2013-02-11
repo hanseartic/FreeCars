@@ -23,6 +23,7 @@ using System.ComponentModel;
 namespace FreeCars {
 	public partial class MainPage : PhoneApplicationPage {
 		private GeoCoordinateWatcher cw;
+		private const int markersMaxDistance = 1500 ;
 		private bool gpsAllowed = false;
 		public MainPage() {
 			InitializeComponent();
@@ -232,7 +233,7 @@ namespace FreeCars {
 			driveNowCarsLayer.Children.Clear();
 			foreach (var car in driveNow.DriveNowCars) {
 				var distanceToMapCenter = (int)car.position.GetDistanceTo(centerLocation);
-				if (1500 < distanceToMapCenter) continue;
+				if (markersMaxDistance < distanceToMapCenter) continue;
 				//var distance = (int)car.position.GetDistanceTo(myLocationPushpin.Location);
 				var pushpinContent = new Border {
 					Child = new StackPanel {
@@ -281,7 +282,7 @@ namespace FreeCars {
 					var distanceToMapCenter = (int)car.position.GetDistanceTo(centerLocation);
 					var fuelTextBlock = new TextBlock { Text = !string.IsNullOrEmpty(car.fuelState) ? car.fuelState + "%" : "", };
 
-					if (1500 < distanceToMapCenter) continue;
+					if (markersMaxDistance < distanceToMapCenter) continue;
 
 					if (null == car.fuelState) {
 						car.Updated += (updatedCar, eventArgs) => {
@@ -338,7 +339,7 @@ namespace FreeCars {
 							Double.Parse(station.lng, cultureInfo.NumberFormat));
 
 					var distanceToMapCenter = (int)(coordinate.GetDistanceTo(centerLocation));
-					if (1500 < distanceToMapCenter) continue;
+					if (markersMaxDistance < distanceToMapCenter) continue;
 					
 					var pushpin = new Pushpin() {
 						Location = coordinate,
@@ -374,7 +375,7 @@ namespace FreeCars {
 				try {
 					var distanceToMapCenter = (int)car.position.GetDistanceTo(centerLocation);
 
-					if (1500 < distanceToMapCenter) continue;
+					if (markersMaxDistance < distanceToMapCenter) continue;
 					var pushpinContent = new Border {
 						Child = new StackPanel {
 							Orientation = System.Windows.Controls.Orientation.Vertical,
