@@ -13,6 +13,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Xml;
 using Microsoft.Phone.Controls;
+using Microsoft.Phone.Info;
 using Microsoft.Phone.Shell;
 using System.IO;
 using System.Text;
@@ -176,6 +177,26 @@ namespace FreeCars {
 			FlurryWP7SDK.Api.LogError("Uncaught Exception occured", e.ExceptionObject);
 	        //e.Handled = true;
         }
+
+	    private static bool? isLowMemoryDevice = null;
+		internal static bool IsLowMemoryDevice {
+			get {
+				if (null == isLowMemoryDevice) {
+					var result = true;
+					try {
+						// Check the working set limit and set the IsLowMemDevice flag accordingly.
+						var applicationWorkingSetLimit = (Int64)DeviceExtendedProperties.GetValue("ApplicationWorkingSetLimit");
+						if (applicationWorkingSetLimit >= 94371840L)
+							result = false;
+					} catch (ArgumentOutOfRangeException) {
+						// Windows Phone OS update not installed, which indicates a 512-MB device. 
+						result = false;
+					}
+					isLowMemoryDevice = result;
+				}
+				return (bool)isLowMemoryDevice;
+			}
+		}
 
 		internal static void SetAppSetting(string key, object value) {
 			try {
