@@ -2,16 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Animation;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
 using AdDuplex;
 using GoogleMaps.Geocode;
 using Microsoft.Advertising;
@@ -19,7 +14,6 @@ using Microsoft.Phone.Controls;
 using Microsoft.Phone.Controls.Maps;
 using System.Device.Location;
 using System.Globalization;
-using System.Windows.Data;
 using Microsoft.Phone.Shell;
 using System.IO.IsolatedStorage;
 using FreeCars.Resources;
@@ -30,6 +24,7 @@ using System.ComponentModel;
 namespace FreeCars {
 	public partial class MainPage : PhoneApplicationPage {
 		private GeoCoordinateWatcher cw;
+		private const int markersMaxDistance = 1500 ;
 		private bool gpsAllowed = false;
 		public MainPage() {
 			InitializeComponent();
@@ -111,12 +106,7 @@ namespace FreeCars {
 			} else {
 				gpsAllowed = false;
 			}
-			try {
-				IsolatedStorageSettings.ApplicationSettings.Add("settings_use_GPS", gpsAllowed);
-			} catch (ArgumentException) {
-				IsolatedStorageSettings.ApplicationSettings["settings_use_GPS"] = gpsAllowed;
-			}
-			IsolatedStorageSettings.ApplicationSettings.Save();
+			App.SetAppSetting("settings_use_GPS", gpsAllowed);
 			return gpsAllowed;
 		}
 		ApplicationBarIconButton mainPageApplicationBarBookCarButton;
@@ -177,9 +167,7 @@ namespace FreeCars {
 			ApplicationBar.MenuItems.Add(mainPageApplicationBarSettingstMenuItem);
 			ApplicationBar.MenuItems.Add(mainPageApplicationBarAboutMenuItem);
 
-			bookingControl.Closed += delegate(object closedSender, EventArgs closedArgs) {
-				ApplicationBar.IsVisible = true;
-			};
+			bookingControl.Closed += (sender, args) => { ApplicationBar.IsVisible = true; };
 		}
 
 		private void OnMainPageApplicationBarBookCarButtonClick(object sender, EventArgs e) {
@@ -210,12 +198,8 @@ namespace FreeCars {
 		void OnMyPositionChanged(object sender, GeoPositionChangedEventArgs<GeoCoordinate> e) {
 			if (GeoPositionStatus.Ready != ((GeoCoordinateWatcher)sender).Status) return;
 			cw.Stop();
-			try {
-				IsolatedStorageSettings.ApplicationSettings.Add("my_last_location", e.Position);
-			} catch (ArgumentException) {
-				IsolatedStorageSettings.ApplicationSettings["my_last_location"] = e.Position;
-			}
-			IsolatedStorageSettings.ApplicationSettings.Save();
+			App.SetAppSetting("my_last_location", e.Position);
+			
 			ShowMeAtLocation(e.Position.Location);
 			SDKAdControl.Latitude = e.Position.Location.Latitude;
 			SDKAdControl.Longitude = e.Position.Location.Longitude;
@@ -250,7 +234,7 @@ namespace FreeCars {
 			driveNowCarsLayer.Children.Clear();
 			foreach (var car in driveNow.DriveNowCars) {
 				var distanceToMapCenter = (int)car.position.GetDistanceTo(centerLocation);
-				if (1500 < distanceToMapCenter) continue;
+				if (markersMaxDistance < distanceToMapCenter) continue;
 				//var distance = (int)car.position.GetDistanceTo(myLocationPushpin.Location);
 				var pushpinContent = new Border {
 					Child = new StackPanel {
@@ -299,7 +283,7 @@ namespace FreeCars {
 					var distanceToMapCenter = (int)car.position.GetDistanceTo(centerLocation);
 					var fuelTextBlock = new TextBlock { Text = !string.IsNullOrEmpty(car.fuelState) ? car.fuelState + "%" : "", };
 
-					if (1500 < distanceToMapCenter) continue;
+					if (markersMaxDistance < distanceToMapCenter) continue;
 
 					if (null == car.fuelState) {
 						car.Updated += (updatedCar, eventArgs) => {
@@ -356,7 +340,7 @@ namespace FreeCars {
 							Double.Parse(station.lng, cultureInfo.NumberFormat));
 
 					var distanceToMapCenter = (int)(coordinate.GetDistanceTo(centerLocation));
-					if (1500 < distanceToMapCenter) continue;
+					if (markersMaxDistance < distanceToMapCenter) continue;
 					
 					var pushpin = new Pushpin() {
 						Location = coordinate,
@@ -392,7 +376,7 @@ namespace FreeCars {
 				try {
 					var distanceToMapCenter = (int)car.position.GetDistanceTo(centerLocation);
 
-					if (1500 < distanceToMapCenter) continue;
+					if (markersMaxDistance < distanceToMapCenter) continue;
 					var pushpinContent = new Border {
 						Child = new StackPanel {
 							Orientation = System.Windows.Controls.Orientation.Vertical,
@@ -514,8 +498,8 @@ namespace FreeCars {
 					}
 					using (var saveFileStream = new IsolatedStorageFileStream(fileName, FileMode.Create, store)) {
 						var b = new WriteableBitmap(173, 173);
-						var offsetX = (map.ActualWidth - 173) / 2;
-						var offsetY = (map.ActualHeight - 173) / 2;
+						var offsetX = (map.ActualWidth - 173)/2;
+						var offsetY = (map.ActualHeight - 173)/2;
 						b.Render(map, new TranslateTransform {
 							X = -offsetX,
 							Y = -offsetY,
@@ -532,14 +516,17 @@ namespace FreeCars {
 
 				var localityName = "";
 				if (null != response) {
-					
-					foreach (var result in response.Where(result => result.types.Contains("sublocality") && result.types.Contains("political"))) {
+
+					foreach (
+						var result in
+							response.Where(result => result.types.Contains("sublocality") && result.types.Contains("political"))) {
 						localityName = result.formatted_address;
 						break;
 					}
 					if ("" == localityName) {
 						foreach (var address_component in response.SelectMany(result => result.address_components.Where(
-						address_component => address_component.types.Contains("locality") && address_component.types.Contains("political")))) {
+							address_component =>
+							address_component.types.Contains("locality") && address_component.types.Contains("political")))) {
 							localityName = address_component.long_name;
 							break;
 						}
@@ -553,7 +540,7 @@ namespace FreeCars {
 						BackContent = localityName,
 						Count = 0,
 						BackgroundImage = new Uri("isostore:/Shared/ShellContent/" + tileParam + ".jpg", UriKind.Absolute),
-				});
+					});
 			});
 		}
 
@@ -571,8 +558,40 @@ namespace FreeCars {
 			pinCurrentMapCenterAsSecondaryTile();
 			e.Handled = true;
 		}
+		private void OnMapViewChangeStart(object sender, MapEventArgs e) {
+			if (!App.IsLowMemoryDevice) {
+				return;
+			}
+			foreach (
+				MapLayer layer in
+					map.Children.OfType<MapLayer>()
+					   .Where(layer => "myLocationLayer" != layer.Name)
+					   .Where(layer => "activeLayer" != layer.Name)) {
+				(layer).Children.Clear();
+			}
+		}
 
 		private void OnMapViewChangeEnd(object sender, MapEventArgs e) {
+			if (App.IsLowMemoryDevice)
+				refreshDelay = DateTime.Now.AddSeconds(0.4);
+			RefreshPOIsOnMap();
+		}
+		private DateTime refreshDelay = DateTime.Now;
+
+		private void RefreshPOIsOnMap() {
+			if (refreshDelay >= DateTime.Now) {
+				var bw = new BackgroundWorker();
+				bw.DoWork += (sender, args) => {
+					Thread.Sleep(100);
+					RefreshPOIsOnMap();
+				};
+				bw.RunWorkerAsync();
+				return;
+			}
+			if (!Dispatcher.CheckAccess()) {
+				Dispatcher.BeginInvoke(RefreshPOIsOnMap);
+				return;
+			}
 			((App)Application.Current).RefreshPOIs();
 
 			if (IsolatedStorageSettings.ApplicationSettings.Contains("car2goSelectedCity")) {
@@ -586,7 +605,7 @@ namespace FreeCars {
 
 			var reverseGeocode = new ReverseGeocode(true);
 			reverseGeocode.Updated += delegate(object o, EventArgs args) {
-				
+
 				var response = (o as ReverseGeocode).Results;
 				var localityName = "";
 				if (null != response) {
@@ -600,16 +619,13 @@ namespace FreeCars {
 				}
 				if ((IsolatedStorageSettings.ApplicationSettings.Contains("current_map_city") &&
 					((string)IsolatedStorageSettings.ApplicationSettings["current_map_city"] != localityName)) || !IsolatedStorageSettings.ApplicationSettings.Contains("current_map_city")) {
-					try {
-						IsolatedStorageSettings.ApplicationSettings.Add("current_map_city", localityName);
-					} catch (ArgumentException) {
-						IsolatedStorageSettings.ApplicationSettings["current_map_city"] = localityName;
-					}
-					IsolatedStorageSettings.ApplicationSettings.Save();
+
+					App.SetAppSetting("current_map_city", localityName);
+
 					((App)Application.Current).RootFrame.Dispatcher.BeginInvoke(() => {
 						try {
-						(App.Current.Resources["car2go"] as Car2Go).LoadPOIs();
-						} catch {}
+							(App.Current.Resources["car2go"] as Car2Go).LoadPOIs();
+						} catch { }
 					});
 				}
 			};

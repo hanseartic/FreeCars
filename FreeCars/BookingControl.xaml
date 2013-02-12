@@ -125,7 +125,7 @@
 		</Grid.RowDefinitions>
 		<StackPanel Orientation="Vertical" Margin="12">
 			<TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Text="{Binding LocalizedStrings.BookingPageHeadline, Source={StaticResource ResourceAccess}}" Style="{StaticResource PhoneTextTitle1Style}" Margin="0,12" />
-			<TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Text="{Binding LocalizedStrings.BookingPagQuestion, Source={StaticResource ResourceAccess}}" Style="{StaticResource PhoneTextTitle2Style}" />
+			<TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Text="{Binding LocalizedStrings.BookingPageQuestion, Source={StaticResource ResourceAccess}}" Style="{StaticResource PhoneTextTitle2Style}" />
 			<TextBlock x:Name="carDescription" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top"  />
 			<Grid x:Name="providersPanels">
 				<StackPanel x:Name="car2GoPanel" Orientation="Vertical" Visibility="{Binding Car2GoVisibility}">

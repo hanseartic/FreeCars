@@ -35,7 +35,7 @@
 
 		<!--ContentPanel - place additional content here-->
 		<Grid x:Name="ContentPanel" Grid.Row="1">
-			<map:Map HorizontalAlignment="Left" Name="map" VerticalAlignment="Top" Height="800" Width="480" Tap="OnMapTap" Hold="OnMapHold" ViewChangeEnd="OnMapViewChangeEnd">
+			<map:Map HorizontalAlignment="Left" Name="map" VerticalAlignment="Top" Height="800" Width="480" Tap="OnMapTap" Hold="OnMapHold" ViewChangeEnd="OnMapViewChangeEnd" ViewChangeStart="OnMapViewChangeStart">
                 <map:MapLayer x:Name="myLocationLayer">
                     <map:Pushpin x:Name="myLocationPushpin" Template="{StaticResource MyPositionPushpinTemplate}" Margin="-14, 0, -14, 0" Opacity="0.9"  Visibility="Collapsed"  />
                 </map:MapLayer>
