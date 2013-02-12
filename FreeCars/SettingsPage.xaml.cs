@@ -191,9 +191,12 @@ namespace FreeCars {
 
 		private void OnRedeemDrivenowPromoViaMailButtonTap(object sender, System.Windows.Input.GestureEventArgs e) {
 			try {
+				var lang = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.ToUpper() == "DE"
+					? "de_DE"
+					: "en_US";
 				var promoCodeMailTask = new EmailComposeTask {
-					Subject = "",
-					Body = "",
+					Subject = "DriveNow PromoCode",
+					Body = "PromoCode: ZNEUATHQJA\n\nhttps://de.drive-now.com/php/metropolis/registration?language=" + lang + "&L=2&prc=ZNEUATHQJA",
 				};
 				promoCodeMailTask.Show();
 			} catch { }
