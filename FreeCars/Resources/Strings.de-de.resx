@@ -293,7 +293,12 @@ Bitte nutze eine der folgenden Kontaktmöglichkeiten bei Kritik, Verbesserungsvo
 Jede Anfrage wird beantwortet!</value>
   </data>
   <data name="ChangelogPageBody" xml:space="preserve">
-    <value>1.5.0.0:
+    <value>1.5.1.1:
+* Performance-Verbesserung auf Low-Mem-Geräten
+* Run under Lock
+* Verschiedene Crashes behoben
+
+1.5.0.0:
 * Verbinden mit car2go-Account
 * Buchungen für car2go
 * Unterscheidung zwischen Elektro und Verbrenner bei car2go
