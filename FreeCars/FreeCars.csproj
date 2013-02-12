@@ -182,6 +182,7 @@
     <Resource Include="Resources\system-icon-location.png" />
     <Resource Include="Resources\logo.png" />
     <Content Include="Resources\plug28x28.png" />
+    <Content Include="Resources\wide_back_tile.png" />
     <Content Include="SplashScreenImage.jpg" />
   </ItemGroup>
   <ItemGroup />
