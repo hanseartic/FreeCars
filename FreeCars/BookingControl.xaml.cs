@@ -47,7 +47,13 @@ namespace FreeCars {
 				CreateCar2GoBooking(delegate(object client, DownloadStringCompletedEventArgs arguments) {
 					
 				});
+			} else if (typeof (DriveNowData) == Item.GetType()) {
+				CreateDriveNowBooking();
 			}
+		}
+
+		private void CreateDriveNowBooking() {
+			// https://m.drive-now.com/php/metropolis/details?vin=
 		}
 
 		private void CreateCar2GoBooking(DownloadStringCompletedEventHandler requestCallback) {
