@@ -157,8 +157,8 @@
 				<ColumnDefinition Width="Auto" />
 				<ColumnDefinition Width="*" />
 			</Grid.ColumnDefinitions>
-			<Button Grid.Column="1" x:Name="okButton" Content="OK" Click="OnOKButtonClicked" />
-			<Button Grid.Column="2" x:Name="cancelButton" Content="Cancel" Click="OnCancelButtonClicked" />
+			<Button Grid.Column="1" x:Name="okButton" Content="{Binding LocalizedStrings.ButtonOK, Source={StaticResource ResourceAccess}}" Click="OnOKButtonClicked" />
+			<Button Grid.Column="2" x:Name="cancelButton" Content="{Binding LocalizedStrings.ButtonCancel, Source={StaticResource ResourceAccess}}" Click="OnCancelButtonClicked" />
 		</Grid>
 	</Grid>
 </UserControl>

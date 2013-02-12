@@ -142,10 +142,10 @@
     <value>Benutze GPS, um die eigene Position auf der Karte anzuzeigen und verfügbare Fahrzeuge in der Nähe zu finden.</value>
   </data>
   <data name="ButtonCancel" xml:space="preserve">
-    <value>Verweigern</value>
+    <value>Abbrechen</value>
   </data>
   <data name="ButtonOK" xml:space="preserve">
-    <value>Zustimmen</value>
+    <value>OK</value>
   </data>
   <data name="ToggleSwitchOff" xml:space="preserve">
     <value>Aus</value>

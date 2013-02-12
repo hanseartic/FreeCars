@@ -142,10 +142,10 @@
     <value>Use GPS-Data to show own location on the map and find free cars nearby.</value>
   </data>
   <data name="ButtonCancel" xml:space="preserve">
-    <value>Decline</value>
+    <value>cancel</value>
   </data>
   <data name="ButtonOK" xml:space="preserve">
-    <value>Allow</value>
+    <value>ok</value>
   </data>
   <data name="ToggleSwitchOff" xml:space="preserve">
     <value>Off</value>
