@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
@@ -13,18 +16,28 @@ using System.IO;
 using System.Runtime.Serialization.Json;
 
 namespace FreeCars {
-	public partial class BookingControl : UserControl {
+	public partial class BookingControl {
+
+		private string username;
+		private string password;
+
 		public BookingControl() {
 			InitializeComponent();
 		}
 		
 		public void Activate(Marker item) {
 			Item = item;
+			username = null;
+			password = null;
+
 			try {
 				VisualStateManager.GoToState(this, "ActiveState", true);
 				IsActive = true;
+				if (typeof(DriveNowCarInformation) == Item.GetType()) {
+					CreateDriveNowBooking();
+				}
 			} catch (UnauthorizedAccessException) {
-				Dispatcher.BeginInvoke(() => { Activate(item); });
+				Dispatcher.BeginInvoke(() => Activate(item));
 			}
 		}
 		internal void Deactivate() {
@@ -41,21 +54,64 @@ namespace FreeCars {
 			Deactivate();
 		}
 
-		private void OnOKButtonClicked(object sender, System.Windows.RoutedEventArgs e) {
+		private void OnOKButtonClicked(object sender, RoutedEventArgs e) {
 			if (null == Item) return;
 			if (typeof(Car2GoInformation) == Item.GetType()) {
 				CreateCar2GoBooking(delegate(object client, DownloadStringCompletedEventArgs arguments) {
 					
 				});
-			} else if (typeof (DriveNowData) == Item.GetType()) {
-				CreateDriveNowBooking();
+			} else if (typeof (DriveNowCarInformation) == Item.GetType()) {
+				//CreateDriveNowBooking();
 			}
 		}
 
 		private void CreateDriveNowBooking() {
-			// https://m.drive-now.com/php/metropolis/details?vin=
+			if (!CheckDriveNowCredentials()) {
+				Deactivate();
+				return;
+			}
+			VisualStateManager.GoToState(this, "DNActiveState", false);
+			dnBookingBrowser.LoadCompleted -= onDriveNowLoadCompleted;
+			dnBookingBrowser.ScriptNotify -= onDriveNowScriptNotify;
+			var item = (DriveNowCarInformation)Item;
+
+			dnBookingBrowser.ScriptNotify += onDriveNowScriptNotify;
+			dnBookingBrowser.LoadCompleted += onDriveNowLoadCompleted;
+			dnBookingBrowser.Navigate(new Uri("https://m.drive-now.com/", UriKind.Absolute));
+			
+			//dnBookingBrowser.Navigate(new Uri("https://m.drive-now.com/php/metropolis/details?vin=" + item.vin, UriKind.Absolute));
 		}
 
+		private void onDriveNowScriptNotify(object sender, NotifyEventArgs args) {
+			var item = Item as DriveNowCarInformation;
+			if (null == item) {
+				dnBookingBrowser.LoadCompleted -= onDriveNowLoadCompleted;
+				return;
+			}
+			if ("dn-loggedin" != args.Value) {
+				return;
+			}
+			dnBookingBrowser.LoadCompleted -= onDriveNowLoadCompleted;
+			VisualStateManager.GoToState(this, "DnBookingBrowserOpenState", true);
+			dnBookingBrowser.Navigate(new Uri("https://m.drive-now.com/php/metropolis/details?vin=" + item.vin, UriKind.Absolute));
+		}
+		private void onDriveNowLoadCompleted(object sender, NavigationEventArgs e) {
+			try {
+				dnBookingBrowser.InvokeScript("eval", "window.checkLoggedIn = function() {" +
+					"window.external.notify('enter');" +
+					"if ($('.dn-welcome').length <= 0) {" +
+						"window.external.notify('dn-not-loggedin');" +
+						"$('#login-field').val('" + username + "');$('#password-field').val('" + password + "');" +
+						"dn_login.init('login-field', 'password-field', '.login_error');" +
+					"} else {" +
+						"window.external.notify('dn-loggedin');" +
+					"}" +
+				"}; window.checkLoggedIn();");
+			} catch (Exception ex) {
+				return;
+				//https://m.drive-now.com/php/metropolis/home?language=de_DE&
+			}
+		}
 		private void CreateCar2GoBooking(DownloadStringCompletedEventHandler requestCallback) {
 			var item = (Car2GoInformation)Item;
 			var car2GoRequestEndpoint = "https://www.car2go.com/api/v2.1/bookings";
@@ -84,7 +140,6 @@ namespace FreeCars {
 			parameters.Add("loc", Car2Go.City);
 			parameters.Add("vin", item.ID);
 			parameters.Add("account", accountId);
-			//parameters.Add("test", "1");
 			var signatureBase = OAuthTools.ConcatenateRequestElements("POST", car2GoRequestEndpoint, parameters);
 			var signature = OAuthTools.GetSignature(
 				OAuthSignatureMethod.HmacSha1,
@@ -94,8 +149,6 @@ namespace FreeCars {
 				oauthTokenSecret);
 
 			var requestParameters = OAuthTools.NormalizeRequestParameters(parameters);
-			var requestUrl = new Uri(car2GoRequestEndpoint + "?" + requestParameters + "&oauth_signature=" + signature, UriKind.Absolute);
-
 			var para = requestParameters + "&oauth_signature=" + signature;
 
 			Helpers.Post(car2GoRequestEndpoint, para, delegate(Stream response) {
@@ -117,7 +170,7 @@ namespace FreeCars {
 				});
 			});
 		}
-		 
+
 		private void HandleNotConnectedToCar2Go() {
 			var mbResult = MessageBox.Show(Strings.BookingPageCar2GoNotConnected, Strings.NotConnected, MessageBoxButton.OKCancel);
 			switch (mbResult) {
@@ -128,16 +181,37 @@ namespace FreeCars {
 					} catch (NullReferenceException) {}
 					
 					break;
-				case MessageBoxResult.Cancel:
 				default:
 					Deactivate();
 					break;
 			}
 		}
+		private bool CheckDriveNowCredentials() {
+			MessageBoxResult result;
+			try {
+				username = (string)App.GetAppSetting("driveNow.username");
+				password = (string)App.GetAppSetting("driveNow.password");
+				if ((null != username) && (null != password)) {
+					return true;
+				}
+				result = MessageBox.Show("Do you want to go to the settings-page now?", "DriveNow credentials missing", MessageBoxButton.OKCancel);
+				if (MessageBoxResult.OK == result) {
+					(Application.Current.RootVisual as PhoneApplicationFrame).Navigate(
+						new Uri("/SettingsPage.xaml?tab=driveNowTab", UriKind.RelativeOrAbsolute));
+				} else {
+					Deactivate();
+				}
+			} catch {
 
+			}
+			return false;
+		}
 		private void OnLoaded(object sender, System.Windows.RoutedEventArgs e) {
 			Deactivate();
 			DataContext = this;
+		}
+
+		private void OnBookingBrowserNavigated(object sender, NavigationEventArgs e) {
 		}
 
 		public bool IsActive {
@@ -213,5 +287,9 @@ namespace FreeCars {
 		}
 
 		public event EventHandler Closed;
+
+		private void OnBookingBrowserNavigationFailed(object sender, NavigationFailedEventArgs e) {
+			return;
+		}
 	}
 }

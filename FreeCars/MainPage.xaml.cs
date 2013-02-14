@@ -176,8 +176,8 @@ namespace FreeCars {
 
 		private void OnMainPageApplicationBarBookCarButtonClick(object sender, EventArgs e) {
 			Pushpin activePushpin = (Pushpin)(activeLayer.Children.First());
-			if (activePushpin.Tag is Car2GoInformation) {
-				bookingControl.Activate((Car2GoInformation)activePushpin.Tag);
+			if (activePushpin.Tag is Car2GoInformation || activePushpin.Tag is DriveNowCarInformation) {
+				bookingControl.Activate((Marker)activePushpin.Tag);
 				ApplicationBar.IsVisible = false;
 			}
 		}
@@ -429,6 +429,9 @@ namespace FreeCars {
 					}
 
 					if (((Pushpin)sender).Tag is Car2GoInformation) {
+						mainPageApplicationBarBookCarButton.IsEnabled = true;
+						bookingControl.Deactivate();
+					} else if (((Pushpin)sender).Tag is DriveNowCarInformation) {
 						mainPageApplicationBarBookCarButton.IsEnabled = true;
 						bookingControl.Deactivate();
 					}
