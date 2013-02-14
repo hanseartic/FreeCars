@@ -142,10 +142,10 @@
     <value>Use GPS-Data to show own location on the map and find free cars nearby.</value>
   </data>
   <data name="ButtonCancel" xml:space="preserve">
-    <value>Decline</value>
+    <value>cancel</value>
   </data>
   <data name="ButtonOK" xml:space="preserve">
-    <value>Allow</value>
+    <value>ok</value>
   </data>
   <data name="ToggleSwitchOff" xml:space="preserve">
     <value>Off</value>
@@ -287,7 +287,18 @@ Please use one of the following options to get in touch with me for critics, sug
 I will answer every request!</value>
   </data>
   <data name="ChangelogPageBody" xml:space="preserve">
-    <value>1.5.0.0:
+    <value>1.5.0.1:
+* Fix crash on startup in trial mode
+* add 'connect to car2go' when making reservation
+* decode multicity's html correctly
+* add promo-code to the email-body when tapping "send promo code via mail" in drivenow-settings
+
+1.5.1.1:
+* Performance improvements for Low-Mem devices
+* Run under Lock
+* Fix several crashes
+
+1.5.0.0:
 * connect to car2go account
 * bookings for car2go
 * differenciate between elektric drive and combustion engines with car2go
@@ -419,10 +430,18 @@ for this location:
   <data name="BookingPageInterior" xml:space="preserve">
     <value>Interior condition</value>
   </data>
-  <data name="BookingPagQuestion" xml:space="preserve">
+  <data name="BookingPageQuestion" xml:space="preserve">
     <value>Do you want to create a booking for this car?</value>
   </data>
   <data name="SettingsPageCar2GoConnectButton" xml:space="preserve">
     <value>connect FreeCars to car2go</value>
+  </data>
+  <data name="BookingPageCar2GoNotConnected" xml:space="preserve">
+    <value>FreeCars is not connected to your car2go-account, yet.
+
+Do you want to connect to your car2go account now? It only takes two minutes and your credentials are not stored in this App.</value>
+  </data>
+  <data name="NotConnected" xml:space="preserve">
+    <value>Not connected</value>
   </data>
 </root>

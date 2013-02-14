@@ -125,7 +125,7 @@
 		</Grid.RowDefinitions>
 		<StackPanel Orientation="Vertical" Margin="12">
 			<TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Text="{Binding LocalizedStrings.BookingPageHeadline, Source={StaticResource ResourceAccess}}" Style="{StaticResource PhoneTextTitle1Style}" Margin="0,12" />
-			<TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Text="{Binding LocalizedStrings.BookingPagQuestion, Source={StaticResource ResourceAccess}}" Style="{StaticResource PhoneTextTitle2Style}" />
+			<TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Text="{Binding LocalizedStrings.BookingPageQuestion, Source={StaticResource ResourceAccess}}" Style="{StaticResource PhoneTextTitle2Style}" />
 			<TextBlock x:Name="carDescription" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top"  />
 			<Grid x:Name="providersPanels">
 				<StackPanel x:Name="car2GoPanel" Orientation="Vertical" Visibility="{Binding Car2GoVisibility}">
@@ -157,8 +157,8 @@
 				<ColumnDefinition Width="Auto" />
 				<ColumnDefinition Width="*" />
 			</Grid.ColumnDefinitions>
-			<Button Grid.Column="1" x:Name="okButton" Content="OK" Click="OnOKButtonClicked" />
-			<Button Grid.Column="2" x:Name="cancelButton" Content="Cancel" Click="OnCancelButtonClicked" />
+			<Button Grid.Column="1" x:Name="okButton" Content="{Binding LocalizedStrings.ButtonOK, Source={StaticResource ResourceAccess}}" Click="OnOKButtonClicked" />
+			<Button Grid.Column="2" x:Name="cancelButton" Content="{Binding LocalizedStrings.ButtonCancel, Source={StaticResource ResourceAccess}}" Click="OnCancelButtonClicked" />
 		</Grid>
 	</Grid>
 </UserControl>

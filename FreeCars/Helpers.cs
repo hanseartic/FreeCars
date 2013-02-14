@@ -36,7 +36,7 @@ namespace FreeCars {
 									//	onResponseGot(reader.ReadToEnd());
 									//}
 								}
-							} catch (WebException ex) {
+							} catch (WebException) {
 								onResponseGot(null);
 							}
 						}, null);

@@ -2,18 +2,13 @@
 using System;
 using System.Collections.Generic;
 using System.Device.Location;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO.IsolatedStorage;
 using System.Net;
 using System.Runtime.Serialization.Json;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Ink;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
+using OAuth;
 
 namespace FreeCars {
 	public class Car2Go : DependencyObject {
@@ -32,6 +27,7 @@ namespace FreeCars {
 				position = null;
 				return;
 			}
+			LoadBookedCars();
 			LoadCars();
 		}
 		private void LoadCars() {
@@ -51,6 +47,76 @@ namespace FreeCars {
 
 			wc.OpenReadCompleted += OnCar2GoCarsOpenReadCompleted;
 			wc.OpenReadAsync(new Uri(callUri));
+		}
+		public bool HasBooking { get; private set; }
+
+		private void LoadBookedCars() {
+			HasBooking = false;
+			try {
+				var token = (string)App.GetAppSetting("car2go.oauth_token");
+				var tokenSecret = (string)App.GetAppSetting("car2go.oauth_token_secret");
+				if (null == token || null == tokenSecret) return;
+
+				const string car2GoRequestEndpoint = "https://www.car2go.com/api/v2.1/booking";
+				var parameters = new WebParameterCollection {
+					{"oauth_callback", "oob"},
+					{"oauth_signature_method", "HMAC-SHA1"},
+					{"oauth_token", token},
+					{"oauth_version", "1.0"},
+					{"oauth_consumer_key", consumerkey},
+					{"oauth_timestamp", OAuthTools.GetTimestamp()},
+					{"oauth_nonce", OAuthTools.GetNonce()},
+					{"format", "json"},
+					{"loc", City},
+				};
+				//parameters.Add("test", "1");
+				var signatureBase = OAuthTools.ConcatenateRequestElements("GET", car2GoRequestEndpoint, parameters);
+				var signature = OAuthTools.GetSignature(OAuthSignatureMethod.HmacSha1, OAuthSignatureTreatment.Escaped, signatureBase, FreeCarsCredentials.Car2Go.SharedSecred, tokenSecret);
+
+				var requestParameters = OAuthTools.NormalizeRequestParameters(parameters);
+				var requestUrl = new Uri(car2GoRequestEndpoint + "?" + requestParameters + "&oauth_signature=" + signature, UriKind.Absolute);
+
+				var webClient = new WebClient();
+				webClient.OpenReadCompleted += (sender, args) => {
+					try {
+						if (0 == args.Result.Length) return;
+						try {
+							var serializer = new DataContractJsonSerializer(typeof(Car2GoBookingResult));
+							var bookingResult = (Car2GoBookingResult)serializer.ReadObject(args.Result);
+							var car2GoCars = new List<Car2GoInformation>();
+							if (0 == bookingResult.ReturnValue.Code) {
+								foreach (var booking in bookingResult.Booking) {
+									var car = booking.Vehicle;
+									GeoCoordinate carPosition = null;
+									try {
+										carPosition = new GeoCoordinate(car.Position.Latitude, car.Position.Longitude);
+									} catch {}
+									var carInfo = new Car2GoInformation {
+										model = ("CE" == car.EngineType) ? "C-Smart" : "Smart ElectricDrive",
+										fuelState = car.Fuel,
+										position = carPosition,
+										licensePlate = car.NumberPlate,
+										ID = car.VIN,
+										exterior = car.Exterior,
+										interior = car.Interior,
+										isBooked = true,
+									};
+									HasBooking = true;
+									car2GoCars.Add(carInfo);
+								}
+								Car2GoCars = car2GoCars;
+								if (null != Updated) {
+									Updated(this, null);
+								}
+							}
+						} catch (NullReferenceException) { }
+					} catch (WebException) { }
+				};
+
+				webClient.OpenReadAsync(requestUrl);
+			} catch (Exception e) {
+				Console.WriteLine(e);
+			}
 		}
 
 		public static string City {

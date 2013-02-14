@@ -14,7 +14,7 @@ using System.Windows.Shapes;
 namespace FreeCars {
 	[DataContract]
 	public class Car2GoInformation : Marker {
-
+		public bool isBooked;
 	}
 
 	[DataContract]
@@ -117,6 +117,8 @@ namespace FreeCars {
 		public Car2GoAPIPosition Position;
 		[DataMember(Name = "vin")]
 		public String VIN;
+		[DataMember(Name = "fuel")] 
+		public String Fuel;
 	}
 	//booking
 	// {"booking":[{"account":{"accountId":1001,"description":"Test User"},"bookingId":123456,"bookingposition":{"address":"Pariser Platz 1, 10117 Berlin","latitude":52.516391,"longitude":13.379588},"reservationTime":{"firstDayOfWeek":1,"gregorianChange":"1582-10-15","lenient":true,"minimalDaysInFirstWeek":1,"time":"2013-01-01","timeInMillis":1356994800,"timeZone":{"DSTSavings":3600000,"ID":"Europe/Berlin","dirty":false,"displayName":"Central European Time","lastRuleInstance":{"DSTSavings":3600000,"ID":"Europe/Berlin","displayName":"Central European Time","rawOffset":3600000},"rawOffset":3600000}},"vehicle":{"engineType":"CE","exterior":"GOOD","fuel":100,"interior":"GOOD","numberPlate":"B-GO0815","position":{"address":"Pariser Platz 1, 10117 Berlin","latitude":52.516391,"longitude":13.379588},"vin":"WME4513341K571875"}}],"returnValue":{"code":0,"description":"Operation successful."}}"

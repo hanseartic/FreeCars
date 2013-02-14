@@ -142,10 +142,10 @@
     <value>Benutze GPS, um die eigene Position auf der Karte anzuzeigen und verfügbare Fahrzeuge in der Nähe zu finden.</value>
   </data>
   <data name="ButtonCancel" xml:space="preserve">
-    <value>Verweigern</value>
+    <value>Abbrechen</value>
   </data>
   <data name="ButtonOK" xml:space="preserve">
-    <value>Zustimmen</value>
+    <value>OK</value>
   </data>
   <data name="ToggleSwitchOff" xml:space="preserve">
     <value>Aus</value>
@@ -293,7 +293,18 @@ Bitte nutze eine der folgenden Kontaktmöglichkeiten bei Kritik, Verbesserungsvo
 Jede Anfrage wird beantwortet!</value>
   </data>
   <data name="ChangelogPageBody" xml:space="preserve">
-    <value>1.5.0.0:
+    <value>1.5.0.1:
+* Crash bei Anwendungsstart in trial mode behoben
+* option 'mit car2go verbindun' bei buchung anzeigen
+* multicity html korrekt interpetieren
+* in den drivenow settings den promo code in die E-Mail einfügen
+
+1.5.1.1:
+* Performance-Verbesserung auf Low-Mem-Geräten
+* Run under Lock
+* Verschiedene Crashes behoben
+
+1.5.0.0:
 * Verbinden mit car2go-Account
 * Buchungen für car2go
 * Unterscheidung zwischen Elektro und Verbrenner bei car2go
@@ -424,10 +435,18 @@ für diese Location zugreifen:
   <data name="BookingPageInterior" xml:space="preserve">
     <value>Zustand innen</value>
   </data>
-  <data name="BookingPagQuestion" xml:space="preserve">
+  <data name="BookingPageQuestion" xml:space="preserve">
     <value>Möchtest Du das folgende Fahrzeug reservieren?</value>
   </data>
   <data name="SettingsPageCar2GoConnectButton" xml:space="preserve">
     <value>FreeCars mit car2go verbinden</value>
+  </data>
+  <data name="BookingPageCar2GoNotConnected" xml:space="preserve">
+    <value>FreeCars ist noch nicht mit Deinem car2go-Account verbunden.
+
+Möchtest Du FreeCars jetzt mit Deinem car2go-Account verbinden? Das dauert nur zwei Minuten und Deine Daten werden nicht in der FreeCars-App gespeichert.</value>
+  </data>
+  <data name="NotConnected" xml:space="preserve">
+    <value>Nicht verbunden</value>
   </data>
 </root>

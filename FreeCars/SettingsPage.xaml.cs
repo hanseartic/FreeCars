@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using GoogleMaps.Geocode;
+using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
 using System.IO.IsolatedStorage;
 using FreeCars.Resources;
 using Microsoft.Phone.Shell;
 using Microsoft.Phone.Tasks;
-using System.Threading;
 using System.Globalization;
 using System.Net;
 using OAuth;
@@ -49,12 +49,7 @@ namespace FreeCars {
 				: Strings.ToggleSwitchOff;
 		}
 		private void SaveToggleSwitch(string setting, bool? isChecked) {
-			try {
-				IsolatedStorageSettings.ApplicationSettings.Add(setting, isChecked);
-			} catch (ArgumentException) {
-				IsolatedStorageSettings.ApplicationSettings[setting] = isChecked;
-			}
-			IsolatedStorageSettings.ApplicationSettings.Save();
+			App.SetAppSetting(setting, isChecked);
 		}
 		private void OnGPSToggleSwitchChanged(object sender, RoutedEventArgs e) {
 			SaveToggleSwitch("settings_use_GPS", ((ToggleSwitch)sender).IsChecked);
@@ -87,15 +82,11 @@ namespace FreeCars {
 				if (0 == selectedItem.locationId) {
 					try {
 						IsolatedStorageSettings.ApplicationSettings.Remove("car2goSelectedCity");
+						IsolatedStorageSettings.ApplicationSettings.Save();
 					} catch (Exception) { }
 				} else {
-					try {
-						IsolatedStorageSettings.ApplicationSettings.Add("car2goSelectedCity", selectedItem.locationName);
-					} catch (ArgumentException) {
-						IsolatedStorageSettings.ApplicationSettings["car2goSelectedCity"] = selectedItem.locationName;
-					}
+					App.SetAppSetting("car2goSelectedCity", selectedItem.locationName);
 				}
-				IsolatedStorageSettings.ApplicationSettings.Save();
 			} catch (NullReferenceException) { }
 		}
 		private void OnShowAdsToggleSwitchChanged(object sender, RoutedEventArgs e) {
@@ -200,9 +191,12 @@ namespace FreeCars {
 
 		private void OnRedeemDrivenowPromoViaMailButtonTap(object sender, System.Windows.Input.GestureEventArgs e) {
 			try {
+				var lang = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.ToUpper() == "DE"
+					? "de_DE"
+					: "en_US";
 				var promoCodeMailTask = new EmailComposeTask {
-					Subject = "",
-					Body = "",
+					Subject = "DriveNow PromoCode",
+					Body = "PromoCode: ZNEUATHQJA\n\nhttps://de.drive-now.com/php/metropolis/registration?language=" + lang + "&L=2&prc=ZNEUATHQJA",
 				};
 				promoCodeMailTask.Show();
 			} catch { }
@@ -221,6 +215,10 @@ namespace FreeCars {
 		}
 
 		private void OnConnectToCar2GoClicked(object sender, RoutedEventArgs e) {
+			connectCar2Go();
+		}
+
+		private void connectCar2Go() {
 			var car2GoGetTokenEndpoint = "https://www.car2go.com/api/reqtoken";
 
 			var oauthRequest = new OAuthRequest() {
@@ -361,18 +359,35 @@ namespace FreeCars {
 			var requestUrl = new Uri(car2GoGetTokenEndpoint + "?" + requestParameters, UriKind.Absolute);
 
 			var webClient = new WebClient();
-			webClient.DownloadStringCompleted += delegate(object client, DownloadStringCompletedEventArgs arguments) {
+			webClient.DownloadStringCompleted += (client, arguments) => {
 				string[] results = { };
 				if (null == arguments.Error) {
 					results = arguments.Result.Split(new char[] { '&' }, StringSplitOptions.None);
 					App.SetAppSetting("car2go.oauth_token", results[0].Split(new char[] { '=' })[1]);
 					App.SetAppSetting("car2go.oauth_token_secret", results[1].Split(new char[] { '=' })[1]);
 				}
-				client = null;
 			};
 			webClient.DownloadStringAsync(requestUrl);
 		}
 
+		protected override void OnNavigatedTo(NavigationEventArgs e) {
+			string tab = string.Empty;
+			string action = string.Empty;
+			if (NavigationContext.QueryString.TryGetValue("tab", out tab) && NavigationContext.QueryString.TryGetValue("action", out action)) {
+				var pivotItemToShow = settingsTabs.Items.Cast<PivotItem>().Single(i => i.Name == tab);
+				settingsTabs.SelectedItem = pivotItemToShow;
+				if ("connectCar2Go" == action) {
+					connectCar2Go();
+				}
+			}
+			base.OnNavigatedTo(e);
+		}
+		protected override void OnBackKeyPress(CancelEventArgs e) {
+			if (Visibility.Visible == c2gAuthBrowser.Visibility) {
+				c2gAuthBrowser.Visibility = Visibility.Collapsed;
+				e.Cancel = true;
+			}
+		}
 		private void Onc2gAuthBrowserNavigated(object sender, System.Windows.Navigation.NavigationEventArgs e) {
 			var browser = (sender as WebBrowser);
 			try {
@@ -383,9 +398,7 @@ namespace FreeCars {
 					"$('body').css('transform-origin', '0 0');" +
 					"$('body').css('transform', 'scale(2.5)');"
 				);
-			} catch (Exception ex) {
-				ex = null;
-			}
+			} catch { }
 			switch (e.Uri.AbsolutePath) {
 				case "/api/authorize/granted.jsp":
 					var tokenData = new string[2];

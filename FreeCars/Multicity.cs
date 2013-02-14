@@ -67,9 +67,9 @@ namespace FreeCars {
 				var usCultureInfo = new CultureInfo("en-US");
 				var multicityCars = new List<MulticityMarker>();
 				foreach (var car in objects.marker) {
-					if (car.hal2option.objectname == "multicitymarker") {										
-						car.licensePlate = Regex.Match(car.hal2option.tooltip, @"\(([^)]*)\)").Groups[1].Value;
-						car.model = car.hal2option.tooltip.Substring(0, car.hal2option.tooltip.IndexOf("(")).Substring(1);
+					if (car.hal2option.objectname == "multicitymarker") {
+						car.licensePlate = HttpUtility.HtmlDecode(Regex.Match(car.hal2option.tooltip, @"\(([^)]*)\)").Groups[1].Value);
+						car.model = HttpUtility.HtmlDecode(car.hal2option.tooltip.Substring(0, car.hal2option.tooltip.IndexOf("(")).Substring(1));
 						try {
 							car.position = new GeoCoordinate(
 								double.Parse(car.lat, usCultureInfo.NumberFormat),

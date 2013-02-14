@@ -5,6 +5,7 @@ using System.Net;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
+using FreeCars.Resources;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using OAuth;
@@ -46,20 +47,35 @@ namespace FreeCars {
 				CreateCar2GoBooking(delegate(object client, DownloadStringCompletedEventArgs arguments) {
 					
 				});
+			} else if (typeof (DriveNowData) == Item.GetType()) {
+				CreateDriveNowBooking();
 			}
+		}
+
+		private void CreateDriveNowBooking() {
+			// https://m.drive-now.com/php/metropolis/details?vin=
 		}
 
 		private void CreateCar2GoBooking(DownloadStringCompletedEventHandler requestCallback) {
 			var item = (Car2GoInformation)Item;
 			var car2GoRequestEndpoint = "https://www.car2go.com/api/v2.1/bookings";
 			
-			var oauth_token = (string)App.GetAppSetting("car2go.oauth_token");
-			var oauth_token_secret = (string)App.GetAppSetting("car2go.oauth_token_secret");
+			var oauthToken = (string)App.GetAppSetting("car2go.oauth_token");
+			var oauthTokenSecret = (string)App.GetAppSetting("car2go.oauth_token_secret");
+			if (null == oauthToken || null == oauthTokenSecret) {
+				HandleNotConnectedToCar2Go();
+			}
+			var accountId = "";
+			try {
+				accountId = ((int)App.GetAppSetting("car2go.oauth_account_id")).ToString();
+			} catch (NullReferenceException) {
+				return;
+			}
 
 			var parameters = new WebParameterCollection();
 			parameters.Add("oauth_callback", "oob");
 			parameters.Add("oauth_signature_method", "HMAC-SHA1");
-			parameters.Add("oauth_token", oauth_token);
+			parameters.Add("oauth_token", oauthToken);
 			parameters.Add("oauth_version", "1.0");
 			parameters.Add("oauth_consumer_key", FreeCarsCredentials.Car2Go.ConsumerKey);
 			parameters.Add("oauth_timestamp", OAuthTools.GetTimestamp());
@@ -67,7 +83,7 @@ namespace FreeCars {
 			parameters.Add("format", "json");
 			parameters.Add("loc", Car2Go.City);
 			parameters.Add("vin", item.ID);
-			parameters.Add("account", ((int)App.GetAppSetting("car2go.oauth_account_id")).ToString());
+			parameters.Add("account", accountId);
 			//parameters.Add("test", "1");
 			var signatureBase = OAuthTools.ConcatenateRequestElements("POST", car2GoRequestEndpoint, parameters);
 			var signature = OAuthTools.GetSignature(
@@ -75,7 +91,7 @@ namespace FreeCars {
 				OAuthSignatureTreatment.Escaped,
 				signatureBase,
 				FreeCarsCredentials.Car2Go.SharedSecred,
-				oauth_token_secret);
+				oauthTokenSecret);
 
 			var requestParameters = OAuthTools.NormalizeRequestParameters(parameters);
 			var requestUrl = new Uri(car2GoRequestEndpoint + "?" + requestParameters + "&oauth_signature=" + signature, UriKind.Absolute);
@@ -94,16 +110,33 @@ namespace FreeCars {
 						} else {
 							mbResult = MessageBox.Show("", resultAccounts.ReturnValue.Description, MessageBoxButton.OK);
 						}
-					} catch (Exception ex) {
+					} catch (Exception) {
 						Deactivate();
 					}
 					if (mbResult == MessageBoxResult.OK) { Deactivate(); }
 				});
 			});
 		}
+		 
+		private void HandleNotConnectedToCar2Go() {
+			var mbResult = MessageBox.Show(Strings.BookingPageCar2GoNotConnected, Strings.NotConnected, MessageBoxButton.OKCancel);
+			switch (mbResult) {
+				case MessageBoxResult.OK:
+					try {
+						(Application.Current.RootVisual as PhoneApplicationFrame).Navigate(
+							new Uri("/SettingsPage.xaml?tab=car2goTab&action=connectCar2Go", UriKind.RelativeOrAbsolute));
+					} catch (NullReferenceException) {}
+					
+					break;
+				case MessageBoxResult.Cancel:
+				default:
+					Deactivate();
+					break;
+			}
+		}
 
 		private void OnLoaded(object sender, System.Windows.RoutedEventArgs e) {
-			Activate(null);
+			Deactivate();
 			DataContext = this;
 		}
 
@@ -156,7 +189,7 @@ namespace FreeCars {
 		public DependencyProperty DriveNowVisibilityProperty = DependencyProperty.Register(
 			"DriveNowVisibility", typeof(Visibility), typeof(BookingControl), new PropertyMetadata(Visibility.Visible));
 		public DependencyProperty MulticityVisibilityProperty = DependencyProperty.Register(
-			" MulticityVisibility", typeof(Visibility), typeof(BookingControl), new PropertyMetadata(Visibility.Visible));
+			"MulticityVisibility", typeof(Visibility), typeof(BookingControl), new PropertyMetadata(Visibility.Visible));
 
 		public Visibility Car2GoVisibility {
 			get { return (Visibility)GetValue(Car2GoVisibilityProperty); }
