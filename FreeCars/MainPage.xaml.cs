@@ -38,6 +38,7 @@ namespace FreeCars {
 		}
 
 		private void CheckTrialAndAds() {
+			if (false == loaded) return;
 			AdsGrid.Visibility = App.IsInTrialMode
 				? Visibility.Visible
 				: Visibility.Collapsed;
@@ -45,17 +46,20 @@ namespace FreeCars {
 		void OnAppTrialModeChanged(object sender, EventArgs e) {
 			CheckTrialAndAds();
 		}
+		private bool loaded = false;
 		void OnMainPageLoaded(object sender, RoutedEventArgs e) {
-			((App)App.Current).TrialModeChanged += OnAppTrialModeChanged;
-			map.CredentialsProvider = new Microsoft.Phone.Controls.Maps.ApplicationIdCredentialsProvider(FreeCarsCredentials.Maps.CredentialsWP);
+			((App)Application.Current).TrialModeChanged += OnAppTrialModeChanged;
+			map.CredentialsProvider = new ApplicationIdCredentialsProvider(FreeCarsCredentials.Maps.CredentialsWP);
 			AdDuplexAdControl.AppId = FreeCarsCredentials.AdDuplex.WindowsPhone.AppId;
 			try {
 				SDKAdControl.AdUnitId = FreeCarsCredentials.PubCenter.WindowsPhone.ApplicationId;
 				SDKAdControl.ApplicationId = FreeCarsCredentials.PubCenter.WindowsPhone.ApplicationId;
 			} catch (InvalidOperationException) { }
 			VisualStateManager.GoToState(bookingControl, "InactiveState", false);
-			//bookingControl.Deactivate();
+			bookingControl.Deactivate();
 			bookingControlGrid.Visibility = Visibility.Visible;
+			loaded = true;
+			CheckTrialAndAds();
 		}
 		protected override void OnBackKeyPress(CancelEventArgs e) {
 			if (bookingControl.IsActive) {
@@ -416,10 +420,10 @@ namespace FreeCars {
 			if (null != ((Pushpin)sender).Tag && typeof(MulticityChargerMarker) == ((Pushpin)sender).Tag.GetType()) return;
 			e.Handled = true;
 			var pushpinContent = ((Pushpin)sender).Content;
-			if (typeof(Border) == pushpinContent.GetType()) {
+			if (pushpinContent is Border) {
 				if (Visibility.Collapsed == ((Border)pushpinContent).Visibility) {
 					foreach (var pushpin in activeLayer.Children.ToArray()) {
-						if (pushpin.GetType() == typeof(Pushpin)) {
+						if (pushpin is Pushpin) {
 							DeactivatePushpin(pushpin as Pushpin);
 						}
 					}
