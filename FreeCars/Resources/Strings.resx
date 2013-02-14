@@ -287,7 +287,13 @@ Please use one of the following options to get in touch with me for critics, sug
 I will answer every request!</value>
   </data>
   <data name="ChangelogPageBody" xml:space="preserve">
-    <value>1.5.1.1:
+    <value>1.5.0.1:
+* Fix crash on startup in trial mode
+* add 'connect to car2go' when making reservation
+* decode multicity's html correctly
+* add promo-code to the email-body when tapping "send promo code via mail" in drivenow-settings
+
+1.5.1.1:
 * Performance improvements for Low-Mem devices
 * Run under Lock
 * Fix several crashes

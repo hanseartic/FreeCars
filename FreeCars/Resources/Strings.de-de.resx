@@ -293,7 +293,13 @@ Bitte nutze eine der folgenden Kontaktmöglichkeiten bei Kritik, Verbesserungsvo
 Jede Anfrage wird beantwortet!</value>
   </data>
   <data name="ChangelogPageBody" xml:space="preserve">
-    <value>1.5.1.1:
+    <value>1.5.0.1:
+* Crash bei Anwendungsstart in trial mode behoben
+* option 'mit car2go verbindun' bei buchung anzeigen
+* multicity html korrekt interpetieren
+* in den drivenow settings den promo code in die E-Mail einfügen
+
+1.5.1.1:
 * Performance-Verbesserung auf Low-Mem-Geräten
 * Run under Lock
 * Verschiedene Crashes behoben
