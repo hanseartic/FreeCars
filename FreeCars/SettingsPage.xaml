@@ -57,13 +57,21 @@
 				</ScrollViewer>
 			</controls:PivotItem>
 			<!--Pivot item DriveNow-->
-			<controls:PivotItem Header="{Binding LocalizedStrings.SettingsDriveNowTitle, Source={StaticResource ResourceAccess}}">
+			<controls:PivotItem x:Name="driveNowTab" Header="{Binding LocalizedStrings.SettingsDriveNowTitle, Source={StaticResource ResourceAccess}}">
 				<ScrollViewer>
 					<Grid>
 						<StackPanel Margin="0,8">
 							<toolkit:ToggleSwitch Header="{Binding LocalizedStrings.SettingsPageShowDriveNowCars, Source={StaticResource ResourceAccess}}" Checked="OnDriveNowCarsToggleSwitchChanged" Unchecked="OnDriveNowCarsToggleSwitchChanged" Loaded="OnDriveNowCarsToggleSwitchLoaded" Content="{Binding LocalizedStrings.ToggleSwitchOff, Source={StaticResource ResourceAccess}}" SwitchForeground="#FFB06909" />
 							<TextBlock Text="{Binding LocalizedStrings.SettingsPageCallDrivenowHeader, Source={StaticResource ResourceAccess}}" Tap="OnCallDriveNowTap"  Style="{StaticResource PhoneTextTitle3Style}" Margin="0" />
 							<TextBlock Text="{Binding LocalizedStrings.SettingsPageCallDrivenowPhoneNumberToDial, Source={StaticResource ResourceAccess}}" Tap="OnCallDriveNowTap" Style="{StaticResource PhoneTextTitle2Style}" Margin="0" TextAlignment="Center" />
+							<TextBlock Text="{Binding LocalizedStrings.SettingsPageDriveNowUsernameHeader, Source={StaticResource ResourceAccess}}" Tap="OnDriveNowUsernameTap"  Style="{StaticResource PhoneTextTitle3Style}" Margin="0" />
+							<TextBox x:Name="driveNowUsernameTextbox" InputScope="EmailUserName"></TextBox>
+							<TextBlock Text="{Binding LocalizedStrings.SettingsPageDriveNowPasswordHeader, Source={StaticResource ResourceAccess}}" Tap="OnDriveNowPassordTap"  Style="{StaticResource PhoneTextTitle3Style}" Margin="0" />
+							<PasswordBox x:Name="driveNowPasswordbox" ></PasswordBox>
+							<Grid  HorizontalAlignment="Stretch">
+								<Button HorizontalAlignment="Left" Content="{Binding LocalizedStrings.ButtonSave, Source={StaticResource ResourceAccess}}" Click="OnSaveDriveNowCredentials" />
+								<Button  HorizontalAlignment="Right" Content="{Binding LocalizedStrings.ButtonClear, Source={StaticResource ResourceAccess}}" Click="OnClearDriveNowCredentials"></Button>
+							</Grid>
 							<TextBlock Text="{Binding LocalizedStrings.SettingsPageRedeemDrivenowPromoCodeHeader, Source={StaticResource ResourceAccess}}" Style="{StaticResource PhoneTextTitle3Style}" Margin="0,8" />
 							<TextBlock Text="{Binding LocalizedStrings.SettingsPageRedeemDrivenowPromoCodeText, Source={StaticResource ResourceAccess}}" TextWrapping="Wrap" />
 							<StackPanel Orientation="Vertical">

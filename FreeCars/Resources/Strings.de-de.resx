@@ -449,4 +449,35 @@ Möchtest Du FreeCars jetzt mit Deinem car2go-Account verbinden? Das dauert nur 
   <data name="NotConnected" xml:space="preserve">
     <value>Nicht verbunden</value>
   </data>
+  <data name="BookingDriveNowUsernamePasswordWrongDialog" xml:space="preserve">
+    <value>Der Login bei DriveNow war mit den von Dir angegebenen Zugangsdaten nicht erfolgreich.
+
+Möchtest Du die Daten jetzt auf der Einstellungsseite ändern?</value>
+  </data>
+  <data name="BookingPageConnectingToDriveNow" xml:space="preserve">
+    <value>Einloggen bei DriveNow
+Buchung vorbereiten</value>
+  </data>
+  <data name="ButtonClear" xml:space="preserve">
+    <value>löschen</value>
+  </data>
+  <data name="ButtonSave" xml:space="preserve">
+    <value>speichern</value>
+  </data>
+  <data name="DriveNowCredentialsMissingDialogHeader" xml:space="preserve">
+    <value>Keine Zugangsdaten für DriveNow</value>
+  </data>
+  <data name="DriveNowCredentialsMissingDialogMessage" xml:space="preserve">
+    <value>Du hast noch keine Zugangsaten für DriveNow eingegeben.
+Möchtest Du jetzt Deine Zugangsdaten speichern?</value>
+  </data>
+  <data name="SettingsPageDriveNowPasswordHeader" xml:space="preserve">
+    <value>Passwort</value>
+  </data>
+  <data name="SettingsPageDriveNowUsernameHeader" xml:space="preserve">
+    <value>Benutzername</value>
+  </data>
+  <data name="UsernameOrPasswordWrong" xml:space="preserve">
+    <value>Username oder Passwort falsch</value>
+  </data>
 </root>

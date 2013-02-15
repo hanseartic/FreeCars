@@ -88,6 +88,19 @@ namespace FreeCars {
 				dnBookingBrowser.LoadCompleted -= onDriveNowLoadCompleted;
 				return;
 			}
+			if ("dn-login-incorrect" == args.Value) {
+				if (MessageBoxResult.OK == MessageBox.Show(
+					Strings.BookingDriveNowUsernamePasswordWrongDialog, 
+					Strings.UsernameOrPasswordWrong, MessageBoxButton.OKCancel)) {
+					gotoDriveNowCredentials();
+				}
+				Deactivate();
+				return;
+			}
+			if ("dn-booking-successful" == args.Value) {
+				Deactivate();
+				return;
+			}
 			if ("dn-loggedin" != args.Value) {
 				return;
 			}
@@ -106,6 +119,10 @@ namespace FreeCars {
 					"} else {" +
 						"window.external.notify('dn-loggedin');" +
 					"}" +
+					"var original_error_func = dn_login.throw_login_error;" +
+					"dn_login.throw_login_error = function(e, d) { original_error_func(e, d); window.external.notify('dn-login-incorrect'); }" +
+					//"var original_dn_booking_confirmation = dn_booking_confirmation;" +
+					"window.dn_booking_confirmation = function() { window.external.notify('dn-booking-successful'); }" +
 				"}; window.checkLoggedIn();");
 			} catch (Exception ex) {
 				return;
@@ -186,6 +203,10 @@ namespace FreeCars {
 					break;
 			}
 		}
+		private void gotoDriveNowCredentials() {
+			(Application.Current.RootVisual as PhoneApplicationFrame).Navigate(
+						new Uri("/SettingsPage.xaml?tab=driveNowTab&action=enterCredentials", UriKind.RelativeOrAbsolute));
+		}
 		private bool CheckDriveNowCredentials() {
 			MessageBoxResult result;
 			try {
@@ -194,10 +215,9 @@ namespace FreeCars {
 				if ((null != username) && (null != password)) {
 					return true;
 				}
-				result = MessageBox.Show("Do you want to go to the settings-page now?", "DriveNow credentials missing", MessageBoxButton.OKCancel);
+				result = MessageBox.Show("DriveNowCredentialsMissingDialogMessage", "DriveNowCredentialsMissingDialogHeader", MessageBoxButton.OKCancel);
 				if (MessageBoxResult.OK == result) {
-					(Application.Current.RootVisual as PhoneApplicationFrame).Navigate(
-						new Uri("/SettingsPage.xaml?tab=driveNowTab", UriKind.RelativeOrAbsolute));
+					gotoDriveNowCredentials();
 				} else {
 					Deactivate();
 				}
@@ -289,7 +309,7 @@ namespace FreeCars {
 		public event EventHandler Closed;
 
 		private void OnBookingBrowserNavigationFailed(object sender, NavigationFailedEventArgs e) {
-			return;
+			/// TODO message-box or toast notifiyng about failed browsing.
 		}
 	}
 }

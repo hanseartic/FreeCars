@@ -444,4 +444,34 @@ Do you want to connect to your car2go account now? It only takes two minutes and
   <data name="NotConnected" xml:space="preserve">
     <value>Not connected</value>
   </data>
+  <data name="BookingDriveNowUsernamePasswordWrongDialog" xml:space="preserve">
+    <value>Could not log you in to DriveNow with the credentials you provided.
+
+Do you want to go to the settings-page now and enter the correct credentials?</value>
+  </data>
+  <data name="BookingPageConnectingToDriveNow" xml:space="preserve">
+    <value>logging in to DriveNow
+preparing reservation</value>
+  </data>
+  <data name="ButtonClear" xml:space="preserve">
+    <value>clear</value>
+  </data>
+  <data name="ButtonSave" xml:space="preserve">
+    <value>save</value>
+  </data>
+  <data name="DriveNowCredentialsMissingDialogHeader" xml:space="preserve">
+    <value>DriveNow credentials missing</value>
+  </data>
+  <data name="DriveNowCredentialsMissingDialogMessage" xml:space="preserve">
+    <value>Do you want to go to the settings-page now?</value>
+  </data>
+  <data name="SettingsPageDriveNowPasswordHeader" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="SettingsPageDriveNowUsernameHeader" xml:space="preserve">
+    <value>Username</value>
+  </data>
+  <data name="UsernameOrPasswordWrong" xml:space="preserve">
+    <value>Username or password wrong</value>
+  </data>
 </root>

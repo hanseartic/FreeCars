@@ -41,6 +41,7 @@ namespace FreeCars {
 			((App)App.Current).TrialModeChanged += AppOnTrialModeChanged;
 			AppOnTrialModeChanged(null, null);
 			CheckCar2GoApiAccess();
+			syncDriveNowCredentialsWithApp();
 		}
 
 		private void OnToggleSwitchChanged(ToggleSwitch sender) {
@@ -373,12 +374,26 @@ namespace FreeCars {
 		protected override void OnNavigatedTo(NavigationEventArgs e) {
 			string tab = string.Empty;
 			string action = string.Empty;
-			if (NavigationContext.QueryString.TryGetValue("tab", out tab) && NavigationContext.QueryString.TryGetValue("action", out action)) {
+			if (NavigationContext.QueryString.TryGetValue("tab", out tab)) {
 				var pivotItemToShow = settingsTabs.Items.Cast<PivotItem>().Single(i => i.Name == tab);
 				settingsTabs.SelectedItem = pivotItemToShow;
-				if ("connectCar2Go" == action) {
-					connectCar2Go();
+				switch (tab) {
+					case "car2goTab":
+						if (NavigationContext.QueryString.TryGetValue("action", out action)) {
+							if ("connectCar2Go" == action) {
+								connectCar2Go();
+							}
+						}
+						break;
+					case "driveNowTab":
+						if (NavigationContext.QueryString.TryGetValue("action", out action)) {
+							if ("enterCredentials" == action) {
+								driveNowUsernameTextbox.Focus();
+							}
+						}
+						break;
 				}
+				
 			}
 			base.OnNavigatedTo(e);
 		}
@@ -417,6 +432,35 @@ namespace FreeCars {
 
 					break;
 			}
+		}
+
+		private void syncDriveNowCredentialsWithApp() {
+			var username = (string)App.GetAppSetting("driveNow.username");
+			var password = (string)App.GetAppSetting("driveNow.password");
+			if (null == username)
+				username = "";
+			driveNowUsernameTextbox.Text = username;
+			if (null == password)
+				password = "";
+			driveNowPasswordbox.Password = password;
+		}
+		private void OnDriveNowUsernameTap(object sender, System.Windows.Input.GestureEventArgs e) {
+			driveNowUsernameTextbox.Focus();
+		}
+
+		private void OnDriveNowPassordTap(object sender, System.Windows.Input.GestureEventArgs e) {
+			driveNowPasswordbox.Focus();
+		}
+
+		private void OnSaveDriveNowCredentials(object sender, RoutedEventArgs e) {
+			App.SetAppSetting("driveNow.username", driveNowUsernameTextbox.Text);
+			App.SetAppSetting("driveNow.password", driveNowPasswordbox.Password);
+		}
+
+		private void OnClearDriveNowCredentials(object sender, RoutedEventArgs e) {
+			App.ClearAppSetting("driveNow.username");
+			App.ClearAppSetting("driveNow.password");
+			syncDriveNowCredentialsWithApp();
 		}
 	}
 }
