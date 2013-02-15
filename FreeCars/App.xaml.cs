@@ -219,6 +219,9 @@ namespace FreeCars {
 			}
 		}
 
+		internal static bool ClearAppSetting(string key) {
+			return IsolatedStorageSettings.ApplicationSettings.Remove(key);
+		}
 		internal static string GetAppAttribute(string attributeName) {
 			string appManifestName = "WMAppManifest.xml";
 			string appNodeName = "App";
