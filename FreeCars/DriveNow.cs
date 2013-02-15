@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using System.Runtime.Serialization;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -75,7 +76,9 @@ namespace FreeCars {
 					if (null != Updated) {
 						Updated(this, null);
 					}
-				} catch (NullReferenceException) { }
+				} catch (NullReferenceException) { } catch (ArgumentNullException) {
+					LoadDriveNowCars();
+				} catch (SerializationException) {}
 			} catch (WebException) { }
         }
         public event EventHandler Updated;
