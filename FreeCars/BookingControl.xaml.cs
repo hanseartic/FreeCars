@@ -9,6 +9,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
 using FreeCars.Resources;
+using FreeCars.Serialization;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using OAuth;
@@ -33,7 +34,7 @@ namespace FreeCars {
 			try {
 				VisualStateManager.GoToState(this, "ActiveState", true);
 				IsActive = true;
-				if (typeof(DriveNowCarInformation) == Item.GetType()) {
+				if (typeof(DriveNowMarker) == Item.GetType()) {
 					CreateDriveNowBooking();
 				}
 			} catch (UnauthorizedAccessException) {
@@ -56,11 +57,11 @@ namespace FreeCars {
 
 		private void OnOKButtonClicked(object sender, RoutedEventArgs e) {
 			if (null == Item) return;
-			if (typeof(Car2GoInformation) == Item.GetType()) {
+			if (typeof(Car2GoMarker) == Item.GetType()) {
 				CreateCar2GoBooking(delegate(object client, DownloadStringCompletedEventArgs arguments) {
 					
 				});
-			} else if (typeof (DriveNowCarInformation) == Item.GetType()) {
+			} else if (typeof (DriveNowMarker) == Item.GetType()) {
 				//CreateDriveNowBooking();
 			}
 		}
@@ -73,7 +74,7 @@ namespace FreeCars {
 			VisualStateManager.GoToState(this, "DNActiveState", false);
 			dnBookingBrowser.LoadCompleted -= onDriveNowLoadCompleted;
 			dnBookingBrowser.ScriptNotify -= onDriveNowScriptNotify;
-			var item = (DriveNowCarInformation)Item;
+			var item = (DriveNowMarker)Item;
 
 			dnBookingBrowser.ScriptNotify += onDriveNowScriptNotify;
 			dnBookingBrowser.LoadCompleted += onDriveNowLoadCompleted;
@@ -83,7 +84,7 @@ namespace FreeCars {
 		}
 
 		private void onDriveNowScriptNotify(object sender, NotifyEventArgs args) {
-			var item = Item as DriveNowCarInformation;
+			var item = Item as DriveNowMarker;
 			if (null == item) {
 				dnBookingBrowser.LoadCompleted -= onDriveNowLoadCompleted;
 				return;
@@ -98,6 +99,7 @@ namespace FreeCars {
 				return;
 			}
 			if ("dn-booking-successful" == args.Value) {
+				MessageBox.Show(Strings.DriveNowBookingSucessfull);
 				Deactivate();
 				return;
 			}
@@ -106,7 +108,7 @@ namespace FreeCars {
 			}
 			dnBookingBrowser.LoadCompleted -= onDriveNowLoadCompleted;
 			VisualStateManager.GoToState(this, "DnBookingBrowserOpenState", true);
-			dnBookingBrowser.Navigate(new Uri("https://m.drive-now.com/php/metropolis/details?vin=" + item.vin, UriKind.Absolute));
+			dnBookingBrowser.Navigate(new Uri("https://m.drive-now.com/php/metropolis/details?vin=" + item.ID + "#bookingdetails-form", UriKind.Absolute));
 		}
 		private void onDriveNowLoadCompleted(object sender, NavigationEventArgs e) {
 			try {
@@ -120,17 +122,18 @@ namespace FreeCars {
 						"window.external.notify('dn-loggedin');" +
 					"}" +
 					"var original_error_func = dn_login.throw_login_error;" +
-					"dn_login.throw_login_error = function(e, d) { original_error_func(e, d); window.external.notify('dn-login-incorrect'); }" +
+					"dn_login.throw_login_error = function(e, d) { original_error_func(e, d); window.external.notify('dn-login-incorrect'); };" +
 					//"var original_dn_booking_confirmation = dn_booking_confirmation;" +
 					"window.dn_booking_confirmation = function() { window.external.notify('dn-booking-successful'); }" +
 				"}; window.checkLoggedIn();");
-			} catch (Exception ex) {
-				return;
-				//https://m.drive-now.com/php/metropolis/home?language=de_DE&
+			} catch (Exception exception) {
+				if (exception.Message.Contains("Error: 80020101.")) {
+					
+				}
 			}
 		}
 		private void CreateCar2GoBooking(DownloadStringCompletedEventHandler requestCallback) {
-			var item = (Car2GoInformation)Item;
+			var item = (Car2GoMarker)Item;
 			var car2GoRequestEndpoint = "https://www.car2go.com/api/v2.1/bookings";
 			
 			var oauthToken = (string)App.GetAppSetting("car2go.oauth_token");
@@ -258,15 +261,15 @@ namespace FreeCars {
 				Visibility car2GoVisibility = Visibility.Collapsed, driveNowVisbility = Visibility.Collapsed, multicityVisibility = Visibility.Collapsed;
 				if (null != value) {
 					var itemType = value.GetType();
-					if (typeof(Car2GoInformation) == itemType) {
+					if (typeof(Car2GoMarker) == itemType) {
 						car2GoVisibility = Visibility.Visible;
-						Car2GoInteriorImagePath = ("GOOD" == (value as Car2GoInformation).interior)
+						Car2GoInteriorImagePath = ("GOOD" == (value as Car2GoMarker).interior)
 							? "/Resources/ib_condition_good.png"
 							: "/Resources/ib_condition_unacceptable.png";
-						Car2GoExteriorImagePath = ("GOOD" == (value as Car2GoInformation).exterior)
+						Car2GoExteriorImagePath = ("GOOD" == (value as Car2GoMarker).exterior)
 							? "/Resources/ib_condition_good.png"
 							: "/Resources/ib_condition_unacceptable.png";
-					} else if (typeof(DriveNowCarInformation) == itemType) {
+					} else if (typeof(DriveNowMarker) == itemType) {
 						driveNowVisbility = Visibility.Visible;
 					} else if (typeof(MulticityMarker) == itemType) {
 						multicityVisibility = Visibility.Visible;

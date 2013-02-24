@@ -14,6 +14,7 @@ using System.IO.IsolatedStorage;
 using System.Globalization;
 using System.Runtime.Serialization.Json;
 using System.Text;
+using FreeCars.Serialization;
 using Microsoft.Phone.BackgroundTransfer;
 using System.IO;
 using System.Text.RegularExpressions;

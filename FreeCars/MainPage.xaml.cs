@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Navigation;
 using AdDuplex;
+using FreeCars.Serialization;
 using GoogleMaps.Geocode;
 using Microsoft.Advertising;
 using Microsoft.Phone.Controls;
@@ -176,7 +177,7 @@ namespace FreeCars {
 
 		private void OnMainPageApplicationBarBookCarButtonClick(object sender, EventArgs e) {
 			Pushpin activePushpin = (Pushpin)(activeLayer.Children.First());
-			if (activePushpin.Tag is Car2GoInformation || activePushpin.Tag is DriveNowCarInformation) {
+			if (activePushpin.Tag is Car2GoMarker || activePushpin.Tag is DriveNowMarker) {
 				bookingControl.Activate((Marker)activePushpin.Tag);
 				ApplicationBar.IsVisible = false;
 			}
@@ -428,10 +429,10 @@ namespace FreeCars {
 						}
 					}
 
-					if (((Pushpin)sender).Tag is Car2GoInformation) {
+					if (((Pushpin)sender).Tag is Car2GoMarker) {
 						mainPageApplicationBarBookCarButton.IsEnabled = true;
 						bookingControl.Deactivate();
-					} else if (((Pushpin)sender).Tag is DriveNowCarInformation) {
+					} else if (((Pushpin)sender).Tag is DriveNowMarker) {
 						mainPageApplicationBarBookCarButton.IsEnabled = true;
 						bookingControl.Deactivate();
 					}
@@ -459,9 +460,9 @@ namespace FreeCars {
 					multicityCarsLayer.Children.Add(pushpin);
 				} else if (typeof(MulticityChargerMarker) == pushpin.Tag.GetType()) {
 					multicityChargingLayer.Children.Add(pushpin);
-				} else if (typeof(DriveNowCarInformation) == pushpin.Tag.GetType()) {
+				} else if (typeof(DriveNowMarker) == pushpin.Tag.GetType()) {
 					driveNowCarsLayer.Children.Add(pushpin);
-				} else if (typeof(Car2GoInformation) == pushpin.Tag.GetType()) {
+				} else if (typeof(Car2GoMarker) == pushpin.Tag.GetType()) {
 					car2goCarsLayer.Children.Add(pushpin);
 				}
 			}

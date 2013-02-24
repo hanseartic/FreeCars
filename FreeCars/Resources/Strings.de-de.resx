@@ -480,4 +480,7 @@ Möchtest Du jetzt Deine Zugangsdaten speichern?</value>
   <data name="UsernameOrPasswordWrong" xml:space="preserve">
     <value>Username oder Passwort falsch</value>
   </data>
+  <data name="DriveNowBookingSucessfull" xml:space="preserve">
+    <value>Das Fahrzeug wurde erfolgreich reserviert. Du erhälst gleich eine Bestätigungs-SMS.</value>
+  </data>
 </root>

@@ -8,13 +8,14 @@ using System.IO.IsolatedStorage;
 using System.Net;
 using System.Runtime.Serialization.Json;
 using System.Windows;
+using FreeCars.Serialization;
 using OAuth;
 
 namespace FreeCars {
 	public class Car2Go : DependencyObject {
-		public List<Car2GoInformation> Car2GoCars { get; private set; }
+		public List<Car2GoMarker> Car2GoCars { get; private set; }
 		public Car2Go() {
-			Car2GoCars = new List<Car2GoInformation>();
+			Car2GoCars = new List<Car2GoMarker>();
 			LoadCities();
 		}
 
@@ -34,7 +35,7 @@ namespace FreeCars {
 			if (null == position) return;
 			try {
 				if (false == (bool)IsolatedStorageSettings.ApplicationSettings["settings_show_car2go_cars"]) {
-					Car2GoCars = new List<Car2GoInformation>();
+					Car2GoCars = new List<Car2GoMarker>();
 					if (null != Updated) {
 						Updated(this, null);
 					}
@@ -83,7 +84,7 @@ namespace FreeCars {
 						try {
 							var serializer = new DataContractJsonSerializer(typeof(Car2GoBookingResult));
 							var bookingResult = (Car2GoBookingResult)serializer.ReadObject(args.Result);
-							var car2GoCars = new List<Car2GoInformation>();
+							var car2GoCars = new List<Car2GoMarker>();
 							if (0 == bookingResult.ReturnValue.Code) {
 								foreach (var booking in bookingResult.Booking) {
 									var car = booking.Vehicle;
@@ -91,7 +92,7 @@ namespace FreeCars {
 									try {
 										carPosition = new GeoCoordinate(car.Position.Latitude, car.Position.Longitude);
 									} catch {}
-									var carInfo = new Car2GoInformation {
+									var carInfo = new Car2GoMarker {
 										model = ("CE" == car.EngineType) ? "C-Smart" : "Smart ElectricDrive",
 										fuelState = car.Fuel,
 										position = carPosition,
@@ -138,7 +139,7 @@ namespace FreeCars {
 				try {
 					var serializer = new DataContractJsonSerializer(typeof(Car2GoVehicleData));
 					var car2GoData = (Car2GoVehicleData)serializer.ReadObject(e.Result);
-					var car2GoCars = new List<Car2GoInformation>();
+					var car2GoCars = new List<Car2GoMarker>();
 					var usCultureInfo = new CultureInfo("en-US");
 					foreach (var car in car2GoData.placemarks) {
 						GeoCoordinate carPosition = null;
@@ -147,7 +148,7 @@ namespace FreeCars {
 								double.Parse(car.coordinates[1], usCultureInfo.NumberFormat),
 								double.Parse(car.coordinates[0], usCultureInfo.NumberFormat));
 						} catch {}
-						var carInfo = new Car2GoInformation {
+						var carInfo = new Car2GoMarker {
 							model = ("CE" == car.engineType) ? "C-Smart" : "Smart ElectricDrive",
 							fuelState = car.fuel,
 							position = carPosition,

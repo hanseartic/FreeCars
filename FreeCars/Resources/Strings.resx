@@ -474,4 +474,7 @@ preparing reservation</value>
   <data name="UsernameOrPasswordWrong" xml:space="preserve">
     <value>Username or password wrong</value>
   </data>
+  <data name="DriveNowBookingSucessfull" xml:space="preserve">
+    <value>The car was booked. Please wait for the SMS.</value>
+  </data>
 </root>
