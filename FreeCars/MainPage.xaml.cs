@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Json;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
@@ -23,19 +26,44 @@ using GestureEventArgs = System.Windows.Input.GestureEventArgs;
 using System.ComponentModel;
 
 namespace FreeCars {
-	public partial class MainPage : PhoneApplicationPage {
+	public partial class MainPage {
 		private GeoCoordinateWatcher cw;
 		private const int markersMaxDistance = 1500 ;
 		private bool gpsAllowed = false;
 		public MainPage() {
 			InitializeComponent();
-			((App)App.Current).CarsUpdated += OnCarsUpdated;
+			((App)Application.Current).CarsUpdated += OnCarsUpdated;
 			cw = new GeoCoordinateWatcher(GeoPositionAccuracy.High);
 			cw.MovementThreshold = 10;
 			cw.PositionChanged += OnMyPositionChanged;
 			Loaded += OnMainPageLoaded;
 			//map.Children.Add(me);
 			SetAppBar();
+			CheckCertificationState();
+		}
+
+		[DataContract]
+		public class CertStatus {
+			[DataMember(Name = "is_certified")]
+			public bool IsCertified { get; set; }
+			[DataMember(Name = "version")]
+			public string Version { get; set; }
+		}
+
+		private void CheckCertificationState() {
+			var webClient = new WebClient();
+			webClient.OpenReadCompleted += (client, arguments) => {
+				if (null == arguments.Error) {
+					try {
+						var serializer = new DataContractJsonSerializer(typeof (CertStatus));
+						var results = (CertStatus)(serializer.ReadObject(arguments.Result));
+						if (App.GetAppAttribute("Version") == results.Version)
+							App.IsCertified = results.IsCertified;
+					} catch {}
+				}
+			};
+			App.IsCertified = true;
+			webClient.OpenReadAsync(new Uri("http://freecars.hanseartic.de/cert_status.php?nocache=" + Environment.TickCount, UriKind.Absolute));
 		}
 
 		private void CheckTrialAndAds() {

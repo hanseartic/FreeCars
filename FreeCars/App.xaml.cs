@@ -179,6 +179,8 @@ namespace FreeCars {
 	        //e.Handled = true;
         }
 
+		public static bool IsCertified { get; set; }
+
 		private static bool? isLowMemoryDevice = null;
 		internal static bool IsLowMemoryDevice {
 			get {

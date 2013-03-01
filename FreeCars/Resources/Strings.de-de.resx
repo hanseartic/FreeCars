@@ -483,4 +483,12 @@ Möchtest Du jetzt Deine Zugangsdaten speichern?</value>
   <data name="DriveNowBookingSucessfull" xml:space="preserve">
     <value>Das Fahrzeug wurde erfolgreich reserviert. Du erhälst gleich eine Bestätigungs-SMS.</value>
   </data>
+  <data name="SettingsPageCar2GoAuthStatusNotConnected" xml:space="preserve">
+    <value>FreeCars ist mit keinem car2go-Account verbunden.
+
+Du kannst FreeCars den Zugriff auf Deinen car2go-Account über das sichere OAuth-Verfahren erlauben. FreeCars erhält dabei keinen Zugriff auf Deine Zugangsdaten. Du kannst den Zugriff jederzeit entweder auf dieser Seite oder online in Deinem car2go-Account widerrufen.</value>
+  </data>
+  <data name="SettingsPageCar2GoDisconnectButton" xml:space="preserve">
+    <value>von car2go-Account trennen</value>
+  </data>
 </root>

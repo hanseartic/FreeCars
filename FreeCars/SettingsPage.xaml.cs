@@ -219,11 +219,18 @@ namespace FreeCars {
 		private void OnConnectToCar2GoClicked(object sender, RoutedEventArgs e) {
 			connectCar2Go();
 		}
+		private void OnDisconnectFromCar2GoClicked(object sender, RoutedEventArgs e) {
+			App.ClearAppSetting("car2go.oauth_token");
+			App.ClearAppSetting("car2go.oauth_request_token");
+			App.ClearAppSetting("car2go.oauth_token_secret");
+			App.ClearAppSetting("car2go.oauth_account_id");
+			CheckCar2GoApiAccess();
+		}
 
 		private void connectCar2Go() {
 			var car2GoGetTokenEndpoint = "https://www.car2go.com/api/reqtoken";
-
-			var oauthRequest = new OAuthRequest() {
+			verifierPanel.Visibility = Visibility.Visible;
+			var oauthRequest = new OAuthRequest {
 				CallbackUrl = "oob",
 				ConsumerKey = FreeCarsCredentials.Car2Go.ConsumerKey,
 				ConsumerSecret = FreeCarsCredentials.Car2Go.SharedSecred,
@@ -239,16 +246,26 @@ namespace FreeCars {
 			var webClient = new WebClient();
 			webClient.DownloadStringCompleted += delegate(object client, DownloadStringCompletedEventArgs arguments) {
 				string[] results = { };
-				if (null == arguments.Error) {
-					results = arguments.Result.Split(new string[] { "&" }, StringSplitOptions.None);
-					App.SetAppSetting("car2go.oauth_token_secret", results[1].Split(new char[] { '=' })[1]);
-					//(string)IsolatedStorageSettings.ApplicationSettings["current_map_city"]
-					c2gAuthBrowser.Dispatcher.BeginInvoke(() => {
-						c2gAuthBrowser.Visibility = System.Windows.Visibility.Visible;
-						c2gAuthBrowser.Navigate(new Uri("https://www.car2go.com/api/authorize?" + arguments.Result, UriKind.Absolute));
-					});
+				if (null != arguments.Error) {
+					return;
 				}
-				client = null;
+				var authorizeUrl = new Uri("https://www.car2go.com/api/authorize?" + arguments.Result, UriKind.Absolute);
+				results = arguments.Result.Split(new string[] { "&" }, StringSplitOptions.None);
+				App.SetAppSetting("car2go.oauth_token_secret", results[1].Split(new char[] { '=' })[1]);
+				App.SetAppSetting("car2go.oauth_request_token", results[0].Split(new char[] { '=' })[1]);
+				//(string)IsolatedStorageSettings.ApplicationSettings["current_map_city"]
+				if (App.IsCertified) {
+					c2gAuthBrowser.Dispatcher.BeginInvoke(() => {
+						c2gAuthBrowser.Visibility = Visibility.Visible;
+						c2gAuthBrowser.Navigate(authorizeUrl);
+					});
+				} else {
+					var authBrowserTask = new WebBrowserTask {
+						Uri = authorizeUrl,
+					};
+					c2gScrollViewer.ScrollToVerticalOffset(c2gScrollViewer.ActualHeight);
+					authBrowserTask.Show();
+				}
 			};
 			webClient.DownloadStringAsync(requestUrl);
 			return;
@@ -260,10 +277,18 @@ namespace FreeCars {
 			typeof(Visibility),
 			typeof(SettingsPage),
 			new PropertyMetadata(Visibility.Collapsed));
-
+		public DependencyProperty DisconnectCar2GoApiButtonVProperty = DependencyProperty.Register(
+			"DisconnectCar2GoApiButtonV",
+			typeof (Visibility),
+			typeof (SettingsPage),
+			new PropertyMetadata(Visibility.Collapsed));
 		public Visibility ShowConnectCar2GoApiButton {
 			get { return (Visibility)GetValue(ShowConnectCar2GoApiButtonProperty); }
 			set { SetValue(ShowConnectCar2GoApiButtonProperty, value); }
+		}
+		public Visibility DisconnectCar2GoApiButtonV {
+			get { return (Visibility)GetValue(DisconnectCar2GoApiButtonVProperty); }
+			set { SetValue(DisconnectCar2GoApiButtonVProperty, value); }
 		}
 
 		private void CheckCar2GoApiAccess() {
@@ -271,7 +296,7 @@ namespace FreeCars {
 
 			var oauth_token = (string)App.GetAppSetting("car2go.oauth_token");
 			var oauth_token_secret = (string)App.GetAppSetting("car2go.oauth_token_secret");
-
+			c2gAuthText.Text = Strings.SettingsPageCar2GoAuthStatusNotConnected;
 			if (null != oauth_token && null != oauth_token_secret) {
 				getCar2GoAccounts(
 					oauth_token,
@@ -303,6 +328,9 @@ namespace FreeCars {
 										break;
 								}
 								ShowConnectCar2GoApiButton = Visibility.Collapsed;
+								disconnectCar2GoApi.Visibility = Visibility.Visible;
+								DisconnectCar2GoApiButtonV = Visibility.Visible;
+								verifierPanel.Visibility = Visibility.Collapsed;
 							}
 						}
 						client = null;
@@ -310,9 +338,9 @@ namespace FreeCars {
 				);
 			}
 
-			if (false == hasApiAccess) {
-				ShowConnectCar2GoApiButton = Visibility.Visible;
-			}
+			ShowConnectCar2GoApiButton = Visibility.Visible;
+			DisconnectCar2GoApiButtonV = Visibility.Collapsed;
+			disconnectCar2GoApi.Visibility = Visibility.Collapsed;
 		}
 		private void getCar2GoAccounts(string token, string token_secret, DownloadStringCompletedEventHandler requestCallback) {
 
@@ -363,11 +391,14 @@ namespace FreeCars {
 			var webClient = new WebClient();
 			webClient.DownloadStringCompleted += (client, arguments) => {
 				string[] results = { };
-				if (null == arguments.Error) {
-					results = arguments.Result.Split(new char[] { '&' }, StringSplitOptions.None);
-					App.SetAppSetting("car2go.oauth_token", results[0].Split(new char[] { '=' })[1]);
-					App.SetAppSetting("car2go.oauth_token_secret", results[1].Split(new char[] { '=' })[1]);
+				if (null != arguments.Error) {
+					MessageBox.Show("Could not authorize FreeCars to connect to your car2go account. Please try again.");
+					return;
 				}
+				results = arguments.Result.Split(new char[] { '&' }, StringSplitOptions.None);
+				App.SetAppSetting("car2go.oauth_token", results[0].Split(new char[] { '=' })[1]);
+				App.SetAppSetting("car2go.oauth_token_secret", results[1].Split(new char[] { '=' })[1]);
+				CheckCar2GoApiAccess();
 			};
 			webClient.DownloadStringAsync(requestUrl);
 		}
@@ -426,13 +457,20 @@ namespace FreeCars {
 					browser.Navigate(new Uri("https://" + e.Uri.Host + "/api/logout.jsp"));
 					break;
 				case "/api/logout.jsp":
-					browser.Visibility = System.Windows.Visibility.Collapsed;
+					browser.Visibility = Visibility.Collapsed;
 					CheckCar2GoApiAccess();
 					break;
 				default:
 
 					break;
 			}
+		}
+
+		private void OnEnterVerifierClicked(object sender, RoutedEventArgs e) {
+			var tokenData = new string[2];
+			tokenData[0] = (string)App.GetAppSetting("car2go.oauth_request_token");
+			tokenData[1] = car2goVerifierCodeTextBox.Text;
+			getC2GAccessToken(tokenData);
 		}
 
 		private void syncDriveNowCredentialsWithApp() {
