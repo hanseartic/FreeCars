@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:maps="clr-namespace:Microsoft.Phone.Maps.Controls;assembly=Microsoft.Phone.Maps"
+    xmlns:toolkit="clr-namespace:Microsoft.Phone.Maps.Toolkit;assembly=Microsoft.Phone.Controls.Toolkit"
     x:Class="FreeCars.MainPage"
     mc:Ignorable="d"
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
@@ -44,9 +45,23 @@
 		<!--ContentPanel - place additional content here-->
 		<Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
 
-			<maps:Map PedestrianFeaturesEnabled="True"
-					  LandmarksEnabled="True" 
-					  Pitch="60" WatermarkMode="On"/>
+			<maps:Map x:Name="Map"
+					PedestrianFeaturesEnabled="True"
+					CartographicMode="Road"
+					LandmarksEnabled="True" 
+					Pitch="60" WatermarkMode="On" >
+				<toolkit:MapExtensions.Children>
+					<toolkit:UserLocationMarker 
+						x:Name="MyPositionMarker"
+						Visibility="{Binding MyPositionVisibility}" GeoCoordinate="{Binding MyPositionGeoCoordinate}"
+						
+						>
+						
+					</toolkit:UserLocationMarker>
+					<toolkit:MapItemsControl></toolkit:MapItemsControl>
+				</toolkit:MapExtensions.Children>
+
+			</maps:Map>
 
 		</Grid>
 

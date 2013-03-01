@@ -126,12 +126,20 @@
     <comment>Controls the Language and ensures that the font for all elements in the RootFrame aligns with the app's language. Set to the language code of this resource file's language.</comment>
   </data>
   <data name="ApplicationTitle" xml:space="preserve">
-    <value>MY APPLICATION</value>
+    <value>FreeCars</value>
   </data>
   <data name="AppBarButtonText" xml:space="preserve">
     <value>add</value>
   </data>
   <data name="AppBarMenuItemText" xml:space="preserve">
     <value>Menu Item</value>
+  </data>
+  <data name="AllowUseOfGPSQuestion" xml:space="preserve">
+    <value>Diese Anwendung möchte auf die aktuelle Position Deines Telefons zugreifen, um Dir freie Fahrzeuge in Deiner Umgebung anzeigen zu können. Diese Anwendung speichert Deinen jeweils letzten Standort, um bei den folgen Starts bessere Suchergebnisse zu erzielen. Wenn Du der Nutzung Deiner Positionsdaten zustimmst, werden diese Daten unter Umständen auch an Microsoft oder Werbedienstleister übertragen.
+
+Möchtest Du der Nutzung Deiner Standortdaten zustimmen? Du kannst diese Einstellung jederzeit auf der Einstellungsseite ändern.</value>
+  </data>
+  <data name="AllowUseOfGPSQuestionHeader" xml:space="preserve">
+    <value>Zugriff auf GPS erlauben?</value>
   </data>
 </root>
