@@ -19,6 +19,7 @@ using Microsoft.Phone.BackgroundTransfer;
 using System.IO;
 using System.Text.RegularExpressions;
 using Microsoft.Phone.Controls.Maps;
+using OAuth;
 
 namespace FreeCars {
     public class Multicity {
@@ -41,7 +42,7 @@ namespace FreeCars {
                 return;
             }
 			LoadMulticityChargers();
-			LoadMulticityCars();            
+			LoadMulticityCars();
         }
         private void LoadMulticityCars() {
             if (null == position) return;
@@ -56,7 +57,7 @@ namespace FreeCars {
             var cultureInfo = new CultureInfo("en-US");
             var lat = position.Location.Latitude.ToString(cultureInfo.NumberFormat);
             var lng = position.Location.Longitude.ToString(cultureInfo.NumberFormat);
-            var callUri = "https://kunden.multicity-carsharing.de/kundenbuchung/hal2ajax_process.php?zoom=10&lng1=&lat1=&lng2=&lat2=&stadtCache=&mapstation_id=&mapstadt_id=&verwaltungfirma=&centerLng=" + lng + "&centerLat=" + lat + "&searchmode=buchanfrage&with_staedte=false&buchungsanfrage=J&lat=" + lat + "&lng=" + lng + "&instant_access=J&open_end=J&objectname=multicitymarker&clustername=multicitycluster&ignore_virtual_stations=J&before=null&after=null&ajxmod=hal2map&callee=getMarker&_=1349642335368";
+            var callUri = "https://kunden.multicity-carsharing.de/kundenbuchung/hal2ajax_process.php?zoom=10&lng1=&lat1=&lng2=&lat2=&stadtCache=&mapstation_id=&mapstadt_id=&verwaltungfirma=&centerLng=" + lng + "&centerLat=" + lat + "&searchmode=buchanfrage&with_staedte=false&buchungsanfrage=J&lat=" + lat + "&lng=" + lng + "&instant_access=J&open_end=J&objectname=multicitymarker&clustername=multicitycluster&ignore_virtual_stations=J&before=null&after=null&ajxmod=hal2map&callee=getMarker&_=" + OAuthTools.GetTimestamp();
             wc.OpenReadCompleted += OnMulticityCarsOpenReadCompleted;
             wc.OpenReadAsync(new Uri(callUri));
         

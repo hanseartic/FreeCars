@@ -44,13 +44,14 @@ namespace FreeCars {
 			} catch (KeyNotFoundException) { }
 			
 			var wc = new WebClient();
-			var callUri = "https://www.car2go.com/api/v2.1/vehicles?loc="+City+"&format=json&oauth_consumer_key=" + consumerkey;
+			var callUri = "https://www.car2go.com/api/v2.1/vehicles?loc=" + City + "&format=json&oauth_consumer_key=" + consumerkey + "&timestamp=" + OAuthTools.GetTimestamp();
 
 			wc.OpenReadCompleted += OnCar2GoCarsOpenReadCompleted;
 			wc.OpenReadAsync(new Uri(callUri));
 		}
 		public bool HasBooking { get; private set; }
 
+		private DateTime lastBookedCarsUpdate = DateTime.MinValue;
 		private void LoadBookedCars() {
 			HasBooking = false;
 			try {
@@ -86,6 +87,9 @@ namespace FreeCars {
 							var bookingResult = (Car2GoBookingResult)serializer.ReadObject(args.Result);
 							var car2GoCars = new List<Car2GoMarker>();
 							if (0 == bookingResult.ReturnValue.Code) {
+								if (bookingResult.Booking.Length > 0) {
+									lastBookedCarsUpdate = DateTime.Now;
+								}
 								foreach (var booking in bookingResult.Booking) {
 									var car = booking.Vehicle;
 									GeoCoordinate carPosition = null;
@@ -134,6 +138,9 @@ namespace FreeCars {
 			}
 		}
 		private void OnCar2GoCarsOpenReadCompleted(object sender, OpenReadCompletedEventArgs e) {
+			if (lastBookedCarsUpdate > DateTime.Now - TimeSpan.FromSeconds(20)) {
+				return;
+			}
 			try {
 				if (0 == e.Result.Length) return;
 				try {
@@ -169,7 +176,7 @@ namespace FreeCars {
 		}
 		private void LoadCities() {
 			var wc = new WebClient();
-			var callUri = "https://www.car2go.com/api/v2.1/locations?&format=json&oauth_consumer_key=" + consumerkey;
+			var callUri = "https://www.car2go.com/api/v2.1/locations?&format=json&oauth_consumer_key=" + consumerkey + "&timestamp=" + OAuthTools.GetTimestamp();
 
 			wc.OpenReadCompleted +=
 				delegate(object o, OpenReadCompletedEventArgs e) {
