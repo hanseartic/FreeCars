@@ -417,12 +417,15 @@ namespace FreeCars {
 				} catch { }
 			}
 		}
-		void OnPushpinTap(object sender, System.Windows.Input.GestureEventArgs e) {
+		void OnPushpinTap(object sender, GestureEventArgs e) {
 			if (null != ((Pushpin)sender).Tag && typeof(MulticityChargerMarker) == ((Pushpin)sender).Tag.GetType()) return;
 			e.Handled = true;
+			mainPageApplicationBarBookCarButton.IconUri = new Uri("Resources/appbar.timer.check.png", UriKind.RelativeOrAbsolute);
 			var pushpinContent = ((Pushpin)sender).Content;
-			if (pushpinContent is Border) {
-				if (Visibility.Collapsed == ((Border)pushpinContent).Visibility) {
+			var border = pushpinContent as Border;
+			bookingControl.Deactivate();
+			if (border != null) {
+				if (Visibility.Collapsed == border.Visibility) {
 					foreach (var pushpin in activeLayer.Children.ToArray()) {
 						if (pushpin is Pushpin) {
 							DeactivatePushpin(pushpin as Pushpin);
@@ -431,17 +434,18 @@ namespace FreeCars {
 
 					if (((Pushpin)sender).Tag is Car2GoMarker) {
 						mainPageApplicationBarBookCarButton.IsEnabled = true;
-						bookingControl.Deactivate();
+						if (((Car2GoMarker)((Pushpin)sender).Tag).isBooked) {
+							mainPageApplicationBarBookCarButton.IconUri = new Uri("Resources/appbar.timer.cancel.png", UriKind.RelativeOrAbsolute);
+						}
 					} else if (((Pushpin)sender).Tag is DriveNowMarker) {
 						mainPageApplicationBarBookCarButton.IsEnabled = true;
-						bookingControl.Deactivate();
 					}
 					var parentLayer = VisualTreeHelper.GetParent((Pushpin)sender) as MapLayer;
 					parentLayer.Children.Remove((Pushpin)sender);
 					activeLayer.Children.Add((Pushpin)sender);
 					//((Pushpin)sender).Tag = parentLayer;
 					((Pushpin)sender).Opacity = 1;
-					((Border)pushpinContent).Visibility = Visibility.Visible;
+					border.Visibility = Visibility.Visible;
 					if (null != ((Pushpin)sender).Tag && typeof(MulticityMarker) == ((Pushpin)sender).Tag.GetType()) {
 						Multicity.LoadChargeState(sender as Pushpin);
 					}
@@ -456,15 +460,17 @@ namespace FreeCars {
 		void DeactivatePushpin(Pushpin pushpin) {
 			if (null != pushpin.Tag) {
 				activeLayer.Children.Remove(pushpin);
-				if (typeof(MulticityMarker) == pushpin.Tag.GetType()) {
-					multicityCarsLayer.Children.Add(pushpin);
-				} else if (typeof(MulticityChargerMarker) == pushpin.Tag.GetType()) {
-					multicityChargingLayer.Children.Add(pushpin);
-				} else if (typeof(DriveNowMarker) == pushpin.Tag.GetType()) {
-					driveNowCarsLayer.Children.Add(pushpin);
-				} else if (typeof(Car2GoMarker) == pushpin.Tag.GetType()) {
-					car2goCarsLayer.Children.Add(pushpin);
-				}
+				try {
+					if (typeof (MulticityMarker) == pushpin.Tag.GetType()) {
+						multicityCarsLayer.Children.Add(pushpin);
+					} else if (typeof (MulticityChargerMarker) == pushpin.Tag.GetType()) {
+						multicityChargingLayer.Children.Add(pushpin);
+					} else if (typeof (DriveNowMarker) == pushpin.Tag.GetType()) {
+						driveNowCarsLayer.Children.Add(pushpin);
+					} else if (typeof (Car2GoMarker) == pushpin.Tag.GetType()) {
+						car2goCarsLayer.Children.Add(pushpin);
+					}
+				} catch (ArgumentException) {}
 			}
 			mainPageApplicationBarBookCarButton.IsEnabled = false;
 			((Border)pushpin.Content).Visibility = Visibility.Collapsed;

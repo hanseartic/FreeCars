@@ -162,6 +162,7 @@
     <Content Include="Resources\appbar.cogs.png" />
     <Content Include="Resources\appbar.deeplink.round.png" />
     <Content Include="Resources\appbar.map.centerme.rest.png" />
+    <Content Include="Resources\appbar.timer.cancel.png" />
     <Content Include="Resources\appbar.timer.check.png" />
     <Content Include="Resources\appbar.transport.repeat.rest.png" />
     <Content Include="Resources\battery28x28.png" />
