@@ -27,16 +27,13 @@ namespace FreeCars {
 		}
 		
 		public void Activate(Marker item) {
-			Item = item;
 			username = null;
 			password = null;
+			Item = item;
 
 			try {
 				VisualStateManager.GoToState(this, "ActiveState", true);
 				IsActive = true;
-				if (typeof(DriveNowMarker) == Item.GetType()) {
-					CreateDriveNowBooking();
-				}
 			} catch (UnauthorizedAccessException) {
 				Dispatcher.BeginInvoke(() => Activate(item));
 			}
@@ -114,21 +111,26 @@ namespace FreeCars {
 			try {
 				dnBookingBrowser.InvokeScript("eval", "window.checkLoggedIn = function() {" +
 					"window.external.notify('enter');" +
+					//"dn_login.throw_login_error = function(e, d) { window.external.notify('dn-login-incorrect'); };" +
 					"if ($('.dn-welcome').length <= 0) {" +
-						"window.external.notify('dn-not-loggedin');" +
 						"$('#login-field').val('" + username + "');$('#password-field').val('" + password + "');" +
+						"window.external.notify('dn-not-loggedin');" +
 						"dn_login.init('login-field', 'password-field', '.login_error');" +
 					"} else {" +
 						"window.external.notify('dn-loggedin');" +
 					"}" +
-					"var original_error_func = dn_login.throw_login_error;" +
-					"dn_login.throw_login_error = function(e, d) { original_error_func(e, d); window.external.notify('dn-login-incorrect'); };" +
-					//"var original_dn_booking_confirmation = dn_booking_confirmation;" +
-					"window.dn_booking_confirmation = function() { window.external.notify('dn-booking-successful'); }" +
-				"}; window.checkLoggedIn();");
+					//"window.original_dn_booking_confirmation = dn_booking_confirmation;" +
+					//"window.original_error_func = dn_login.throw_login_error;" +
+					"window.dn_booking_confirmation = function() { window.external.notify('dn-booking-successful'); };" +
+					"dn_login.throw_login_error = function(e, d) { window.external.notify('dn-login-incorrect'); };" +
+				"}; " +
+				"window.readyStateCheckInterval = setInterval(function() {window.external.notify('timer');if (document.readyState === 'complete') {" +
+				"if (typeof dn_login === 'undefined') return; clearInterval(window.readyStateCheckInterval);window.checkLoggedIn();}}, 100);" +
+				//"window.checkLoggedIn();" +
+				"");
 			} catch (Exception exception) {
 				if (exception.Message.Contains("Error: 80020101.")) {
-					
+					Deactivate();
 				}
 			}
 		}
@@ -207,9 +209,13 @@ namespace FreeCars {
 			}
 		}
 		private void gotoDriveNowCredentials() {
-			(Application.Current.RootVisual as PhoneApplicationFrame).Navigate(
-						new Uri("/SettingsPage.xaml?tab=driveNowTab&action=enterCredentials", UriKind.RelativeOrAbsolute));
+			var phoneApplicationFrame = Application.Current.RootVisual as PhoneApplicationFrame;
+			if (phoneApplicationFrame != null) {
+				phoneApplicationFrame.Navigate(
+					new Uri("/SettingsPage.xaml?tab=driveNowTab&action=enterCredentials", UriKind.RelativeOrAbsolute));
+			}
 		}
+
 		private bool CheckDriveNowCredentials() {
 			MessageBoxResult result;
 			try {
@@ -218,7 +224,7 @@ namespace FreeCars {
 				if ((null != username) && (null != password)) {
 					return true;
 				}
-				result = MessageBox.Show("DriveNowCredentialsMissingDialogMessage", "DriveNowCredentialsMissingDialogHeader", MessageBoxButton.OKCancel);
+				result = MessageBox.Show(Strings.DriveNowCredentialsMissingDialogMessage, Strings.DriveNowCredentialsMissingDialogHeader, MessageBoxButton.OKCancel);
 				if (MessageBoxResult.OK == result) {
 					gotoDriveNowCredentials();
 				} else {
@@ -271,6 +277,7 @@ namespace FreeCars {
 							: "/Resources/ib_condition_unacceptable.png";
 					} else if (typeof(DriveNowMarker) == itemType) {
 						driveNowVisbility = Visibility.Visible;
+						CreateDriveNowBooking();
 					} else if (typeof(MulticityMarker) == itemType) {
 						multicityVisibility = Visibility.Visible;
 					}
