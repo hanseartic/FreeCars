@@ -91,7 +91,16 @@ namespace FreeCars {
 			car2Go.LoadPOIs();
 			this.Resources.Add("car2go", car2Go);
 			StartFlurry();
-        }
+
+			var currentVersion = GetAppAttribute("Version");
+			var lastAppVersion = (string)GetAppSetting("last_version");
+			if (null != lastAppVersion && lastAppVersion == currentVersion) {
+				IsFirstLaunch = false;
+			} else {
+				IsFirstLaunch = true;
+			}
+			SetAppSetting("last_version", currentVersion);
+		}
 		private void StartFlurry() {
 			try {
 				if (false == (bool)IsolatedStorageSettings.ApplicationSettings["settings_allow_analytics"]) return;
@@ -200,6 +209,8 @@ namespace FreeCars {
 				return (bool)isLowMemoryDevice;
 			}
 		}
+
+		public static bool IsFirstLaunch { get; set; }
 
 		internal static void SetAppSetting(string key, object value) {
 			try {
