@@ -31,7 +31,9 @@ namespace FreeCars {
 			username = null;
 			password = null;
 			Item = item;
-
+			okButton.IsEnabled = true;
+			cancelButton.IsEnabled = true;
+			bookingProgressBar.Visibility = Visibility.Collapsed;
 			try {
 				VisualStateManager.GoToState(this, "ActiveState", true);
 				IsActive = true;
@@ -56,6 +58,9 @@ namespace FreeCars {
 		private void OnOKButtonClicked(object sender, RoutedEventArgs e) {
 			if (null == Item) return;
 			if (typeof(Car2GoMarker) == Item.GetType()) {
+				okButton.IsEnabled = false;
+				cancelButton.IsEnabled = false;
+				bookingProgressBar.Visibility = Visibility.Visible;
 				if ((Item as Car2GoMarker).isBooked) {
 					CancelCar2GoBooking();
 				} else {

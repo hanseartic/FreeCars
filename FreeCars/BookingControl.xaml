@@ -212,16 +212,18 @@
 			</Grid>
 			<StackPanel x:Name="multicityPanel" Orientation="Vertical" Visibility="{Binding MulticityVisibility}"/>
 		</Grid>
-		<StackPanel Orientation="Vertical" Margin="12"/>
-		<Grid x:Name="ButtonsRow" Grid.Row="1" VerticalAlignment="Center">
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="*" />
-				<ColumnDefinition Width="Auto" />
-				<ColumnDefinition Width="Auto" />
-				<ColumnDefinition Width="*" />
-			</Grid.ColumnDefinitions>
-			<Button Grid.Column="1" x:Name="okButton" Content="{Binding LocalizedStrings.ButtonOK, Source={StaticResource ResourceAccess}}" Click="OnOKButtonClicked" />
-			<Button Grid.Column="2" x:Name="cancelButton" Content="{Binding LocalizedStrings.ButtonCancel, Source={StaticResource ResourceAccess}}" Click="OnCancelButtonClicked" />
-		</Grid>
+		<StackPanel Grid.Row="1" Orientation="Vertical" Margin="12">
+			<ProgressBar x:Name="bookingProgressBar" IsIndeterminate="True" Background="{StaticResource PhoneAccentBrush}" Foreground="{StaticResource PhoneAccentBrush}" Visibility="Collapsed" />
+			<Grid x:Name="ButtonsRow" Grid.Row="1" VerticalAlignment="Center">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*" />
+					<ColumnDefinition Width="Auto" />
+					<ColumnDefinition Width="Auto" />
+					<ColumnDefinition Width="*" />
+				</Grid.ColumnDefinitions>
+				<Button Grid.Column="1" x:Name="okButton" Content="{Binding LocalizedStrings.ButtonOK, Source={StaticResource ResourceAccess}}" Click="OnOKButtonClicked" />
+				<Button Grid.Column="2" x:Name="cancelButton" Content="{Binding LocalizedStrings.ButtonCancel, Source={StaticResource ResourceAccess}}" Click="OnCancelButtonClicked" />
+			</Grid>
+		</StackPanel>
 	</Grid>
 </UserControl>
