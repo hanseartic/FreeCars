@@ -91,6 +91,9 @@ namespace FreeCars {
 			car2Go.LoadPOIs();
 			this.Resources.Add("car2go", car2Go);
 			StartFlurry();
+	        UpdateFlipTile("FreeCars", "", "FreeCars", "Find free rides around you - car2go, DriveNow, multicity", 0,
+	                       new Uri("/", UriKind.Relative), 
+						   new Uri("/ApplicationIcon.png", UriKind.Relative), null, null, new Uri("/Resources/wide_back_tile.png", UriKind.Relative), null);
 
 			var currentVersion = GetAppAttribute("Version");
 			var lastAppVersion = (string)GetAppSetting("last_version");
@@ -160,7 +163,56 @@ namespace FreeCars {
 				tile => tile.NavigationUri.ToString().Contains(tileUri));
 			return shellTile;
 		}
-        // Code to execute when the application is deactivated (sent to background)
+		private static readonly Version targetedVersion = new Version(7, 10, 8858);
+		public static bool LeastVersionIs78 { get { return Environment.OSVersion.Version >= targetedVersion; } }
+		public static void UpdateFlipTile(
+			string title,
+			string backTitle,
+			string backContent,
+			string wideBackContent,
+			int count,
+			Uri tileId,
+			Uri smallBackgroundImage,
+			Uri backgroundImage,
+			Uri backBackgroundImage,
+			Uri wideBackgroundImage,
+			Uri wideBackBackgroundImage) {
+				if (LeastVersionIs78) {
+				// Get the new FlipTileData type.
+				Type flipTileDataType = Type.GetType("Microsoft.Phone.Shell.FlipTileData, Microsoft.Phone");
+
+				// Get the ShellTile type so we can call the new version of "Update" that takes the new Tile templates.
+				Type shellTileType = Type.GetType("Microsoft.Phone.Shell.ShellTile, Microsoft.Phone");
+
+				// Loop through any existing Tiles that are pinned to Start.
+				foreach (var tileToUpdate in ShellTile.ActiveTiles) {
+					// Look for a match based on the Tile's NavigationUri (tileId).
+					if (tileToUpdate.NavigationUri.ToString() == tileId.ToString()) {
+						// Get the constructor for the new FlipTileData class and assign it to our variable to hold the Tile properties.
+						var UpdateTileData = flipTileDataType.GetConstructor(new Type[] { }).Invoke(null);
+
+						// Set the properties. 
+						SetProperty(UpdateTileData, "Title", title);
+						SetProperty(UpdateTileData, "Count", count);
+						SetProperty(UpdateTileData, "BackTitle", backTitle);
+						SetProperty(UpdateTileData, "BackContent", backContent);
+						SetProperty(UpdateTileData, "SmallBackgroundImage", smallBackgroundImage);
+						SetProperty(UpdateTileData, "BackgroundImage", backgroundImage);
+						SetProperty(UpdateTileData, "BackBackgroundImage", backBackgroundImage);
+						SetProperty(UpdateTileData, "WideBackgroundImage", wideBackgroundImage);
+						SetProperty(UpdateTileData, "WideBackBackgroundImage", wideBackBackgroundImage);
+						SetProperty(UpdateTileData, "WideBackContent", wideBackContent);
+
+						// Invoke the new version of ShellTile.Update.
+						shellTileType.GetMethod("Update").Invoke(tileToUpdate, new[] { UpdateTileData });
+						break;
+					}
+				}
+			}
+
+		}
+		
+		// Code to execute when the application is deactivated (sent to background)
         // This code will not execute when the application is closing
         private void Application_Deactivated(object sender, DeactivatedEventArgs e) {
         }
@@ -187,7 +239,10 @@ namespace FreeCars {
 			FlurryWP7SDK.Api.LogError("Uncaught Exception occured", e.ExceptionObject);
 	        //e.Handled = true;
         }
-
+		private static void SetProperty(object instance, string name, object value) {
+			var setMethod = instance.GetType().GetProperty(name).GetSetMethod();
+			setMethod.Invoke(instance, new object[] { value });
+		}
 		public static bool IsCertified { get; set; }
 
 		private static bool? isLowMemoryDevice = null;
