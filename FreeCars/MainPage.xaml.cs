@@ -39,7 +39,7 @@ namespace FreeCars {
 			Loaded += OnMainPageLoaded;
 			//map.Children.Add(me);
 			SetAppBar();
-			CheckCertificationState();
+			CheckApplicationState();
 		}
 
 		[DataContract]
@@ -50,18 +50,23 @@ namespace FreeCars {
 			public string Version { get; set; }
 		}
 
-		private void CheckCertificationState() {
+		private void CheckApplicationState() {
 			var webClient = new WebClient();
 			webClient.OpenReadCompleted += (client, arguments) => {
 				if (null == arguments.Error) {
 					try {
 						var serializer = new DataContractJsonSerializer(typeof (CertStatus));
 						var results = (CertStatus)(serializer.ReadObject(arguments.Result));
-						if (App.GetAppAttribute("Version") == results.Version)
+						var currentVersion = App.GetAppAttribute("Version");
+						if (currentVersion == results.Version) {
 							App.IsCertified = results.IsCertified;
+						}
 					} catch {}
+				} else {
+					
 				}
 			};
+			
 			App.IsCertified = true;
 			webClient.OpenReadAsync(new Uri("http://freecars.hanseartic.de/cert_status.php?nocache=" + Environment.TickCount, UriKind.Absolute));
 		}
@@ -89,7 +94,14 @@ namespace FreeCars {
 			bookingControlGrid.Visibility = Visibility.Visible;
 			loaded = true;
 			CheckTrialAndAds();
+			NotifyOnFirstLaunch();
 		}
+
+		private void NotifyOnFirstLaunch() {
+			if (!App.IsFirstLaunch)
+				return;
+		}
+
 		protected override void OnBackKeyPress(CancelEventArgs e) {
 			if (bookingControl.IsActive) {
 				bookingControl.Deactivate();
@@ -201,6 +213,10 @@ namespace FreeCars {
 			ApplicationBar.MenuItems.Add(mainPageApplicationBarAboutMenuItem);
 
 			bookingControl.Closed += (sender, args) => { ApplicationBar.IsVisible = true; };
+			bookingControl.ActionCompleted += (sender, args) => {
+				DeactivateAllPushpins();
+				((App)Application.Current).ReloadPOIs();
+			};
 		}
 
 		private void OnMainPageApplicationBarBookCarButtonClick(object sender, EventArgs e) {
@@ -448,7 +464,6 @@ namespace FreeCars {
 		void OnPushpinTap(object sender, GestureEventArgs e) {
 			if (null != ((Pushpin)sender).Tag && typeof(MulticityChargerMarker) == ((Pushpin)sender).Tag.GetType()) return;
 			e.Handled = true;
-			mainPageApplicationBarBookCarButton.IconUri = new Uri("Resources/appbar.timer.check.png", UriKind.RelativeOrAbsolute);
 			var pushpinContent = ((Pushpin)sender).Content;
 			var border = pushpinContent as Border;
 			bookingControl.Deactivate();
@@ -486,6 +501,7 @@ namespace FreeCars {
 
 		}
 		void DeactivatePushpin(Pushpin pushpin) {
+			mainPageApplicationBarBookCarButton.IconUri = new Uri("Resources/appbar.timer.check.png", UriKind.RelativeOrAbsolute);
 			if (null != pushpin.Tag) {
 				activeLayer.Children.Remove(pushpin);
 				try {
@@ -586,12 +602,15 @@ namespace FreeCars {
 			});
 		}
 
-		private void OnMapTap(object sender, GestureEventArgs e) {
+		public void DeactivateAllPushpins() {
 			foreach (var pushpin in activeLayer.Children.ToArray()) {
-				if (pushpin.GetType() == typeof(Pushpin)) {
+				if (pushpin is Pushpin) {
 					DeactivatePushpin(pushpin as Pushpin);
 				}
 			}
+		}
+		private void OnMapTap(object sender, GestureEventArgs e) {
+			DeactivateAllPushpins();
 			bookingControl.Deactivate();
 			mainPageApplicationBarBookCarButton.IsEnabled = false;
 			e.Handled = true;
