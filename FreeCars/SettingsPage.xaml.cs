@@ -229,7 +229,6 @@ namespace FreeCars {
 
 		private void connectCar2Go() {
 			var car2GoGetTokenEndpoint = "https://www.car2go.com/api/reqtoken";
-			verifierPanel.Visibility = Visibility.Visible;
 			var oauthRequest = new OAuthRequest {
 				CallbackUrl = "oob",
 				ConsumerKey = FreeCarsCredentials.Car2Go.ConsumerKey,
@@ -260,6 +259,7 @@ namespace FreeCars {
 						c2gAuthBrowser.Navigate(authorizeUrl);
 					});
 				} else {
+					verifierPanel.Visibility = Visibility.Visible;
 					var authBrowserTask = new WebBrowserTask {
 						Uri = authorizeUrl,
 					};
@@ -268,8 +268,6 @@ namespace FreeCars {
 				}
 			};
 			webClient.DownloadStringAsync(requestUrl);
-			return;
-			//c2gAuthBrowser.Navigate();
 		}
 
 		public DependencyProperty ShowConnectCar2GoApiButtonProperty = DependencyProperty.Register(
@@ -390,12 +388,11 @@ namespace FreeCars {
 
 			var webClient = new WebClient();
 			webClient.DownloadStringCompleted += (client, arguments) => {
-				string[] results = { };
 				if (null != arguments.Error) {
 					MessageBox.Show("Could not authorize FreeCars to connect to your car2go account. Please try again.");
 					return;
 				}
-				results = arguments.Result.Split(new char[] { '&' }, StringSplitOptions.None);
+				var results = arguments.Result.Split(new char[] { '&' }, StringSplitOptions.None);
 				App.SetAppSetting("car2go.oauth_token", results[0].Split(new char[] { '=' })[1]);
 				App.SetAppSetting("car2go.oauth_token_secret", results[1].Split(new char[] { '=' })[1]);
 				CheckCar2GoApiAccess();

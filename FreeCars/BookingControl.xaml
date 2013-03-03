@@ -176,13 +176,15 @@
 		</Grid.RowDefinitions>
 		<Grid x:Name="providersPanels">
 			<StackPanel x:Name="car2GoPanel" Orientation="Vertical" Visibility="{Binding Car2GoVisibility}">
-				<TextBlock TextWrapping="Wrap" VerticalAlignment="Top" Text="{Binding LocalizedStrings.BookingPageHeadline, Source={StaticResource ResourceAccess}}" Style="{StaticResource PhoneTextTitle1Style}" />
-				<TextBlock TextWrapping="Wrap" VerticalAlignment="Top" Text="{Binding LocalizedStrings.BookingPageQuestion, Source={StaticResource ResourceAccess}}" Style="{StaticResource PhoneTextTitle2Style}" />
-				<TextBlock x:Name="carDescription" TextWrapping="Wrap" VerticalAlignment="Top"  />
+				<TextBlock TextWrapping="Wrap" VerticalAlignment="Top" Text="{Binding LocalizedStrings.BookingPageHeadline, Source={StaticResource ResourceAccess}}" Style="{StaticResource PhoneTextTitle1Style}" Visibility="{Binding Car2GoBookVisibility}" />
+				<TextBlock TextWrapping="Wrap" VerticalAlignment="Top" Text="{Binding LocalizedStrings.BookingPageQuestion, Source={StaticResource ResourceAccess}}" Style="{StaticResource PhoneTextTitle2Style}" Visibility="{Binding Car2GoBookVisibility}" />
+				<TextBlock TextWrapping="Wrap" VerticalAlignment="Top" Text="{Binding LocalizedStrings.BookingPageCancelHeadline, Source={StaticResource ResourceAccess}}" Style="{StaticResource PhoneTextTitle1Style}" Visibility="{Binding Car2GoCancelVisibility}" />
+				<TextBlock TextWrapping="Wrap" VerticalAlignment="Top" Text="{Binding LocalizedStrings.BookingPageCancelQuestion, Source={StaticResource ResourceAccess}}" Style="{StaticResource PhoneTextTitle2Style}" Visibility="{Binding Car2GoCancelVisibility}" />
 				<StackPanel Orientation="Horizontal" Margin="12,0">
 					<TextBlock Text="{Binding Item.model}" Margin="0,12" Style="{StaticResource PhoneTextTitle2Style}" />
 					<TextBlock Text="{Binding Item.licensePlate}" Margin="6,12" Style="{StaticResource PhoneTextTitle2Style}" />
 				</StackPanel>
+				<TextBlock x:Name="carDescription" TextWrapping="Wrap" VerticalAlignment="Top" Margin="12,0" />
 				<StackPanel x:Name="c2gInterior"  VerticalAlignment="Center" Orientation="Horizontal" Margin="12,0">
 					<TextBlock Text="{Binding LocalizedStrings.BookingPageInterior, Source={StaticResource ResourceAccess}}" />
 					<Image Source="{Binding Car2GoInteriorImagePath}" Height="20" Margin="12,0,0,0" />

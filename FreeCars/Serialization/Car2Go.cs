@@ -6,6 +6,8 @@ namespace FreeCars.Serialization {
 	[DataContract]
 	public class Car2GoMarker : Marker {
 		public bool isBooked;
+		public int BookingId;
+		public string address;
 	}
 
 	[DataContract]
@@ -119,6 +121,35 @@ namespace FreeCars.Serialization {
 		public Car2GoBooking[] Booking;
 		[DataMember(Name = "returnValue")]
 		public APIReturnValue ReturnValue;
+	}
+	/*
+	{"cancelBooking":[{
+		"cancelFee":"4.00",
+		"cancelFeeCurrency":"EUR",
+		"cancelFeeExists":true
+	}],
+	"returnValue":{
+		"code":0,
+		"description":"Operation successful."
+	}}
+	*/
+
+	[DataContract]
+	public class Car2GoCancelBookingResult {
+		[DataMember(Name = "cancelBooking")]
+		public cancelBooking[] CancelBooking { get; set; }
+		[DataMember(Name = "returnValue")]
+		public APIReturnValue ReturnValue;
+
+		[DataContract]
+		public class cancelBooking {
+			[DataMember]
+			public float cancelFee { get; set; }
+			[DataMember]
+			public string cancelFeeCurrency { get; set; }
+			[DataMember]
+			public bool cancelFeeExists { get; set; }
+		}
 	}
 	[DataContract]
 	public class Car2GoBooking {

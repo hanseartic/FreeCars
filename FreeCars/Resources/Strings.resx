@@ -485,4 +485,15 @@ You can allow FreeCars to access your car2go account via oauth. Your car2go cred
   <data name="SettingsPageCar2GoDisconnectButton" xml:space="preserve">
     <value>disconnect FreeCars from car2go</value>
   </data>
+  <data name="BookingPageC2GCancelationSuccessful" xml:space="preserve">
+    <value>The booking was canceled.
+
+You will be charged {1} {0}.</value>
+  </data>
+  <data name="BookingPageCancelHeadline" xml:space="preserve">
+    <value>Cancel reservation?</value>
+  </data>
+  <data name="BookingPageCancelQuestion" xml:space="preserve">
+    <value>Do you want to  cancel the reservation for this car?</value>
+  </data>
 </root>

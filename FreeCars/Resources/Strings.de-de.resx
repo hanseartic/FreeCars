@@ -491,4 +491,15 @@ Du kannst FreeCars den Zugriff auf Deinen car2go-Account über das sichere OAuth
   <data name="SettingsPageCar2GoDisconnectButton" xml:space="preserve">
     <value>von car2go-Account trennen</value>
   </data>
+  <data name="BookingPageC2GCancelationSuccessful" xml:space="preserve">
+    <value>Die Reservierung wurde storniert.
+
+Die Kosten hierfür betragen {0} {1}.</value>
+  </data>
+  <data name="BookingPageCancelHeadline" xml:space="preserve">
+    <value>Buchung stornieren?</value>
+  </data>
+  <data name="BookingPageCancelQuestion" xml:space="preserve">
+    <value>Möchtest Du die Buchung stornieren?</value>
+  </data>
 </root>

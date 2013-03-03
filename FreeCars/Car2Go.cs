@@ -105,6 +105,7 @@ namespace FreeCars {
 										exterior = car.Exterior,
 										interior = car.Interior,
 										isBooked = true,
+										BookingId = bookingResult.Booking[0].BookingId,
 									};
 									HasBooking = true;
 									car2GoCars.Add(carInfo);
@@ -163,6 +164,7 @@ namespace FreeCars {
 							ID = car.vin,
 							exterior = car.exterior,
 							interior = car.interior,
+							address = car.address,
 						};
 						car2GoCars.Add(carInfo);
 					}
