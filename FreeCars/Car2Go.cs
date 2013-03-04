@@ -8,13 +8,14 @@ using System.IO.IsolatedStorage;
 using System.Net;
 using System.Runtime.Serialization.Json;
 using System.Windows;
+using FreeCars.Serialization;
 using OAuth;
 
 namespace FreeCars {
 	public class Car2Go : DependencyObject {
-		public List<Car2GoInformation> Car2GoCars { get; private set; }
+		public List<Car2GoMarker> Car2GoCars { get; private set; }
 		public Car2Go() {
-			Car2GoCars = new List<Car2GoInformation>();
+			Car2GoCars = new List<Car2GoMarker>();
 			LoadCities();
 		}
 
@@ -34,7 +35,7 @@ namespace FreeCars {
 			if (null == position) return;
 			try {
 				if (false == (bool)IsolatedStorageSettings.ApplicationSettings["settings_show_car2go_cars"]) {
-					Car2GoCars = new List<Car2GoInformation>();
+					Car2GoCars = new List<Car2GoMarker>();
 					if (null != Updated) {
 						Updated(this, null);
 					}
@@ -43,13 +44,14 @@ namespace FreeCars {
 			} catch (KeyNotFoundException) { }
 			
 			var wc = new WebClient();
-			var callUri = "https://www.car2go.com/api/v2.1/vehicles?loc="+City+"&format=json&oauth_consumer_key=" + consumerkey;
+			var callUri = "https://www.car2go.com/api/v2.1/vehicles?loc=" + City + "&format=json&oauth_consumer_key=" + consumerkey + "&timestamp=" + OAuthTools.GetTimestamp();
 
 			wc.OpenReadCompleted += OnCar2GoCarsOpenReadCompleted;
 			wc.OpenReadAsync(new Uri(callUri));
 		}
 		public bool HasBooking { get; private set; }
 
+		private DateTime lastBookedCarsUpdate = DateTime.MinValue;
 		private void LoadBookedCars() {
 			HasBooking = false;
 			try {
@@ -83,15 +85,18 @@ namespace FreeCars {
 						try {
 							var serializer = new DataContractJsonSerializer(typeof(Car2GoBookingResult));
 							var bookingResult = (Car2GoBookingResult)serializer.ReadObject(args.Result);
-							var car2GoCars = new List<Car2GoInformation>();
+							var car2GoCars = new List<Car2GoMarker>();
 							if (0 == bookingResult.ReturnValue.Code) {
+								if (bookingResult.Booking.Length > 0) {
+									lastBookedCarsUpdate = DateTime.Now;
+								}
 								foreach (var booking in bookingResult.Booking) {
 									var car = booking.Vehicle;
 									GeoCoordinate carPosition = null;
 									try {
 										carPosition = new GeoCoordinate(car.Position.Latitude, car.Position.Longitude);
 									} catch {}
-									var carInfo = new Car2GoInformation {
+									var carInfo = new Car2GoMarker {
 										model = ("CE" == car.EngineType) ? "C-Smart" : "Smart ElectricDrive",
 										fuelState = car.Fuel,
 										position = carPosition,
@@ -100,6 +105,7 @@ namespace FreeCars {
 										exterior = car.Exterior,
 										interior = car.Interior,
 										isBooked = true,
+										BookingId = bookingResult.Booking[0].BookingId,
 									};
 									HasBooking = true;
 									car2GoCars.Add(carInfo);
@@ -133,12 +139,15 @@ namespace FreeCars {
 			}
 		}
 		private void OnCar2GoCarsOpenReadCompleted(object sender, OpenReadCompletedEventArgs e) {
+			if (lastBookedCarsUpdate > DateTime.Now - TimeSpan.FromSeconds(20)) {
+				return;
+			}
 			try {
 				if (0 == e.Result.Length) return;
 				try {
 					var serializer = new DataContractJsonSerializer(typeof(Car2GoVehicleData));
 					var car2GoData = (Car2GoVehicleData)serializer.ReadObject(e.Result);
-					var car2GoCars = new List<Car2GoInformation>();
+					var car2GoCars = new List<Car2GoMarker>();
 					var usCultureInfo = new CultureInfo("en-US");
 					foreach (var car in car2GoData.placemarks) {
 						GeoCoordinate carPosition = null;
@@ -147,7 +156,7 @@ namespace FreeCars {
 								double.Parse(car.coordinates[1], usCultureInfo.NumberFormat),
 								double.Parse(car.coordinates[0], usCultureInfo.NumberFormat));
 						} catch {}
-						var carInfo = new Car2GoInformation {
+						var carInfo = new Car2GoMarker {
 							model = ("CE" == car.engineType) ? "C-Smart" : "Smart ElectricDrive",
 							fuelState = car.fuel,
 							position = carPosition,
@@ -155,6 +164,7 @@ namespace FreeCars {
 							ID = car.vin,
 							exterior = car.exterior,
 							interior = car.interior,
+							address = car.address,
 						};
 						car2GoCars.Add(carInfo);
 					}
@@ -168,7 +178,7 @@ namespace FreeCars {
 		}
 		private void LoadCities() {
 			var wc = new WebClient();
-			var callUri = "https://www.car2go.com/api/v2.1/locations?&format=json&oauth_consumer_key=" + consumerkey;
+			var callUri = "https://www.car2go.com/api/v2.1/locations?&format=json&oauth_consumer_key=" + consumerkey + "&timestamp=" + OAuthTools.GetTimestamp();
 
 			wc.OpenReadCompleted +=
 				delegate(object o, OpenReadCompletedEventArgs e) {

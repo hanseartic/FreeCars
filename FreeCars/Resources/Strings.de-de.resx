@@ -206,7 +206,7 @@
 
 Über secondary-Tiles können beliebige Suchorte auf den Startbildschirm gepinnt werden.
 	
-Derzeit ist nur die Vorreservierung der Fahrzeuge von car2go über die App möglich.</value>
+Bisher ist nur die Vorreservierung der Fahrzeuge von car2go und DriveNow über die App möglich.</value>
   </data>
   <data name="AboutPageVersionInfo" xml:space="preserve">
     <value>Version</value>
@@ -293,7 +293,15 @@ Bitte nutze eine der folgenden Kontaktmöglichkeiten bei Kritik, Verbesserungsvo
 Jede Anfrage wird beantwortet!</value>
   </data>
   <data name="ChangelogPageBody" xml:space="preserve">
-    <value>1.5.0.1:
+    <value>1.6.0.0:
+* Stornierungen für car2go
+* Buchungen für DriveNow
+* WideTiles (ab WP 7.8)
+* Performance-Verbesserungen
+* Caching bei Aktualisierung von Fahrzeugen verhindern
+* Einige Abstürze durch Fehler bei'm Nachladen behoben
+
+1.5.0.1:
 * Crash bei Anwendungsstart in trial mode behoben
 * option 'mit car2go verbindun' bei buchung anzeigen
 * multicity html korrekt interpetieren
@@ -448,5 +456,58 @@ Möchtest Du FreeCars jetzt mit Deinem car2go-Account verbinden? Das dauert nur 
   </data>
   <data name="NotConnected" xml:space="preserve">
     <value>Nicht verbunden</value>
+  </data>
+  <data name="BookingDriveNowUsernamePasswordWrongDialog" xml:space="preserve">
+    <value>Der Login bei DriveNow war mit den von Dir angegebenen Zugangsdaten nicht erfolgreich.
+
+Möchtest Du die Daten jetzt auf der Einstellungsseite ändern?</value>
+  </data>
+  <data name="BookingPageConnectingToDriveNow" xml:space="preserve">
+    <value>Einloggen bei DriveNow
+Buchung vorbereiten</value>
+  </data>
+  <data name="ButtonClear" xml:space="preserve">
+    <value>löschen</value>
+  </data>
+  <data name="ButtonSave" xml:space="preserve">
+    <value>speichern</value>
+  </data>
+  <data name="DriveNowCredentialsMissingDialogHeader" xml:space="preserve">
+    <value>Keine Zugangsdaten für DriveNow</value>
+  </data>
+  <data name="DriveNowCredentialsMissingDialogMessage" xml:space="preserve">
+    <value>Du hast noch keine Zugangsaten für DriveNow eingegeben.
+Möchtest Du jetzt Deine Zugangsdaten speichern?</value>
+  </data>
+  <data name="SettingsPageDriveNowPasswordHeader" xml:space="preserve">
+    <value>Passwort</value>
+  </data>
+  <data name="SettingsPageDriveNowUsernameHeader" xml:space="preserve">
+    <value>Benutzername</value>
+  </data>
+  <data name="UsernameOrPasswordWrong" xml:space="preserve">
+    <value>Username oder Passwort falsch</value>
+  </data>
+  <data name="DriveNowBookingSucessfull" xml:space="preserve">
+    <value>Das Fahrzeug wurde erfolgreich reserviert. Du erhälst gleich eine Bestätigungs-SMS.</value>
+  </data>
+  <data name="SettingsPageCar2GoAuthStatusNotConnected" xml:space="preserve">
+    <value>FreeCars ist mit keinem car2go-Account verbunden.
+
+Du kannst FreeCars den Zugriff auf Deinen car2go-Account über das sichere OAuth-Verfahren erlauben. FreeCars erhält dabei keinen Zugriff auf Deine Zugangsdaten. Du kannst den Zugriff jederzeit entweder auf dieser Seite oder online in Deinem car2go-Account widerrufen.</value>
+  </data>
+  <data name="SettingsPageCar2GoDisconnectButton" xml:space="preserve">
+    <value>von car2go-Account trennen</value>
+  </data>
+  <data name="BookingPageC2GCancelationSuccessful" xml:space="preserve">
+    <value>Die Reservierung wurde storniert.
+
+Die Kosten hierfür betragen {0} {1}.</value>
+  </data>
+  <data name="BookingPageCancelHeadline" xml:space="preserve">
+    <value>Buchung stornieren?</value>
+  </data>
+  <data name="BookingPageCancelQuestion" xml:space="preserve">
+    <value>Möchtest Du die Buchung stornieren?</value>
   </data>
 </root>

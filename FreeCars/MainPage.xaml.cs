@@ -2,12 +2,17 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Reflection;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Json;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Navigation;
 using AdDuplex;
+using FreeCars.Serialization;
 using GoogleMaps.Geocode;
 using Microsoft.Advertising;
 using Microsoft.Phone.Controls;
@@ -22,19 +27,49 @@ using GestureEventArgs = System.Windows.Input.GestureEventArgs;
 using System.ComponentModel;
 
 namespace FreeCars {
-	public partial class MainPage : PhoneApplicationPage {
+	public partial class MainPage {
 		private GeoCoordinateWatcher cw;
 		private const int markersMaxDistance = 1500 ;
 		private bool gpsAllowed = false;
 		public MainPage() {
 			InitializeComponent();
-			((App)App.Current).CarsUpdated += OnCarsUpdated;
+			((App)Application.Current).CarsUpdated += OnCarsUpdated;
 			cw = new GeoCoordinateWatcher(GeoPositionAccuracy.High);
 			cw.MovementThreshold = 10;
 			cw.PositionChanged += OnMyPositionChanged;
 			Loaded += OnMainPageLoaded;
 			//map.Children.Add(me);
 			SetAppBar();
+			CheckApplicationState();
+		}
+
+		[DataContract]
+		public class CertStatus {
+			[DataMember(Name = "is_certified")]
+			public bool IsCertified { get; set; }
+			[DataMember(Name = "version")]
+			public string Version { get; set; }
+		}
+
+		private void CheckApplicationState() {
+			var webClient = new WebClient();
+			webClient.OpenReadCompleted += (client, arguments) => {
+				if (null == arguments.Error) {
+					try {
+						var serializer = new DataContractJsonSerializer(typeof (CertStatus));
+						var results = (CertStatus)(serializer.ReadObject(arguments.Result));
+						var currentVersion = App.GetAppAttribute("Version");
+						if (currentVersion == results.Version) {
+							App.IsCertified = results.IsCertified;
+						}
+					} catch {}
+				} else {
+					
+				}
+			};
+			
+			App.IsCertified = true;
+			webClient.OpenReadAsync(new Uri("http://freecars.hanseartic.de/cert_status.php?nocache=" + Environment.TickCount, UriKind.Absolute));
 		}
 
 		private void CheckTrialAndAds() {
@@ -60,7 +95,14 @@ namespace FreeCars {
 			bookingControlGrid.Visibility = Visibility.Visible;
 			loaded = true;
 			CheckTrialAndAds();
+			NotifyOnFirstLaunch();
 		}
+
+		private void NotifyOnFirstLaunch() {
+			if (!App.IsFirstLaunch)
+				return;
+		}
+
 		protected override void OnBackKeyPress(CancelEventArgs e) {
 			if (bookingControl.IsActive) {
 				bookingControl.Deactivate();
@@ -172,12 +214,16 @@ namespace FreeCars {
 			ApplicationBar.MenuItems.Add(mainPageApplicationBarAboutMenuItem);
 
 			bookingControl.Closed += (sender, args) => { ApplicationBar.IsVisible = true; };
+			bookingControl.ActionCompleted += (sender, args) => {
+				DeactivateAllPushpins();
+				((App)Application.Current).ReloadPOIs();
+			};
 		}
 
 		private void OnMainPageApplicationBarBookCarButtonClick(object sender, EventArgs e) {
 			Pushpin activePushpin = (Pushpin)(activeLayer.Children.First());
-			if (activePushpin.Tag is Car2GoInformation) {
-				bookingControl.Activate((Car2GoInformation)activePushpin.Tag);
+			if (activePushpin.Tag is Car2GoMarker || activePushpin.Tag is DriveNowMarker) {
+				bookingControl.Activate((Marker)activePushpin.Tag);
 				ApplicationBar.IsVisible = false;
 			}
 		}
@@ -416,28 +462,34 @@ namespace FreeCars {
 				} catch { }
 			}
 		}
-		void OnPushpinTap(object sender, System.Windows.Input.GestureEventArgs e) {
+		void OnPushpinTap(object sender, GestureEventArgs e) {
 			if (null != ((Pushpin)sender).Tag && typeof(MulticityChargerMarker) == ((Pushpin)sender).Tag.GetType()) return;
 			e.Handled = true;
 			var pushpinContent = ((Pushpin)sender).Content;
-			if (pushpinContent is Border) {
-				if (Visibility.Collapsed == ((Border)pushpinContent).Visibility) {
+			var border = pushpinContent as Border;
+			bookingControl.Deactivate();
+			if (border != null) {
+				if (Visibility.Collapsed == border.Visibility) {
 					foreach (var pushpin in activeLayer.Children.ToArray()) {
 						if (pushpin is Pushpin) {
 							DeactivatePushpin(pushpin as Pushpin);
 						}
 					}
 
-					if (((Pushpin)sender).Tag is Car2GoInformation) {
+					if (((Pushpin)sender).Tag is Car2GoMarker) {
 						mainPageApplicationBarBookCarButton.IsEnabled = true;
-						bookingControl.Deactivate();
+						if (((Car2GoMarker)((Pushpin)sender).Tag).isBooked) {
+							mainPageApplicationBarBookCarButton.IconUri = new Uri("Resources/appbar.timer.cancel.png", UriKind.RelativeOrAbsolute);
+						}
+					} else if (((Pushpin)sender).Tag is DriveNowMarker) {
+						mainPageApplicationBarBookCarButton.IsEnabled = true;
 					}
 					var parentLayer = VisualTreeHelper.GetParent((Pushpin)sender) as MapLayer;
 					parentLayer.Children.Remove((Pushpin)sender);
 					activeLayer.Children.Add((Pushpin)sender);
 					//((Pushpin)sender).Tag = parentLayer;
 					((Pushpin)sender).Opacity = 1;
-					((Border)pushpinContent).Visibility = Visibility.Visible;
+					border.Visibility = Visibility.Visible;
 					if (null != ((Pushpin)sender).Tag && typeof(MulticityMarker) == ((Pushpin)sender).Tag.GetType()) {
 						Multicity.LoadChargeState(sender as Pushpin);
 					}
@@ -450,17 +502,20 @@ namespace FreeCars {
 
 		}
 		void DeactivatePushpin(Pushpin pushpin) {
+			mainPageApplicationBarBookCarButton.IconUri = new Uri("Resources/appbar.timer.check.png", UriKind.RelativeOrAbsolute);
 			if (null != pushpin.Tag) {
 				activeLayer.Children.Remove(pushpin);
-				if (typeof(MulticityMarker) == pushpin.Tag.GetType()) {
-					multicityCarsLayer.Children.Add(pushpin);
-				} else if (typeof(MulticityChargerMarker) == pushpin.Tag.GetType()) {
-					multicityChargingLayer.Children.Add(pushpin);
-				} else if (typeof(DriveNowCarInformation) == pushpin.Tag.GetType()) {
-					driveNowCarsLayer.Children.Add(pushpin);
-				} else if (typeof(Car2GoInformation) == pushpin.Tag.GetType()) {
-					car2goCarsLayer.Children.Add(pushpin);
-				}
+				try {
+					if (typeof (MulticityMarker) == pushpin.Tag.GetType()) {
+						multicityCarsLayer.Children.Add(pushpin);
+					} else if (typeof (MulticityChargerMarker) == pushpin.Tag.GetType()) {
+						multicityChargingLayer.Children.Add(pushpin);
+					} else if (typeof (DriveNowMarker) == pushpin.Tag.GetType()) {
+						driveNowCarsLayer.Children.Add(pushpin);
+					} else if (typeof (Car2GoMarker) == pushpin.Tag.GetType()) {
+						car2goCarsLayer.Children.Add(pushpin);
+					}
+				} catch (ArgumentException) {}
 			}
 			mainPageApplicationBarBookCarButton.IsEnabled = false;
 			((Border)pushpin.Content).Visibility = Visibility.Collapsed;
@@ -484,6 +539,26 @@ namespace FreeCars {
 		}
 
 		private void OnReverseGeocodeUpdated(object sender, EventArgs e) {
+
+			var response = (sender as ReverseGeocode).Results;
+			var localityName = "";
+			if (null != response) {
+				foreach (
+					var result in
+						response.Where(result => result.types.Contains("sublocality") && result.types.Contains("political"))) {
+					localityName = result.formatted_address;
+					break;
+				}
+				if ("" == localityName) {
+					foreach (var address_component in response.SelectMany(result => result.address_components.Where(
+						address_component =>
+						address_component.types.Contains("locality") && address_component.types.Contains("political")))) {
+						localityName = address_component.long_name;
+						break;
+					}
+				}
+			}
+
 			map.Dispatcher.BeginInvoke(() => {
 				var usCultureInfo = new CultureInfo("en-US");
 				var latitude = map.Center.Latitude.ToString(usCultureInfo.NumberFormat);
@@ -493,12 +568,12 @@ namespace FreeCars {
 				if (null != App.CheckIfTileExist(tileParam)) return;
 
 				using (var store = IsolatedStorageFile.GetUserStoreForApplication()) {
+					foreach (var layer in map.Children.OfType<MapLayer>()) {
+						layer.Visibility = Visibility.Collapsed;
+					}
 					var fileName = "/Shared/ShellContent/" + tileParam + ".jpg";
 					if (store.FileExists(fileName)) {
 						store.DeleteFile(fileName);
-					}
-					foreach (var layer in map.Children.OfType<MapLayer>()) {
-						layer.Visibility = Visibility.Collapsed;
 					}
 					using (var saveFileStream = new IsolatedStorageFileStream(fileName, FileMode.Create, store)) {
 						var b = new WriteableBitmap(173, 173);
@@ -511,49 +586,72 @@ namespace FreeCars {
 						b.Invalidate();
 						b.SaveJpeg(saveFileStream, b.PixelWidth, b.PixelHeight, 0, 100);
 					}
+					var widefileName = "/Shared/ShellContent/" + tileParam + "_wide.jpg";
+					if (store.FileExists(widefileName)) {
+						store.DeleteFile(widefileName);
+					}
+					using (var saveFileStream = new IsolatedStorageFileStream(widefileName, FileMode.Create, store)) {
+						var b = new WriteableBitmap(691, 336);
+						var scale = 691 / map.ActualWidth;
+						var offsetX = ((map.ActualWidth) / 2) * scale;
+						var offsetY = ((map.ActualHeight * scale - 336) / 2);
+						//map.Width = 691;
+						b.Render(map, new CompositeTransform {
+							CenterX = .5, CenterY = .5,
+							ScaleX = scale,
+							ScaleY = scale,
+							TranslateX = 0,
+							TranslateY = -offsetY,
+						});
+						b.Invalidate();
+						b.SaveJpeg(saveFileStream, b.PixelWidth, b.PixelHeight, 0, 100);
+					}
+					// 691 x 336
 					foreach (var layer in map.Children.OfType<MapLayer>()) {
 						layer.Visibility = Visibility.Visible;
 					}
 				}
 
-				var response = (sender as ReverseGeocode).Results;
+				ShellTileData shellTileData = null;
+				var shellTileUri = new Uri("/MainPage.xaml?" + tileParam, UriKind.Relative);
 
-				var localityName = "";
-				if (null != response) {
-
-					foreach (
-						var result in
-							response.Where(result => result.types.Contains("sublocality") && result.types.Contains("political"))) {
-						localityName = result.formatted_address;
-						break;
-					}
-					if ("" == localityName) {
-						foreach (var address_component in response.SelectMany(result => result.address_components.Where(
-							address_component =>
-							address_component.types.Contains("locality") && address_component.types.Contains("political")))) {
-							localityName = address_component.long_name;
-							break;
-						}
-					}
-				}
-
-				ShellTile.Create(
-					new Uri("/MainPage.xaml?" + tileParam, UriKind.Relative),
-					new StandardTileData {
+				if (App.LeastVersionIs78) {
+					var shellTileType = Type.GetType("Microsoft.Phone.Shell.ShellTile, Microsoft.Phone");
+					var appTileData = App.CreateFlipTileData();
+					// Set the properties.
+					App.SetProperty(appTileData, "Title", null);
+					App.SetProperty(appTileData, "Count", 0);
+					App.SetProperty(appTileData, "SmallBackgroundImage", null);
+					App.SetProperty(appTileData, "BackgroundImage", new Uri("isostore:/Shared/ShellContent/" + tileParam + ".jpg", UriKind.Absolute));
+					App.SetProperty(appTileData, "BackContent", localityName);
+					App.SetProperty(appTileData, "BackTitle", "FreeCars");
+					App.SetProperty(appTileData, "BackBackgroundImage", null);
+					App.SetProperty(appTileData, "WideBackContent", localityName);
+					App.SetProperty(appTileData, "WideBackgroundImage", new Uri("isostore:/Shared/ShellContent/" + tileParam + "_wide.jpg", UriKind.Absolute));
+					App.SetProperty(appTileData, "WideBackBackgroundImage", null);
+					var m = shellTileType.GetMethod("Create", new[] { typeof(Uri), typeof(ShellTileData), typeof(bool) });
+					var r = m.Invoke(null, new[] { shellTileUri, appTileData, true });
+				} else {
+					shellTileData = new StandardTileData {
 						BackTitle = "FreeCars",
 						BackContent = localityName,
 						Count = 0,
 						BackgroundImage = new Uri("isostore:/Shared/ShellContent/" + tileParam + ".jpg", UriKind.Absolute),
-					});
+					};
+					ShellTile.Create(shellTileUri, shellTileData);
+				}
 			});
 		}
 
-		private void OnMapTap(object sender, GestureEventArgs e) {
+		public void DeactivateAllPushpins() {
 			foreach (var pushpin in activeLayer.Children.ToArray()) {
-				if (pushpin.GetType() == typeof(Pushpin)) {
+				if (pushpin is Pushpin) {
 					DeactivatePushpin(pushpin as Pushpin);
 				}
 			}
+		}
+		private void OnMapTap(object sender, GestureEventArgs e) {
+			DeactivateAllPushpins();
 			bookingControl.Deactivate();
 			mainPageApplicationBarBookCarButton.IsEnabled = false;
 			e.Handled = true;

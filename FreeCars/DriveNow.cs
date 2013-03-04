@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using System.Runtime.Serialization;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -15,14 +16,16 @@ using System.Globalization;
 using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Text.RegularExpressions;
+using FreeCars.Serialization;
+using OAuth;
 
 namespace FreeCars {
     public class DriveNow {
 				public DriveNow() {
-						DriveNowCars = new List<DriveNowCarInformation>();
+						DriveNowCars = new List<DriveNowMarker>();
         }
 
-				public List<DriveNowCarInformation> DriveNowCars { get; private set; }
+				public List<DriveNowMarker> DriveNowCars { get; private set; }
 
         private GeoPosition<GeoCoordinate> position;
         public void LoadPOIs() {
@@ -38,7 +41,7 @@ namespace FreeCars {
             if (null == position) return;
             try {
 								if (false == (bool)IsolatedStorageSettings.ApplicationSettings["settings_show_drivenow_cars"]) {
-										DriveNowCars = new List<DriveNowCarInformation>();
+										DriveNowCars = new List<DriveNowMarker>();
 										if (null != Updated) {
 												Updated(this, null);
 										}
@@ -47,7 +50,7 @@ namespace FreeCars {
             } catch (KeyNotFoundException) { }
             var wc = new WebClient();
 			//var callUri = "https://www.drive-now.com/php/metropolis/json.vehicle_filter?tenant=germany&language=de_DE&L=0&url=%2Fphp%2Fmetropolis%2Fcity_berlin&redirect_flag=1";
-            var callUri = "https://de.drive-now.com/php/metropolis/json.vehicle_filter";
+            var callUri = "https://de.drive-now.com/php/metropolis/json.vehicle_filter?timestamp=" + OAuthTools.GetTimestamp();
 			
             wc.OpenReadCompleted += OnDriveNowCarsOpenReadCompleted;
             wc.OpenReadAsync(new Uri(callUri));
@@ -59,7 +62,7 @@ namespace FreeCars {
 				try {
 					var serializer = new DataContractJsonSerializer(typeof(DriveNowData));
 					var driveNowData = (DriveNowData)serializer.ReadObject(e.Result);
-					var drivenow_cars = new List<DriveNowCarInformation>();
+					var drivenow_cars = new List<DriveNowMarker>();
 					Regex replaceMultipleSpaceWithOnlyOneSpaceRegex = new Regex(@"[ ]{2,}", RegexOptions.None);
 					var usCultureInfo = new CultureInfo("en-US");
 					foreach (var car in driveNowData.rec.vehicles.vehicles) {
@@ -75,7 +78,9 @@ namespace FreeCars {
 					if (null != Updated) {
 						Updated(this, null);
 					}
-				} catch (NullReferenceException) { }
+				} catch (NullReferenceException) { } catch (ArgumentNullException) {
+					LoadDriveNowCars();
+				} catch (SerializationException) {}
 			} catch (WebException) { }
         }
         public event EventHandler Updated;

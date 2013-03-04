@@ -2,28 +2,17 @@
 using System.Collections.Generic;
 using System.IO.IsolatedStorage;
 using System.Linq;
-using System.Net;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Xml;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Info;
 using Microsoft.Phone.Shell;
-using System.IO;
-using System.Text;
-using System.Runtime.Serialization.Json;
-using System.Runtime.Serialization;
 using Microsoft.Phone.Controls.Maps;
 using Microsoft.Phone.Marketplace;
 
 namespace FreeCars {
-    public partial class App : Application {
+    public partial class App {
         /// <summary>
         /// Provides easy access to the root frame of the Phone Application.
         /// </summary>
@@ -86,12 +75,29 @@ namespace FreeCars {
 			driveNow.LoadPOIs();
 			this.Resources.Add("driveNow", driveNow);
 
-	        var car2Go = new Car2Go();
-	        car2Go.Updated += OnLayerUpdated;
+			var car2Go = new Car2Go();
+			car2Go.Updated += OnLayerUpdated;
 			car2Go.LoadPOIs();
 			this.Resources.Add("car2go", car2Go);
 			StartFlurry();
-        }
+			UpdateFlipTile(
+				"", "FreeCars", "\n     car2go\n   DriveNow\n    multicity", "Find free rides around you - car2go, DriveNow, multicity", 0,
+				new Uri("/", UriKind.Relative), 
+				null, //new Uri("/ApplicationIcon.png", UriKind.Relative),
+				null,
+				null,
+				new Uri("/Resources/wide_back_tile.png", UriKind.Relative),
+				null);
+
+			var currentVersion = GetAppAttribute("Version");
+			var lastAppVersion = (string)GetAppSetting("last_version");
+			if (null != lastAppVersion && lastAppVersion == currentVersion) {
+				IsFirstLaunch = false;
+			} else {
+				IsFirstLaunch = true;
+			}
+			SetAppSetting("last_version", currentVersion);
+		}
 		private void StartFlurry() {
 			try {
 				if (false == (bool)IsolatedStorageSettings.ApplicationSettings["settings_allow_analytics"]) return;
@@ -151,7 +157,74 @@ namespace FreeCars {
 				tile => tile.NavigationUri.ToString().Contains(tileUri));
 			return shellTile;
 		}
-        // Code to execute when the application is deactivated (sent to background)
+		private static readonly Version targetedVersion = new Version(7, 10, 8858);
+		public static bool LeastVersionIs78 { get { return Environment.OSVersion.Version >= targetedVersion; } }
+		public static void UpdateFlipTile(
+			string title,
+			string backTitle,
+			string backContent,
+			string wideBackContent,
+			int count,
+			Uri tileUri,
+			Uri smallBackgroundImage,
+			Uri backgroundImage,
+			Uri backBackgroundImage,
+			Uri wideBackgroundImage,
+			Uri wideBackBackgroundImage) {
+			
+			if (LeastVersionIs78) {
+				// Loop through any existing Tiles that are pinned to Start.
+				foreach (var tileToUpdate in ShellTile.ActiveTiles) {
+					// Look for a match based on the Tile's NavigationUri (tileUri).
+					if (tileToUpdate.NavigationUri.ToString() == tileUri.ToString()) {
+
+						// Get the ShellTile type so we can call the new version of "Update" that takes the new Tile templates.
+						var shellTileType = Type.GetType("Microsoft.Phone.Shell.ShellTile, Microsoft.Phone");
+						// Get the constructor for the new FlipTileData class and assign it to our variable to hold the Tile properties.
+						var updateTileData = CreateFlipTileData();
+						if (null == updateTileData) return;
+						// Set the properties.
+ 						
+						SetProperty(updateTileData, "Title", title);
+						SetProperty(updateTileData, "Count", count);
+						SetProperty(updateTileData, "BackTitle", backTitle);
+						SetProperty(updateTileData, "BackContent", backContent);
+						SetProperty(updateTileData, "SmallBackgroundImage", smallBackgroundImage);
+						SetProperty(updateTileData, "BackgroundImage", backgroundImage);
+						SetProperty(updateTileData, "BackBackgroundImage", backBackgroundImage);
+						SetProperty(updateTileData, "WideBackgroundImage", wideBackgroundImage);
+						SetProperty(updateTileData, "WideBackBackgroundImage", wideBackBackgroundImage);
+						SetProperty(updateTileData, "WideBackContent", wideBackContent);
+						
+						// Invoke the new version of ShellTile.Update.
+						shellTileType.GetMethod("Update").Invoke(tileToUpdate, new[] { updateTileData });
+						break;
+					}
+				}
+			}
+		}
+
+		public static object CreateFlipTileData() {
+			try {
+				// Get the new FlipTileData type.
+				Type flipTileDataType = Type.GetType("Microsoft.Phone.Shell.FlipTileData, Microsoft.Phone");
+				var flipTileData = flipTileDataType.GetConstructor(new Type[] {}).Invoke(null);
+				return flipTileData;
+			} catch (NullReferenceException) {
+				return null;
+			}
+		}
+		public static object CreateIconicTileData() {
+			try {
+				// Get the new FlipTileData type.
+				Type flipTileDataType = Type.GetType("Microsoft.Phone.Shell.FlipTileData, Microsoft.Phone");
+				var flipTileData = flipTileDataType.GetConstructor(new Type[] {}).Invoke(null);
+				return flipTileData;
+			} catch (NullReferenceException) {
+				return null;
+			}
+		}
+		// Code to execute when the application is deactivated (sent to background)
         // This code will not execute when the application is closing
         private void Application_Deactivated(object sender, DeactivatedEventArgs e) {
         }
@@ -178,6 +251,11 @@ namespace FreeCars {
 			FlurryWP7SDK.Api.LogError("Uncaught Exception occured", e.ExceptionObject);
 	        //e.Handled = true;
         }
+		public static void SetProperty(object instance, string name, object value) {
+			var setMethod = instance.GetType().GetProperty(name).GetSetMethod();
+			setMethod.Invoke(instance, new object[] { value });
+		}
+		public static bool IsCertified { get; set; }
 
 		private static bool? isLowMemoryDevice = null;
 		internal static bool IsLowMemoryDevice {
@@ -199,6 +277,8 @@ namespace FreeCars {
 			}
 		}
 
+		public static bool IsFirstLaunch { get; set; }
+
 		internal static void SetAppSetting(string key, object value) {
 			try {
 				IsolatedStorageSettings.ApplicationSettings.Add(key, value);
@@ -219,6 +299,9 @@ namespace FreeCars {
 			}
 		}
 
+		internal static bool ClearAppSetting(string key) {
+			return IsolatedStorageSettings.ApplicationSettings.Remove(key);
+		}
 		internal static string GetAppAttribute(string attributeName) {
 			string appManifestName = "WMAppManifest.xml";
 			string appNodeName = "App";
