@@ -1,12 +1,13 @@
-﻿<UserControl x:Name="userControl" x:Class="FreeCars.BookingControl"
+﻿<UserControl
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone" x:Name="userControl" x:Class="FreeCars.BookingControl"
     mc:Ignorable="d"
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
-    Foreground="{StaticResource PhoneForegroundBrush}" d:DesignWidth="480" Loaded="OnLoaded" RenderTransformOrigin="0.5,0.5" Opacity="0.75" Visibility="Collapsed">
+    Foreground="{StaticResource PhoneForegroundBrush}" d:DesignWidth="480" Loaded="OnLoaded" RenderTransformOrigin="0.5,0.5" Opacity="0.75">
 	<UserControl.RenderTransform>
 		<CompositeTransform/>
 	</UserControl.RenderTransform>
@@ -117,48 +118,112 @@
 						</ObjectAnimationUsingKeyFrames>
 					</Storyboard>
 				</VisualState>
+				<VisualState x:Name="DnBookingBrowserOpenState">
+					<Storyboard>
+						<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="userControl">
+							<DiscreteObjectKeyFrame KeyTime="0">
+								<DiscreteObjectKeyFrame.Value>
+									<Visibility>Visible</Visibility>
+								</DiscreteObjectKeyFrame.Value>
+							</DiscreteObjectKeyFrame>
+						</ObjectAnimationUsingKeyFrames>
+						<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="dnBookingBrowser">
+							<DiscreteObjectKeyFrame KeyTime="0">
+								<DiscreteObjectKeyFrame.Value>
+									<Visibility>Visible</Visibility>
+								</DiscreteObjectKeyFrame.Value>
+							</DiscreteObjectKeyFrame>
+						</ObjectAnimationUsingKeyFrames>
+						<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="ButtonsRow">
+							<DiscreteObjectKeyFrame KeyTime="0">
+								<DiscreteObjectKeyFrame.Value>
+									<Visibility>Collapsed</Visibility>
+								</DiscreteObjectKeyFrame.Value>
+							</DiscreteObjectKeyFrame>
+						</ObjectAnimationUsingKeyFrames>
+						<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="stackPanel">
+							<DiscreteObjectKeyFrame KeyTime="0">
+								<DiscreteObjectKeyFrame.Value>
+									<Visibility>Collapsed</Visibility>
+								</DiscreteObjectKeyFrame.Value>
+							</DiscreteObjectKeyFrame>
+						</ObjectAnimationUsingKeyFrames>
+					</Storyboard>
+				</VisualState>
+				<VisualState x:Name="DNActiveState">
+					<Storyboard>
+						<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="userControl">
+							<DiscreteObjectKeyFrame KeyTime="0">
+								<DiscreteObjectKeyFrame.Value>
+									<Visibility>Visible</Visibility>
+								</DiscreteObjectKeyFrame.Value>
+							</DiscreteObjectKeyFrame>
+						</ObjectAnimationUsingKeyFrames>
+						<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="ButtonsRow">
+							<DiscreteObjectKeyFrame KeyTime="0">
+								<DiscreteObjectKeyFrame.Value>
+									<Visibility>Collapsed</Visibility>
+								</DiscreteObjectKeyFrame.Value>
+							</DiscreteObjectKeyFrame>
+						</ObjectAnimationUsingKeyFrames>
+					</Storyboard>
+				</VisualState>
 			</VisualStateGroup>
 		</VisualStateManager.VisualStateGroups>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="*" />
 			<RowDefinition Height="Auto" />
 		</Grid.RowDefinitions>
-		<StackPanel Orientation="Vertical" Margin="12">
-			<TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Text="{Binding LocalizedStrings.BookingPageHeadline, Source={StaticResource ResourceAccess}}" Style="{StaticResource PhoneTextTitle1Style}" Margin="0,12" />
-			<TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Text="{Binding LocalizedStrings.BookingPageQuestion, Source={StaticResource ResourceAccess}}" Style="{StaticResource PhoneTextTitle2Style}" />
-			<TextBlock x:Name="carDescription" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top"  />
-			<Grid x:Name="providersPanels">
-				<StackPanel x:Name="car2GoPanel" Orientation="Vertical" Visibility="{Binding Car2GoVisibility}">
-					<StackPanel Orientation="Horizontal">
-						<TextBlock Text="{Binding Item.model}" Margin="0,12" Style="{StaticResource PhoneTextTitle2Style}" />
-						<TextBlock Text="{Binding Item.licensePlate}" Margin="6,12" Style="{StaticResource PhoneTextTitle2Style}" />
-					</StackPanel>
-					<StackPanel  VerticalAlignment="Center" Orientation="Horizontal">
-						<TextBlock Text="{Binding LocalizedStrings.BookingPageInterior, Source={StaticResource ResourceAccess}}" />
-						<Image Source="{Binding Car2GoInteriorImagePath}" Height="20" Margin="12,0,0,0" />
-					</StackPanel>
-					<StackPanel VerticalAlignment="Center" Orientation="Horizontal">
-						<TextBlock Text="{Binding LocalizedStrings.BookingPageExterior, Source={StaticResource ResourceAccess}}" />
-						<Image Source="{Binding Car2GoExteriorImagePath}" Height="20" Margin="12,0,0,0" />
-					</StackPanel>
+		<Grid x:Name="providersPanels">
+			<StackPanel x:Name="car2GoPanel" Orientation="Vertical" Visibility="{Binding Car2GoVisibility}">
+				<TextBlock TextWrapping="Wrap" VerticalAlignment="Top" Text="{Binding LocalizedStrings.BookingPageHeadline, Source={StaticResource ResourceAccess}}" Style="{StaticResource PhoneTextTitle1Style}" Visibility="{Binding Car2GoBookVisibility}" />
+				<TextBlock TextWrapping="Wrap" VerticalAlignment="Top" Text="{Binding LocalizedStrings.BookingPageQuestion, Source={StaticResource ResourceAccess}}" Style="{StaticResource PhoneTextTitle2Style}" Visibility="{Binding Car2GoBookVisibility}" />
+				<TextBlock TextWrapping="Wrap" VerticalAlignment="Top" Text="{Binding LocalizedStrings.BookingPageCancelHeadline, Source={StaticResource ResourceAccess}}" Style="{StaticResource PhoneTextTitle1Style}" Visibility="{Binding Car2GoCancelVisibility}" />
+				<TextBlock TextWrapping="Wrap" VerticalAlignment="Top" Text="{Binding LocalizedStrings.BookingPageCancelQuestion, Source={StaticResource ResourceAccess}}" Style="{StaticResource PhoneTextTitle2Style}" Visibility="{Binding Car2GoCancelVisibility}" />
+				<StackPanel Orientation="Horizontal" Margin="12,0">
+					<TextBlock Text="{Binding Item.model}" Margin="0,12" Style="{StaticResource PhoneTextTitle2Style}" />
+					<TextBlock Text="{Binding Item.licensePlate}" Margin="6,12" Style="{StaticResource PhoneTextTitle2Style}" />
 				</StackPanel>
-				<StackPanel x:Name="driveNowPanel" Orientation="Vertical" Visibility="Collapsed">
-
+				<TextBlock x:Name="carDescription" TextWrapping="Wrap" VerticalAlignment="Top" Margin="12,0" />
+				<StackPanel x:Name="c2gInterior"  VerticalAlignment="Center" Orientation="Horizontal" Margin="12,0">
+					<TextBlock Text="{Binding LocalizedStrings.BookingPageInterior, Source={StaticResource ResourceAccess}}" />
+					<Image Source="{Binding Car2GoInteriorImagePath}" Height="20" Margin="12,0,0,0" />
 				</StackPanel>
-				<StackPanel x:Name="multicityPanel" Orientation="Vertical" Visibility="Collapsed">
-
+				<StackPanel x:Name="c2gExterior" VerticalAlignment="Center" Orientation="Horizontal" Margin="12,0">
+					<TextBlock Text="{Binding LocalizedStrings.BookingPageExterior, Source={StaticResource ResourceAccess}}" />
+					<Image Source="{Binding Car2GoExteriorImagePath}" Height="20" Margin="12,0,0,0" />
 				</StackPanel>
+			</StackPanel>
+			<Grid x:Name="driveNowPanel" Visibility="{Binding DriveNowVisibility}">
+				<StackPanel x:Name="stackPanel" VerticalAlignment="Center">
+					<TextBlock TextAlignment="Center" FontSize="26.667" Text="{Binding LocalizedStrings.BookingPageConnectingToDriveNow, Source={StaticResource ResourceAccess}}" />
+					<ProgressBar x:Name="dnProgressBar" IsIndeterminate="True" Background="{StaticResource PhoneAccentBrush}" Foreground="{StaticResource PhoneAccentBrush}" />
+				</StackPanel>
+				<phone:WebBrowser x:Name="dnBookingBrowser"
+					HorizontalAlignment="Stretch"
+					VerticalAlignment="Stretch"
+					Visibility="Collapsed"
+					Navigated="OnBookingBrowserNavigated"
+					IsScriptEnabled="True" 
+					IsEnabled="True"
+					NavigationFailed="OnBookingBrowserNavigationFailed"
+					Height="800"
+						  />
+			</Grid>
+			<StackPanel x:Name="multicityPanel" Orientation="Vertical" Visibility="{Binding MulticityVisibility}"/>
+		</Grid>
+		<StackPanel Grid.Row="1" Orientation="Vertical" Margin="12">
+			<ProgressBar x:Name="bookingProgressBar" IsIndeterminate="True" Background="{StaticResource PhoneAccentBrush}" Foreground="{StaticResource PhoneAccentBrush}" Visibility="Collapsed" />
+			<Grid x:Name="ButtonsRow" Grid.Row="1" VerticalAlignment="Center">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*" />
+					<ColumnDefinition Width="Auto" />
+					<ColumnDefinition Width="Auto" />
+					<ColumnDefinition Width="*" />
+				</Grid.ColumnDefinitions>
+				<Button Grid.Column="1" x:Name="okButton" Content="{Binding LocalizedStrings.ButtonOK, Source={StaticResource ResourceAccess}}" Click="OnOKButtonClicked" />
+				<Button Grid.Column="2" x:Name="cancelButton" Content="{Binding LocalizedStrings.ButtonCancel, Source={StaticResource ResourceAccess}}" Click="OnCancelButtonClicked" />
 			</Grid>
 		</StackPanel>
-		<Grid Grid.Row="1" VerticalAlignment="Center">
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="*" />
-				<ColumnDefinition Width="Auto" />
-				<ColumnDefinition Width="Auto" />
-				<ColumnDefinition Width="*" />
-			</Grid.ColumnDefinitions>
-			<Button Grid.Column="1" x:Name="okButton" Content="OK" Click="OnOKButtonClicked" />
-			<Button Grid.Column="2" x:Name="cancelButton" Content="Cancel" Click="OnCancelButtonClicked" />
-		</Grid>
 	</Grid>
 </UserControl>
