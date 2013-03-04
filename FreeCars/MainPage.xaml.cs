@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
 using System.Threading;
@@ -538,6 +539,26 @@ namespace FreeCars {
 		}
 
 		private void OnReverseGeocodeUpdated(object sender, EventArgs e) {
+
+			var response = (sender as ReverseGeocode).Results;
+			var localityName = "";
+			if (null != response) {
+				foreach (
+					var result in
+						response.Where(result => result.types.Contains("sublocality") && result.types.Contains("political"))) {
+					localityName = result.formatted_address;
+					break;
+				}
+				if ("" == localityName) {
+					foreach (var address_component in response.SelectMany(result => result.address_components.Where(
+						address_component =>
+						address_component.types.Contains("locality") && address_component.types.Contains("political")))) {
+						localityName = address_component.long_name;
+						break;
+					}
+				}
+			}
+
 			map.Dispatcher.BeginInvoke(() => {
 				var usCultureInfo = new CultureInfo("en-US");
 				var latitude = map.Center.Latitude.ToString(usCultureInfo.NumberFormat);
@@ -547,12 +568,12 @@ namespace FreeCars {
 				if (null != App.CheckIfTileExist(tileParam)) return;
 
 				using (var store = IsolatedStorageFile.GetUserStoreForApplication()) {
+					foreach (var layer in map.Children.OfType<MapLayer>()) {
+						layer.Visibility = Visibility.Collapsed;
+					}
 					var fileName = "/Shared/ShellContent/" + tileParam + ".jpg";
 					if (store.FileExists(fileName)) {
 						store.DeleteFile(fileName);
-					}
-					foreach (var layer in map.Children.OfType<MapLayer>()) {
-						layer.Visibility = Visibility.Collapsed;
 					}
 					using (var saveFileStream = new IsolatedStorageFileStream(fileName, FileMode.Create, store)) {
 						var b = new WriteableBitmap(173, 173);
@@ -565,40 +586,60 @@ namespace FreeCars {
 						b.Invalidate();
 						b.SaveJpeg(saveFileStream, b.PixelWidth, b.PixelHeight, 0, 100);
 					}
+					var widefileName = "/Shared/ShellContent/" + tileParam + "_wide.jpg";
+					if (store.FileExists(widefileName)) {
+						store.DeleteFile(widefileName);
+					}
+					using (var saveFileStream = new IsolatedStorageFileStream(widefileName, FileMode.Create, store)) {
+						var b = new WriteableBitmap(691, 336);
+						var scale = 691 / map.ActualWidth;
+						var offsetX = ((map.ActualWidth) / 2) * scale;
+						var offsetY = ((map.ActualHeight * scale - 336) / 2);
+						//map.Width = 691;
+						b.Render(map, new CompositeTransform {
+							CenterX = .5, CenterY = .5,
+							ScaleX = scale,
+							ScaleY = scale,
+							TranslateX = 0,
+							TranslateY = -offsetY,
+						});
+						b.Invalidate();
+						b.SaveJpeg(saveFileStream, b.PixelWidth, b.PixelHeight, 0, 100);
+					}
+					// 691 x 336
 					foreach (var layer in map.Children.OfType<MapLayer>()) {
 						layer.Visibility = Visibility.Visible;
 					}
 				}
 
-				var response = (sender as ReverseGeocode).Results;
+				ShellTileData shellTileData = null;
+				var shellTileUri = new Uri("/MainPage.xaml?" + tileParam, UriKind.Relative);
 
-				var localityName = "";
-				if (null != response) {
-
-					foreach (
-						var result in
-							response.Where(result => result.types.Contains("sublocality") && result.types.Contains("political"))) {
-						localityName = result.formatted_address;
-						break;
-					}
-					if ("" == localityName) {
-						foreach (var address_component in response.SelectMany(result => result.address_components.Where(
-							address_component =>
-							address_component.types.Contains("locality") && address_component.types.Contains("political")))) {
-							localityName = address_component.long_name;
-							break;
-						}
-					}
-				}
-
-				ShellTile.Create(
-					new Uri("/MainPage.xaml?" + tileParam, UriKind.Relative),
-					new StandardTileData {
+				if (App.LeastVersionIs78) {
+					var shellTileType = Type.GetType("Microsoft.Phone.Shell.ShellTile, Microsoft.Phone");
+					var appTileData = App.CreateFlipTileData();
+					// Set the properties.
+					App.SetProperty(appTileData, "Title", null);
+					App.SetProperty(appTileData, "Count", 0);
+					App.SetProperty(appTileData, "SmallBackgroundImage", null);
+					App.SetProperty(appTileData, "BackgroundImage", new Uri("isostore:/Shared/ShellContent/" + tileParam + ".jpg", UriKind.Absolute));
+					App.SetProperty(appTileData, "BackContent", localityName);
+					App.SetProperty(appTileData, "BackTitle", "FreeCars");
+					App.SetProperty(appTileData, "BackBackgroundImage", null);
+					App.SetProperty(appTileData, "WideBackContent", localityName);
+					App.SetProperty(appTileData, "WideBackgroundImage", new Uri("isostore:/Shared/ShellContent/" + tileParam + "_wide.jpg", UriKind.Absolute));
+					App.SetProperty(appTileData, "WideBackBackgroundImage", null);
+					var m = shellTileType.GetMethod("Create", new[] { typeof(Uri), typeof(ShellTileData), typeof(bool) });
+					var r = m.Invoke(null, new[] { shellTileUri, appTileData, true });
+				} else {
+					shellTileData = new StandardTileData {
 						BackTitle = "FreeCars",
 						BackContent = localityName,
 						Count = 0,
 						BackgroundImage = new Uri("isostore:/Shared/ShellContent/" + tileParam + ".jpg", UriKind.Absolute),
-					});
+					};
+					ShellTile.Create(shellTileUri, shellTileData);
+				}
 			});
 		}
 
