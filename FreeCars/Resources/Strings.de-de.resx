@@ -293,7 +293,15 @@ Bitte nutze eine der folgenden Kontaktmöglichkeiten bei Kritik, Verbesserungsvo
 Jede Anfrage wird beantwortet!</value>
   </data>
   <data name="ChangelogPageBody" xml:space="preserve">
-    <value>1.5.0.1:
+    <value>1.6.0.0:
+* Stornierungen für car2go
+* Buchungen für DriveNow
+* WideTiles (ab WP 7.8)
+* Performance-Verbesserungen
+* Caching bei Aktualisierung von Fahrzeugen verhindern
+* Einige Abstürze durch Fehler bei'm Nachladen behoben
+
+1.5.0.1:
 * Crash bei Anwendungsstart in trial mode behoben
 * option 'mit car2go verbindun' bei buchung anzeigen
 * multicity html korrekt interpetieren
