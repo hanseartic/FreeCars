@@ -287,7 +287,15 @@ Please use one of the following options to get in touch with me for critics, sug
 I will answer every request!</value>
   </data>
   <data name="ChangelogPageBody" xml:space="preserve">
-    <value>1.5.0.1:
+    <value>1.6.0.0:
+* cancel bookings with car2go
+* book cars with DriveNow
+* wide tiles (WP 7.8 and up)
+* performance improvements
+* prevent caching when reloading car positions
+* catch some crashes resulting from reloading stuff
+
+1.5.0.1:
 * Fix crash on startup in trial mode
 * add 'connect to car2go' when making reservation
 * decode multicity's html correctly
