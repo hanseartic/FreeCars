@@ -30,12 +30,12 @@ namespace FreeCars {
 		public void Activate(Marker item) {
 			username = null;
 			password = null;
-			Item = item;
 			okButton.IsEnabled = true;
 			cancelButton.IsEnabled = true;
 			bookingProgressBar.Visibility = Visibility.Collapsed;
 			try {
 				VisualStateManager.GoToState(this, "ActiveState", true);
+				Item = item;
 				IsActive = true;
 			} catch (UnauthorizedAccessException) {
 				Dispatcher.BeginInvoke(() => Activate(item));

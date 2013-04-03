@@ -293,7 +293,11 @@ Bitte nutze eine der folgenden Kontaktmöglichkeiten bei Kritik, Verbesserungsvo
 Jede Anfrage wird beantwortet!</value>
   </data>
   <data name="ChangelogPageBody" xml:space="preserve">
-    <value>1.6.0.0:
+    <value>1.6.0.1:
+* Stornierungen für car2go - jetzt wirklich
+* Verwirrende Buttons bei DriveNow-Buchungen entfernt
+
+1.6.0.0:
 * Stornierungen für car2go
 * Buchungen für DriveNow
 * WideTiles (ab WP 7.8)

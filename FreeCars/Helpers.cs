@@ -31,7 +31,7 @@ namespace FreeCars {
 					onDeleted(resultStream);
 				}
 			};
-			webClient.UploadStringAsync(uri, "DELETE", parameters);
+			webClient.UploadStringAsync(uri, "DELETE", "");//parameters);
 		}
 
 		public static void Post(string address, string parameters, Action<Stream> onResponseGot) {
