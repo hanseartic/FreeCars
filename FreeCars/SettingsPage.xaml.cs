@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Navigation;
+using FreeCars.Providers;
 using FreeCars.Serialization;
 using Microsoft.Phone.Controls;
 using System.IO.IsolatedStorage;

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Navigation;
 using System.Xml;
+using FreeCars.Providers;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Info;
 using Microsoft.Phone.Shell;

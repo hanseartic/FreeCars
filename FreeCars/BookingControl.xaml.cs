@@ -9,6 +9,7 @@ using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
+using FreeCars.Providers;
 using FreeCars.Resources;
 using FreeCars.Serialization;
 using Microsoft.Phone.Controls;
