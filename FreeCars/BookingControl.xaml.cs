@@ -432,13 +432,45 @@ namespace FreeCars {
 		# endregion DriveNow
 
 		# region multicity
+		private void CreateMulticityBooking() {
+			if (!CheckMulticityCredentials()) {
+				Deactivate();
+				return;
+			}
+			VisualStateManager.GoToState(this, "MCActiveState", false);
+			mcBookingBrowser.LoadCompleted -= onMulticityLoadCompleted;
+			mcBookingBrowser.ScriptNotify -= onMulticityScriptNotify;
+			var item = (MulticityMarker)Item;
+
+			mcBookingBrowser.ScriptNotify += onMulticityScriptNotify;
+			mcBookingBrowser.LoadCompleted += onMulticityLoadCompleted;
+		}
 		private bool CheckMulticityCredentials() {
 			try {
-				username = "";
+				username = (string)App.GetAppSetting("multicity.username");
+				password = (string)App.GetAppSetting("multicity.password");
+				if ((null != username) && (null != password)) {
+					return true;
+				}
+				MessageBoxResult result = MessageBox.Show(Strings.MulticityCredentialsMissingDialogMessage, Strings.MulticityCredentialsMissingDialogHeader, MessageBoxButton.OKCancel);
+				if (MessageBoxResult.OK == result) {
+					gotoDriveNowCredentials();
+				} else {
+					Deactivate();
+				}
 			} catch {}
-			MessageBoxResult result;
 			return false;
 		}
+
+		private void onMulticityScriptNotify(object sender, NotifyEventArgs args) {
+			throw new NotImplementedException();
+			mcBookingBrowser.LoadCompleted -= onMulticityLoadCompleted;
+			VisualStateManager.GoToState(this, "MCBookingBrowserOpenState", true);
+		}
+		private void onMulticityLoadCompleted(object sender, NavigationEventArgs navigationEventArgs) {
+			throw new NotImplementedException();
+		}
+
 		public DependencyProperty MulticityVisibilityProperty = DependencyProperty.Register(
 			"MulticityVisibility", typeof(Visibility), typeof(BookingControl), new PropertyMetadata(Visibility.Visible));
 		public Visibility MulticityVisibility {

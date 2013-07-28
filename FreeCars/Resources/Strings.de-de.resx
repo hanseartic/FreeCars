@@ -514,4 +514,15 @@ Die Kosten hierfür betragen {0} {1}.</value>
   <data name="BookingPageCancelQuestion" xml:space="preserve">
     <value>Möchtest Du die Buchung stornieren?</value>
   </data>
+  <data name="BookingPageConnectingToMulticity" xml:space="preserve">
+    <value>Einloggen bei multicity
+Buchung vorbereiten</value>
+  </data>
+  <data name="MulticityCredentialsMissingDialogHeader" xml:space="preserve">
+    <value>Keine Zugangsdaten für multicity</value>
+  </data>
+  <data name="MulticityCredentialsMissingDialogMessage" xml:space="preserve">
+    <value>Du hast noch keine Zugangsaten für multicity eingegeben.
+Möchtest Du jetzt Deine Zugangsdaten speichern?</value>
+  </data>
 </root>
