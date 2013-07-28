@@ -120,9 +120,15 @@ namespace FreeCars {
 			stream.Read(inBytes, 0, (int)stream.Length);
 			string convertString = fromEncoding.GetString(inBytes, 0, inBytes.Length);
 			// wrong place ATM, but has to be hacked in here ... :C
-			convertString = convertString.Replace("\"click\": \"showMarkerInfos\",", "");
-			var outBytes = toEncoding.GetBytes(convertString);
-			return new MemoryStream(outBytes);
+			convertString = convertString.Replace("\"click\": \"showMarkerInfos\",", "").Replace('\uFFFD',' ');
+			convertString = convertString.Replace("},\n]", "}\n]");
+			try {
+				var outBytes = toEncoding.GetBytes(convertString);
+				return new MemoryStream(outBytes);
+			} catch (ArgumentException ae) {
+				var outBytes = fromEncoding.GetBytes(convertString);
+				return new MemoryStream(outBytes);
+			}
 		}
 		private void SerializeChargers(Stream inputStream) {
 			if (0 == inputStream.Length) return;
