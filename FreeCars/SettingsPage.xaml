@@ -107,13 +107,21 @@
 				</ScrollViewer>
 			</controls:PivotItem>
 			<!--Pivot item multicity-->
-			<controls:PivotItem Header="{Binding LocalizedStrings.SettingsMulticityTitle, Source={StaticResource ResourceAccess}}">
+			<controls:PivotItem x:Name="multicityTab" Header="{Binding LocalizedStrings.SettingsMulticityTitle, Source={StaticResource ResourceAccess}}">
 				<Grid>
 					<StackPanel>
 						<toolkit:ToggleSwitch Header="{Binding LocalizedStrings.SettingsPageShowMulticityCars, Source={StaticResource ResourceAccess}}" Checked="OnMulticityCarsToggleSwitchChanged" Unchecked="OnMulticityCarsToggleSwitchChanged" Loaded="OnMulticityCarsToggleSwitchLoaded" Content="{Binding LocalizedStrings.ToggleSwitchOff, Source={StaticResource ResourceAccess}}" SwitchForeground="Red" />
 						<toolkit:ToggleSwitch Header="{Binding LocalizedStrings.SettingsPageShowMulticityChargers, Source={StaticResource ResourceAccess}}" Checked="OnMulticityChargersToggleSwitchChanged" Unchecked="OnMulticityChargersToggleSwitchChanged" Loaded="OnMulticityChargersToggleSwitchLoaded" Content="{Binding LocalizedStrings.ToggleSwitchOff, Source={StaticResource ResourceAccess}}" SwitchForeground="Green" />
 						<TextBlock Text="{Binding LocalizedStrings.SettingsPageCallMulticityHeader, Source={StaticResource ResourceAccess}}" Tap="OnCallMulticityTap" Style="{StaticResource PhoneTextTitle3Style}" Margin="0" />
 						<TextBlock Text="{Binding LocalizedStrings.SettingsPageCallMulticityPhoneNumber, Source={StaticResource ResourceAccess}}" Style="{StaticResource PhoneTextTitle2Style}" Margin="0" Tap="OnCallMulticityTap" HorizontalAlignment="Center"/>
+						<TextBlock Text="{Binding LocalizedStrings.SettingsPageMulticityUsernameHeader, Source={StaticResource ResourceAccess}}" Tap="OnMulticityUsernameTap" Style="{StaticResource PhoneTextTitle3Style}" Margin="0" />
+						<TextBox x:Name="multicityUsernameTextbox" InputScope="EmailUserName"></TextBox>
+						<TextBlock Text="{Binding LocalizedStrings.SettingsPageMulticityPasswordHeader, Source={StaticResource ResourceAccess}}" Tap="OnMulticityPassordTap" Style="{StaticResource PhoneTextTitle3Style}" Margin="0" />
+						<PasswordBox x:Name="multicityPasswordbox" ></PasswordBox>
+						<Grid HorizontalAlignment="Stretch">
+							<Button HorizontalAlignment="Left" Content="{Binding LocalizedStrings.ButtonSave, Source={StaticResource ResourceAccess}}" Click="OnSaveMulticityCredentials" />
+							<Button HorizontalAlignment="Right" Content="{Binding LocalizedStrings.ButtonClear, Source={StaticResource ResourceAccess}}" Click="OnClearMulticityCredentials"></Button>
+						</Grid>
 					</StackPanel>
 				</Grid>
 			</controls:PivotItem>

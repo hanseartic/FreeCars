@@ -499,5 +499,30 @@ namespace FreeCars {
 			App.ClearAppSetting("driveNow.password");
 			syncDriveNowCredentialsWithApp();
 		}
+		private void syncMulticityCredentialsWithApp() {
+			var username = (string)App.GetAppSetting("driveNow.username");
+			var password = (string)App.GetAppSetting("driveNow.password");
+			if (null == username)
+				username = "";
+			driveNowUsernameTextbox.Text = username;
+			if (null == password)
+				password = "";
+			driveNowPasswordbox.Password = password;
+		}
+		private void OnMulticityUsernameTap(object sender, System.Windows.Input.GestureEventArgs e) {
+			multicityUsernameTextbox.Focus();
+		}
+		private void OnMulticityPassordTap(object sender, System.Windows.Input.GestureEventArgs e) {
+			multicityPasswordbox.Focus();
+		}
+		private void OnSaveMulticityCredentials(object sender, RoutedEventArgs e) {
+			App.SetAppSetting("multicity.username", multicityUsernameTextbox.Text);
+			App.SetAppSetting("multicity.password", multicityPasswordbox.Password);
+		}
+		private void OnClearMulticityCredentials(object sender, RoutedEventArgs e) {
+			App.ClearAppSetting("multicity.username");
+			App.ClearAppSetting("multicity.password");
+			syncMulticityCredentialsWithApp();
+		}
 	}
 }
