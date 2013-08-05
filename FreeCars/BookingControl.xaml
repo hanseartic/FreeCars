@@ -228,8 +228,8 @@
 					Height="800"
 					/>
 			</Grid>
-			<StackPanel x:Name="multicityPanel" Orientation="Vertical" Visibility="{Binding MulticityVisibility}">
-				<StackPanel x:Name="mcProgressStackPanel" VerticalAlignment="Center">
+			<Grid x:Name="multicityPanel" Visibility="{Binding MulticityVisibility}">
+				<StackPanel x:Name="mcProgressStackPanel" VerticalAlignment="Center" Visibility="Visible">
 					<TextBlock TextAlignment="Center" FontSize="26.667" Text="{Binding LocalizedStrings.BookingPageConnectingToMulticity, Source={StaticResource ResourceAccess}}" />
 					<ProgressBar x:Name="mcProgressBar" IsIndeterminate="True" Background="{StaticResource PhoneAccentBrush}" Foreground="{StaticResource PhoneAccentBrush}" />
 				</StackPanel>
@@ -243,7 +243,7 @@
 					NavigationFailed="OnBookingBrowserNavigationFailed"
 					Height="800"
 					/>
-			</StackPanel>
+			</Grid>
 		</Grid>
 		<StackPanel Grid.Row="1" Orientation="Vertical" Margin="12">
 			<ProgressBar x:Name="bookingProgressBar" IsIndeterminate="True" Background="{StaticResource PhoneAccentBrush}" Foreground="{StaticResource PhoneAccentBrush}" Visibility="Collapsed" />
