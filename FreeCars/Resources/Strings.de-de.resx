@@ -515,7 +515,7 @@ Die Kosten hierfür betragen {0} {1}.</value>
     <value>Möchtest Du die Buchung stornieren?</value>
   </data>
   <data name="BookingPageConnectingToMulticity" xml:space="preserve">
-    <value>Einloggen bei multicity
+    <value>Lade mobile Buchung von multicity
 Buchung vorbereiten</value>
   </data>
   <data name="MulticityCredentialsMissingDialogHeader" xml:space="preserve">
@@ -524,5 +524,12 @@ Buchung vorbereiten</value>
   <data name="MulticityCredentialsMissingDialogMessage" xml:space="preserve">
     <value>Du hast noch keine Zugangsaten für multicity eingegeben.
 Möchtest Du jetzt Deine Zugangsdaten speichern?</value>
+  </data>
+  <data name="SettingsPageMulticityPasswordHeader" xml:space="preserve">
+    <value>Passwort</value>
+  </data>
+  <data name="SettingsPageMulticityUsernameHeader" xml:space="preserve">
+    <value>Kundennummer
+(Kartennummer funktioniert nicht)</value>
   </data>
 </root>
