@@ -47,6 +47,7 @@ namespace FreeCars {
 				VisualStateManager.GoToState(this, "InactiveState", true);
 				IsActive = false;
 				TriggerEvent(Closed);
+
 			} catch (UnauthorizedAccessException) {
 				Dispatcher.BeginInvoke(Deactivate);
 			}
@@ -121,6 +122,7 @@ namespace FreeCars {
 						CreateDriveNowBooking();
 					} else if (typeof(MulticityMarker) == itemType) {
 						multicityVisibility = Visibility.Visible;
+						CreateMulticityBooking();
 					}
 				}
 				Car2GoVisibility = car2GoVisibility;
@@ -350,7 +352,6 @@ namespace FreeCars {
 					new Uri("/SettingsPage.xaml?tab=driveNowTab&action=enterCredentials", UriKind.RelativeOrAbsolute));
 			}
 		}
-
 		private bool CheckDriveNowCredentials() {
 			try {
 				username = (string)App.GetAppSetting("driveNow.username");
@@ -399,7 +400,7 @@ namespace FreeCars {
 		private void onDriveNowLoadCompleted(object sender, NavigationEventArgs e) {
 			try {
 				dnBookingBrowser.InvokeScript("eval", "window.checkLoggedIn = function() {" +
-					"window.external.notify('enter');" +
+					"window.external.notify('dn-enter');" +
 					//"dn_login.throw_login_error = function(e, d) { window.external.notify('dn-login-incorrect'); };" +
 					"if ($('.dn-welcome').length <= 0) {" +
 						"$('#login-field').val('" + username + "');$('#password-field').val('" + password + "');" +
@@ -444,6 +445,15 @@ namespace FreeCars {
 
 			mcBookingBrowser.ScriptNotify += onMulticityScriptNotify;
 			mcBookingBrowser.LoadCompleted += onMulticityLoadCompleted;
+			var bookingUri = new Uri(
+					"https://kunden.multicity-carsharing.de/kundenbuchung/process.php?proc=buchen&autopos_id=&auto_id=" + item.ID +
+					"&station_id=&open_end=J&instant_access=J", UriKind.Absolute);
+			//mcBookingBrowser.Navigate(new Uri("https://www.multicity-carsharing.de/", UriKind.Absolute),
+			mcBookingBrowser.Navigate(
+				bookingUri,
+				null,
+				"User-Agent: FreeCars/1.6 (compatible; MSIE 8.0; Windows NT 6.2; Win64; x64; Trident/6.0)\r\n");
+				//"User-Agent: Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; Win64; x64; Trident/6.0)\r\n");
 		}
 		private bool CheckMulticityCredentials() {
 			try {
@@ -454,21 +464,115 @@ namespace FreeCars {
 				}
 				MessageBoxResult result = MessageBox.Show(Strings.MulticityCredentialsMissingDialogMessage, Strings.MulticityCredentialsMissingDialogHeader, MessageBoxButton.OKCancel);
 				if (MessageBoxResult.OK == result) {
-					gotoDriveNowCredentials();
+					gotoMulticityCredentials();
 				} else {
 					Deactivate();
 				}
 			} catch {}
 			return false;
 		}
-
+		private void gotoMulticityCredentials() {
+			var phoneApplicationFrame = Application.Current.RootVisual as PhoneApplicationFrame;
+			if (phoneApplicationFrame != null) {
+				phoneApplicationFrame.Navigate(
+					new Uri("/SettingsPage.xaml?tab=multicityTab&action=enterCredentials", UriKind.RelativeOrAbsolute));
+			}
+		}
 		private void onMulticityScriptNotify(object sender, NotifyEventArgs args) {
-			throw new NotImplementedException();
+			var item = Item as MulticityMarker;
+			if (null == item) {
+				mcBookingBrowser.LoadCompleted -= onMulticityLoadCompleted;
+				return;
+			}
+			switch (args.Value) {
+				case "timer":
+					break;
+				case "document.ready":
+					/*
+					mcBookingBrowser.Navigate(
+						new Uri("https://www.multicity-carsharing.de/?mobile=false", UriKind.Absolute),
+						null,
+						"User-Agent: Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; Win64; x64; Trident/6.0)\r\n");
+					*/
+					loginToMulticity();
+					break;
+				case "logging-in":
+					break;
+			}
+			if ("mc-login-incorrect" == args.Value) {
+				if (MessageBoxResult.OK == MessageBox.Show(
+					Strings.BookingDriveNowUsernamePasswordWrongDialog,
+					Strings.UsernameOrPasswordWrong, MessageBoxButton.OKCancel)) {
+					gotoDriveNowCredentials();
+				}
+				Deactivate();
+				return;
+			}
+			if ("mc-booking-successful" == args.Value) {
+				MessageBox.Show(Strings.DriveNowBookingSucessfull);
+				Deactivate();
+				return;
+			}
+			if ("mc-loggedin" != args.Value) {
+				return;
+			}
 			mcBookingBrowser.LoadCompleted -= onMulticityLoadCompleted;
-			VisualStateManager.GoToState(this, "MCBookingBrowserOpenState", true);
+			mcBookingBrowser.ScriptNotify -= onMulticityScriptNotify;
+			Deactivate();
+			return;
+			item = (MulticityMarker)Item;
+			//VisualStateManager.GoToState(this, "MCBookingBrowserOpenState", true);
+			var bookUri =
+				new Uri(
+					"https://kunden.multicity-carsharing.de/kundenbuchung/process.php?proc=buchen&autopos_id=&auto_id=" + item.ID +
+					"&station_id=&open_end=J&instant_access=J", UriKind.Absolute);
+			mcBookingBrowser.Navigate(new Uri("https://kunden.multicity-carsharing.de/kundenbuchung/process.php?proc=buchen&autopos_id=&auto_id=" + item.ID + "&station_id=&open_end=J&instant_access=J", UriKind.Absolute));
+		}
+		private void loginToMulticity() {
+			try {
+				mcBookingBrowser.InvokeScript("eval", 
+					"window.checkLoggedIn = function() {" +
+					//"if ($('input[name=\"logout\"]').length === 0) {" +
+					"if (jQuery('#username').length == 0) {" +
+					//	"window.external.notify('logging-in');" +
+					
+					//	"$('#kartenr').focus().val('"+ username +"');$('#passwd').focus().val('" + password + "');" + //$('#loginbtn').val('submit');$('#loginform').trigger('submit');" +
+						"jQuery('#username').focus().val('" + username + "');jQuery('#bform2 input[type=\"password\"]').focus().val('" + password + "');" +
+					"} else {" +
+						"window.external.notify('mc-booking-successful');" +
+					"}" +
+				"}; " +
+				"window.showloginerror = function(text) {" +
+					"window.external.notify('mc-login-incorrect');" +
+				"};" +
+				"checkLoggedIn();" +
+				"");
+			} catch {
+				
+			}
 		}
 		private void onMulticityLoadCompleted(object sender, NavigationEventArgs navigationEventArgs) {
-			throw new NotImplementedException();
+			try {
+				mcBookingBrowser.InvokeScript("eval", "window.extendForFreeCars = function() {" +
+					"document.getElementsByTagName('aside')[0].style.display='none';" +
+				"};" +
+				"window.readyStateCheckInterval = setInterval(function() {window.external.notify('timer');if (document.readyState === 'complete') {" +
+					"clearInterval(window.readyStateCheckInterval);window.external.notify('document.ready');}}, 200);" +
+				//"readyStateCheckInterval();" +
+					//"window.checkLoggedIn();" +
+				"");
+				mcBookingBrowser.Visibility = Visibility.Visible;
+				mcProgressStackPanel.Visibility = Visibility.Collapsed;
+			} catch (UnauthorizedAccessException) {
+				mcBookingBrowser.Dispatcher.BeginInvoke(() => {
+					mcBookingBrowser.Visibility = Visibility.Visible;
+					mcProgressStackPanel.Visibility = Visibility.Visible;
+				});
+			} catch (Exception exception) {
+				if (exception.Message.Contains("Error: 80020101.")) {
+					
+				}
+			}
 		}
 
 		public DependencyProperty MulticityVisibilityProperty = DependencyProperty.Register(

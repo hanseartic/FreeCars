@@ -291,7 +291,6 @@ namespace FreeCars {
 		}
 
 		private void CheckCar2GoApiAccess() {
-			var hasApiAccess = false;
 
 			var oauth_token = (string)App.GetAppSetting("car2go.oauth_token");
 			var oauth_token_secret = (string)App.GetAppSetting("car2go.oauth_token_secret");
@@ -484,7 +483,6 @@ namespace FreeCars {
 		private void OnDriveNowUsernameTap(object sender, System.Windows.Input.GestureEventArgs e) {
 			driveNowUsernameTextbox.Focus();
 		}
-
 		private void OnDriveNowPassordTap(object sender, System.Windows.Input.GestureEventArgs e) {
 			driveNowPasswordbox.Focus();
 		}
