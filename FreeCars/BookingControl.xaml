@@ -141,7 +141,7 @@
 								</DiscreteObjectKeyFrame.Value>
 							</DiscreteObjectKeyFrame>
 						</ObjectAnimationUsingKeyFrames>
-						<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="stackPanel">
+						<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="dnProgressStackPanel">
 							<DiscreteObjectKeyFrame KeyTime="0">
 								<DiscreteObjectKeyFrame.Value>
 									<Visibility>Collapsed</Visibility>
@@ -151,6 +151,24 @@
 					</Storyboard>
 				</VisualState>
 				<VisualState x:Name="DNActiveState">
+					<Storyboard>
+						<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="userControl">
+							<DiscreteObjectKeyFrame KeyTime="0">
+								<DiscreteObjectKeyFrame.Value>
+									<Visibility>Visible</Visibility>
+								</DiscreteObjectKeyFrame.Value>
+							</DiscreteObjectKeyFrame>
+						</ObjectAnimationUsingKeyFrames>
+						<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="ButtonsRow">
+							<DiscreteObjectKeyFrame KeyTime="0">
+								<DiscreteObjectKeyFrame.Value>
+									<Visibility>Collapsed</Visibility>
+								</DiscreteObjectKeyFrame.Value>
+							</DiscreteObjectKeyFrame>
+						</ObjectAnimationUsingKeyFrames>
+					</Storyboard>
+				</VisualState>
+				<VisualState x:Name="MCActiveState">
 					<Storyboard>
 						<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="userControl">
 							<DiscreteObjectKeyFrame KeyTime="0">
@@ -195,7 +213,7 @@
 				</StackPanel>
 			</StackPanel>
 			<Grid x:Name="driveNowPanel" Visibility="{Binding DriveNowVisibility}">
-				<StackPanel x:Name="stackPanel" VerticalAlignment="Center">
+				<StackPanel x:Name="dnProgressStackPanel" VerticalAlignment="Center">
 					<TextBlock TextAlignment="Center" FontSize="26.667" Text="{Binding LocalizedStrings.BookingPageConnectingToDriveNow, Source={StaticResource ResourceAccess}}" />
 					<ProgressBar x:Name="dnProgressBar" IsIndeterminate="True" Background="{StaticResource PhoneAccentBrush}" Foreground="{StaticResource PhoneAccentBrush}" />
 				</StackPanel>
@@ -208,9 +226,24 @@
 					IsEnabled="True"
 					NavigationFailed="OnBookingBrowserNavigationFailed"
 					Height="800"
-						  />
+					/>
 			</Grid>
-			<StackPanel x:Name="multicityPanel" Orientation="Vertical" Visibility="{Binding MulticityVisibility}"/>
+			<Grid x:Name="multicityPanel" Visibility="{Binding MulticityVisibility}">
+				<StackPanel x:Name="mcProgressStackPanel" VerticalAlignment="Center" Visibility="Visible">
+					<TextBlock TextAlignment="Center" FontSize="26.667" Text="{Binding LocalizedStrings.BookingPageConnectingToMulticity, Source={StaticResource ResourceAccess}}" />
+					<ProgressBar x:Name="mcProgressBar" IsIndeterminate="True" Background="{StaticResource PhoneAccentBrush}" Foreground="{StaticResource PhoneAccentBrush}" />
+				</StackPanel>
+				<phone:WebBrowser x:Name="mcBookingBrowser"
+					HorizontalAlignment="Stretch"
+					VerticalAlignment="Stretch"
+					Visibility="Collapsed"
+					Navigated="OnBookingBrowserNavigated"
+					IsScriptEnabled="True" 
+					IsEnabled="True"
+					NavigationFailed="OnBookingBrowserNavigationFailed"
+					Height="800"
+					/>
+			</Grid>
 		</Grid>
 		<StackPanel Grid.Row="1" Orientation="Vertical" Margin="12">
 			<ProgressBar x:Name="bookingProgressBar" IsIndeterminate="True" Background="{StaticResource PhoneAccentBrush}" Foreground="{StaticResource PhoneAccentBrush}" Visibility="Collapsed" />

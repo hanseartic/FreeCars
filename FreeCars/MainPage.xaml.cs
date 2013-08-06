@@ -223,7 +223,9 @@ namespace FreeCars {
 
 		private void OnMainPageApplicationBarBookCarButtonClick(object sender, EventArgs e) {
 			Pushpin activePushpin = (Pushpin)(activeLayer.Children.First());
-			if (activePushpin.Tag is Car2GoMarker || activePushpin.Tag is DriveNowMarker) {
+			if (activePushpin.Tag is Car2GoMarker ||
+				activePushpin.Tag is DriveNowMarker ||
+				activePushpin.Tag is MulticityMarker) {
 				bookingControl.Activate((Marker)activePushpin.Tag);
 				ApplicationBar.IsVisible = false;
 			}
@@ -482,7 +484,7 @@ namespace FreeCars {
 						if (((Car2GoMarker)((Pushpin)sender).Tag).isBooked) {
 							mainPageApplicationBarBookCarButton.IconUri = new Uri("Resources/appbar.timer.cancel.png", UriKind.RelativeOrAbsolute);
 						}
-					} else if (((Pushpin)sender).Tag is DriveNowMarker) {
+					} else if ((((Pushpin)sender).Tag is DriveNowMarker) || (((Pushpin)sender).Tag is MulticityMarker)) {
 						mainPageApplicationBarBookCarButton.IsEnabled = true;
 					}
 					var parentLayer = VisualTreeHelper.GetParent((Pushpin)sender) as MapLayer;

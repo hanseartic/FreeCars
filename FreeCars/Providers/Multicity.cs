@@ -88,17 +88,20 @@ namespace FreeCars {
 		}
 		public static void LoadChargeState(Pushpin pushpin) {
 			var car = (MulticityMarker)pushpin.Tag;
-			var batteryRequestClient = new WebClient();
-			batteryRequestClient.DownloadStringCompleted += (client, eventArgs) => {
+			var multicityMoreInfoRequestClient = new WebClient();
+			multicityMoreInfoRequestClient.DownloadStringCompleted += (client, eventArgs) => {
 				try {
-					var result = eventArgs.Result.Substring(eventArgs.Result.IndexOf("chargepercent"));
-					result = result.Substring(0, result.IndexOf("%") - 1).Substring(15);
+					var chargeResult = eventArgs.Result.Substring(eventArgs.Result.IndexOf("chargepercent"));
+					chargeResult = chargeResult.Substring(0, chargeResult.IndexOf("%") - 1).Substring(15);
+					var idResult = eventArgs.Result.Substring(eventArgs.Result.IndexOf("auto_id="));
+					idResult = idResult.Substring(8, 6);
 					pushpin.Dispatcher.BeginInvoke((Action)(() => {
-						car.fuelState = result;
+						car.fuelState = chargeResult;
+						car.ID = idResult;
 					}));
 				} catch (WebException) { } catch { }
 			};
-			batteryRequestClient.DownloadStringAsync(new Uri("https://kunden.multicity-carsharing.de/kundenbuchung/hal2ajax_process.php?infoConfig%5BinfoTyp%5D=HM_AUTO_INFO&infoConfig%5Bpopup%5D=J&infoConfig%5BobjectId%5D=" + car.hal2option.id + "&infoConfig%5Bobjecttyp%5D=carpos&infoConfig%5BmarkerInfos%5D=false&ajxmod=hal2map&callee=markerinfo"));
+			multicityMoreInfoRequestClient.DownloadStringAsync(new Uri("https://kunden.multicity-carsharing.de/kundenbuchung/hal2ajax_process.php?infoConfig%5BinfoTyp%5D=HM_AUTO_INFO&infoConfig%5Bpopup%5D=J&infoConfig%5BobjectId%5D=" + car.hal2option.id + "&infoConfig%5Bobjecttyp%5D=carpos&infoConfig%5BmarkerInfos%5D=false&ajxmod=hal2map&callee=markerinfo"));
 		}
 		private void LoadMulticityChargers() {
 			if (null == position) return;
@@ -125,7 +128,7 @@ namespace FreeCars {
 			try {
 				var outBytes = toEncoding.GetBytes(convertString);
 				return new MemoryStream(outBytes);
-			} catch (ArgumentException ae) {
+			} catch (ArgumentException) {
 				var outBytes = fromEncoding.GetBytes(convertString);
 				return new MemoryStream(outBytes);
 			}

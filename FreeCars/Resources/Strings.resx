@@ -508,4 +508,21 @@ You will be charged {1} {0}.</value>
   <data name="BookingPageCancelQuestion" xml:space="preserve">
     <value>Do you want to  cancel the reservation for this car?</value>
   </data>
+  <data name="BookingPageConnectingToMulticity" xml:space="preserve">
+    <value>opening mobile multicity site
+preparing reservation</value>
+  </data>
+  <data name="MulticityCredentialsMissingDialogHeader" xml:space="preserve">
+    <value>multicity credentials missing</value>
+  </data>
+  <data name="MulticityCredentialsMissingDialogMessage" xml:space="preserve">
+    <value>Do you want to go to the settings-page now?</value>
+  </data>
+  <data name="SettingsPageMulticityPasswordHeader" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="SettingsPageMulticityUsernameHeader" xml:space="preserve">
+    <value>Customer No.
+(Card number does not work)</value>
+  </data>
 </root>
