@@ -44,6 +44,7 @@ namespace FreeCars {
 			AppOnTrialModeChanged(null, null);
 			CheckCar2GoApiAccess();
 			syncDriveNowCredentialsWithApp();
+			syncMulticityCredentialsWithApp();
 		}
 
 		private void OnToggleSwitchChanged(ToggleSwitch sender) {
@@ -498,14 +499,14 @@ namespace FreeCars {
 			syncDriveNowCredentialsWithApp();
 		}
 		private void syncMulticityCredentialsWithApp() {
-			var username = (string)App.GetAppSetting("driveNow.username");
-			var password = (string)App.GetAppSetting("driveNow.password");
+			var username = (string)App.GetAppSetting("multicity.username");
+			var password = (string)App.GetAppSetting("multicity.password");
 			if (null == username)
 				username = "";
-			driveNowUsernameTextbox.Text = username;
+			multicityUsernameTextbox.Text = username;
 			if (null == password)
 				password = "";
-			driveNowPasswordbox.Password = password;
+			multicityPasswordbox.Password = password;
 		}
 		private void OnMulticityUsernameTap(object sender, System.Windows.Input.GestureEventArgs e) {
 			multicityUsernameTextbox.Focus();
