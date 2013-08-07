@@ -294,7 +294,11 @@ Bitte nutze eine der folgenden Kontaktmöglichkeiten bei Kritik, Verbesserungsvo
 Jede Anfrage wird beantwortet!</value>
   </data>
   <data name="ChangelogPageBody" xml:space="preserve">
-    <value>1.6.0.1:
+    <value>1.7.0.0:
+* Buchungen für multicity
+* Batteriesymbol statt Tanksäule bei Elektroantrieb auch bei DriveNow
+
+1.6.0.1:
 * Stornierungen für car2go - jetzt wirklich
 * Verwirrende Buttons bei DriveNow-Buchungen entfernt
 

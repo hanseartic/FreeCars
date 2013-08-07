@@ -289,7 +289,11 @@ Please use one of the following options to get in touch with me for critics, sug
 I will answer every request!</value>
   </data>
   <data name="ChangelogPageBody" xml:space="preserve">
-    <value>1.6.0.1:
+    <value>1.7.0.0:
+* enable multicity booking
+* show battery-icon instead of fuel icon when DriveNow-vehicle has electric drive
+
+1.6.0.1:
 * really cancel bookings with car2go
 * remove unneccessary buttons while booking DriveNow
 
