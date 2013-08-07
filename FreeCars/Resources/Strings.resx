@@ -527,4 +527,9 @@ preparing reservation</value>
     <value>Customer No.
 (Card number does not work)</value>
   </data>
+  <data name="BookingMulticityUsernamePasswordWrongDialog" xml:space="preserve">
+    <value>Could not log you in to Multicity with the credentials you provided.
+
+Do you want to go to the settings-page now and enter the correct credentials?</value>
+  </data>
 </root>

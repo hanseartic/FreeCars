@@ -533,4 +533,9 @@ Möchtest Du jetzt Deine Zugangsdaten speichern?</value>
     <value>Kundennummer
 (Kartennummer funktioniert nicht)</value>
   </data>
+  <data name="BookingMulticityUsernamePasswordWrongDialog" xml:space="preserve">
+    <value>Der Login bei multicity war mit den von Dir angegebenen Zugangsdaten nicht erfolgreich.
+
+Möchtest Du die Daten jetzt auf der Einstellungsseite ändern?</value>
+  </data>
 </root>
