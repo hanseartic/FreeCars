@@ -202,9 +202,11 @@
     <value>@fraggedreality</value>
   </data>
   <data name="AboutPageDisclaimer" xml:space="preserve">
-    <value>FreeCars shows you free rides of the carsharing companies car2go, DriveNow and multicity as well as electrical charging-units nearby.
+    <value>FreeCars shows you free rides of the carsharing companies car2go, DriveNow and multicity as well as multicity's electrical charging-units nearby.
 
-At the moment you can only book car2go and DriveNow cars via this app. Multicity is in the pipeline.</value>
+You can directly book available cars through the app.
+
+For quick-access you can pin the current location and zoom-level to the home-screen by tap-holding the map.</value>
   </data>
   <data name="AboutPageVersionInfo" xml:space="preserve">
     <value>Version</value>

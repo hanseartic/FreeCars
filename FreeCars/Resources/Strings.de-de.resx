@@ -202,11 +202,12 @@
     <value>@fraggedreality</value>
   </data>
   <data name="AboutPageDisclaimer" xml:space="preserve">
-    <value>FreeCars zeigt freie Fahrzeuge der Carsharing-Anbieter car2go, DriveNow und multicity sowie elektrische Ladesäulen in der Umgebung an.
+    <value>FreeCars zeigt freie Fahrzeuge der Carsharing-Anbieter car2go, DriveNow und multicity sowie elektrische Ladesäulen von multicity in der Umgebung an.
+
+Über die Buchungsfunktion können Fahrzeuge direkt vorreserviert werden.
 
 Über secondary-Tiles können beliebige Suchorte auf den Startbildschirm gepinnt werden.
-	
-Bisher ist nur die Vorreservierung der Fahrzeuge von car2go und DriveNow über die App möglich.</value>
+</value>
   </data>
   <data name="AboutPageVersionInfo" xml:space="preserve">
     <value>Version</value>
