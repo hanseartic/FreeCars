@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Navigation;
 using System.Xml;
+using FreeCars.Providers;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Info;
 using Microsoft.Phone.Shell;
@@ -125,13 +126,13 @@ namespace FreeCars {
 		}
 		public void ReloadPOIs() {
 			try {
-					(Resources["multicity"] as Multicity).LoadPOIs();
+				(Resources["multicity"] as Multicity).LoadPOIs();
 			} catch { }
 			try {
-					(Resources["driveNow"] as DriveNow).LoadPOIs();
+				(Resources["driveNow"] as DriveNow).LoadPOIs();
 			} catch { }
 			try {
-					(Resources["car2go"] as Car2Go).LoadPOIs();
+				(Resources["car2go"] as Car2Go).LoadPOIs();
 			} catch { }
 		}
         public event EventHandler CarsUpdated;

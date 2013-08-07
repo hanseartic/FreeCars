@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Navigation;
+using FreeCars.Providers;
 using FreeCars.Serialization;
 using Microsoft.Phone.Controls;
 using System.IO.IsolatedStorage;
@@ -43,6 +44,7 @@ namespace FreeCars {
 			AppOnTrialModeChanged(null, null);
 			CheckCar2GoApiAccess();
 			syncDriveNowCredentialsWithApp();
+			syncMulticityCredentialsWithApp();
 		}
 
 		private void OnToggleSwitchChanged(ToggleSwitch sender) {
@@ -290,7 +292,6 @@ namespace FreeCars {
 		}
 
 		private void CheckCar2GoApiAccess() {
-			var hasApiAccess = false;
 
 			var oauth_token = (string)App.GetAppSetting("car2go.oauth_token");
 			var oauth_token_secret = (string)App.GetAppSetting("car2go.oauth_token_secret");
@@ -483,7 +484,6 @@ namespace FreeCars {
 		private void OnDriveNowUsernameTap(object sender, System.Windows.Input.GestureEventArgs e) {
 			driveNowUsernameTextbox.Focus();
 		}
-
 		private void OnDriveNowPassordTap(object sender, System.Windows.Input.GestureEventArgs e) {
 			driveNowPasswordbox.Focus();
 		}
@@ -497,6 +497,31 @@ namespace FreeCars {
 			App.ClearAppSetting("driveNow.username");
 			App.ClearAppSetting("driveNow.password");
 			syncDriveNowCredentialsWithApp();
+		}
+		private void syncMulticityCredentialsWithApp() {
+			var username = (string)App.GetAppSetting("multicity.username");
+			var password = (string)App.GetAppSetting("multicity.password");
+			if (null == username)
+				username = "";
+			multicityUsernameTextbox.Text = username;
+			if (null == password)
+				password = "";
+			multicityPasswordbox.Password = password;
+		}
+		private void OnMulticityUsernameTap(object sender, System.Windows.Input.GestureEventArgs e) {
+			multicityUsernameTextbox.Focus();
+		}
+		private void OnMulticityPassordTap(object sender, System.Windows.Input.GestureEventArgs e) {
+			multicityPasswordbox.Focus();
+		}
+		private void OnSaveMulticityCredentials(object sender, RoutedEventArgs e) {
+			App.SetAppSetting("multicity.username", multicityUsernameTextbox.Text);
+			App.SetAppSetting("multicity.password", multicityPasswordbox.Password);
+		}
+		private void OnClearMulticityCredentials(object sender, RoutedEventArgs e) {
+			App.ClearAppSetting("multicity.username");
+			App.ClearAppSetting("multicity.password");
+			syncMulticityCredentialsWithApp();
 		}
 	}
 }

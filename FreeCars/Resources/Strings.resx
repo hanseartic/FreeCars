@@ -202,9 +202,11 @@
     <value>@fraggedreality</value>
   </data>
   <data name="AboutPageDisclaimer" xml:space="preserve">
-    <value>FreeCars shows you free rides of the carsharing companies car2go, DriveNow and multicity as well as electrical charging-units nearby.
+    <value>FreeCars shows you free rides of the carsharing companies car2go, DriveNow and multicity as well as multicity's electrical charging-units nearby.
 
-At the moment you can only book car2go and DriveNow cars via this app. Multicity is in the pipeline.</value>
+You can directly book available cars through the app.
+
+For quick-access you can pin the current location and zoom-level to the home-screen by tap-holding the map.</value>
   </data>
   <data name="AboutPageVersionInfo" xml:space="preserve">
     <value>Version</value>
@@ -287,7 +289,11 @@ Please use one of the following options to get in touch with me for critics, sug
 I will answer every request!</value>
   </data>
   <data name="ChangelogPageBody" xml:space="preserve">
-    <value>1.6.0.1:
+    <value>1.7.0.0:
+* enable multicity booking
+* show battery-icon instead of fuel icon when DriveNow-vehicle has electric drive
+
+1.6.0.1:
 * really cancel bookings with car2go
 * remove unneccessary buttons while booking DriveNow
 
@@ -507,5 +513,27 @@ You will be charged {1} {0}.</value>
   </data>
   <data name="BookingPageCancelQuestion" xml:space="preserve">
     <value>Do you want to  cancel the reservation for this car?</value>
+  </data>
+  <data name="BookingPageConnectingToMulticity" xml:space="preserve">
+    <value>opening mobile multicity site
+preparing reservation</value>
+  </data>
+  <data name="MulticityCredentialsMissingDialogHeader" xml:space="preserve">
+    <value>multicity credentials missing</value>
+  </data>
+  <data name="MulticityCredentialsMissingDialogMessage" xml:space="preserve">
+    <value>Do you want to go to the settings-page now?</value>
+  </data>
+  <data name="SettingsPageMulticityPasswordHeader" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="SettingsPageMulticityUsernameHeader" xml:space="preserve">
+    <value>Customer No.
+(Card number does not work)</value>
+  </data>
+  <data name="BookingMulticityUsernamePasswordWrongDialog" xml:space="preserve">
+    <value>Could not log you in to Multicity with the credentials you provided.
+
+Do you want to go to the settings-page now and enter the correct credentials?</value>
   </data>
 </root>

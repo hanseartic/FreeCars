@@ -12,6 +12,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Navigation;
 using AdDuplex;
+using FreeCars.Providers;
 using FreeCars.Serialization;
 using GoogleMaps.Geocode;
 using Microsoft.Advertising;
@@ -222,7 +223,9 @@ namespace FreeCars {
 
 		private void OnMainPageApplicationBarBookCarButtonClick(object sender, EventArgs e) {
 			Pushpin activePushpin = (Pushpin)(activeLayer.Children.First());
-			if (activePushpin.Tag is Car2GoMarker || activePushpin.Tag is DriveNowMarker) {
+			if (activePushpin.Tag is Car2GoMarker ||
+				activePushpin.Tag is DriveNowMarker ||
+				activePushpin.Tag is MulticityMarker) {
 				bookingControl.Activate((Marker)activePushpin.Tag);
 				ApplicationBar.IsVisible = false;
 			}
@@ -282,7 +285,7 @@ namespace FreeCars {
 			var cultureInfo = new CultureInfo("en-US");
 			var driveNowBrush = new SolidColorBrush(new Color { A = 255, R = 176, G = 105, B = 9 });
 			driveNowCarsLayer.Children.Clear();
-			foreach (var car in driveNow.DriveNowCars) {
+			foreach (var car in driveNow.Markers) {
 				var distanceToMapCenter = (int)car.position.GetDistanceTo(centerLocation);
 				if (markersMaxDistance < distanceToMapCenter) continue;
 				//var distance = (int)car.position.GetDistanceTo(myLocationPushpin.Location);
@@ -296,7 +299,10 @@ namespace FreeCars {
 								Orientation = System.Windows.Controls.Orientation.Horizontal,
 								Children = {
 									new Image {
-										Source = new BitmapImage(new Uri("/Resources/fuel28x28.png", UriKind.Relative)), 
+										Source = new BitmapImage(car.fuelType == "ELE" 
+											? new Uri("/Resources/battery28x28.png", UriKind.Relative)
+											: new Uri("/Resources/fuel28x28.png", UriKind.Relative)
+										), 
 										Margin = new Thickness(0, 0, 12, 0),
 									},
 									new TextBlock { Text = car.fuelState + "%", },
@@ -328,7 +334,7 @@ namespace FreeCars {
 			var multcityChargersBrush = new SolidColorBrush(Colors.Green);
 			multicityCarsLayer.Children.Clear();
 			var tempList = new List<Pushpin>();
-			foreach (var car in multicity.MulticityCars) {
+			foreach (var car in multicity.Markers) {
 				try {
 					var distanceToMapCenter = (int)car.position.GetDistanceTo(centerLocation);
 					var fuelTextBlock = new TextBlock { Text = !string.IsNullOrEmpty(car.fuelState) ? car.fuelState + "%" : "", };
@@ -422,7 +428,7 @@ namespace FreeCars {
 			var car2GoCarsBrush = new SolidColorBrush(new Color {A = 255, R = 0, G = 159, B = 228,});
 			var centerLocation = map.Center;
 			car2goCarsLayer.Children.Clear();
-			foreach (var car in car2Go.Car2GoCars) {
+			foreach (var car in car2Go.Markers) {
 				try {
 					var distanceToMapCenter = (int)car.position.GetDistanceTo(centerLocation);
 
@@ -481,7 +487,7 @@ namespace FreeCars {
 						if (((Car2GoMarker)((Pushpin)sender).Tag).isBooked) {
 							mainPageApplicationBarBookCarButton.IconUri = new Uri("Resources/appbar.timer.cancel.png", UriKind.RelativeOrAbsolute);
 						}
-					} else if (((Pushpin)sender).Tag is DriveNowMarker) {
+					} else if ((((Pushpin)sender).Tag is DriveNowMarker) || (((Pushpin)sender).Tag is MulticityMarker)) {
 						mainPageApplicationBarBookCarButton.IsEnabled = true;
 					}
 					var parentLayer = VisualTreeHelper.GetParent((Pushpin)sender) as MapLayer;

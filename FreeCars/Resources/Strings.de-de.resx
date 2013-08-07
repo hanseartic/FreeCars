@@ -202,11 +202,12 @@
     <value>@fraggedreality</value>
   </data>
   <data name="AboutPageDisclaimer" xml:space="preserve">
-    <value>FreeCars zeigt freie Fahrzeuge der Carsharing-Anbieter car2go, DriveNow und multicity sowie elektrische Ladesäulen in der Umgebung an.
+    <value>FreeCars zeigt freie Fahrzeuge der Carsharing-Anbieter car2go, DriveNow und multicity sowie elektrische Ladesäulen von multicity in der Umgebung an.
+
+Über die Buchungsfunktion können Fahrzeuge direkt vorreserviert werden.
 
 Über secondary-Tiles können beliebige Suchorte auf den Startbildschirm gepinnt werden.
-	
-Bisher ist nur die Vorreservierung der Fahrzeuge von car2go und DriveNow über die App möglich.</value>
+</value>
   </data>
   <data name="AboutPageVersionInfo" xml:space="preserve">
     <value>Version</value>
@@ -293,7 +294,11 @@ Bitte nutze eine der folgenden Kontaktmöglichkeiten bei Kritik, Verbesserungsvo
 Jede Anfrage wird beantwortet!</value>
   </data>
   <data name="ChangelogPageBody" xml:space="preserve">
-    <value>1.6.0.1:
+    <value>1.7.0.0:
+* Buchungen für multicity
+* Batteriesymbol statt Tanksäule bei Elektroantrieb auch bei DriveNow
+
+1.6.0.1:
 * Stornierungen für car2go - jetzt wirklich
 * Verwirrende Buttons bei DriveNow-Buchungen entfernt
 
@@ -513,5 +518,28 @@ Die Kosten hierfür betragen {0} {1}.</value>
   </data>
   <data name="BookingPageCancelQuestion" xml:space="preserve">
     <value>Möchtest Du die Buchung stornieren?</value>
+  </data>
+  <data name="BookingPageConnectingToMulticity" xml:space="preserve">
+    <value>Lade mobile Buchung von multicity
+Buchung vorbereiten</value>
+  </data>
+  <data name="MulticityCredentialsMissingDialogHeader" xml:space="preserve">
+    <value>Keine Zugangsdaten für multicity</value>
+  </data>
+  <data name="MulticityCredentialsMissingDialogMessage" xml:space="preserve">
+    <value>Du hast noch keine Zugangsaten für multicity eingegeben.
+Möchtest Du jetzt Deine Zugangsdaten speichern?</value>
+  </data>
+  <data name="SettingsPageMulticityPasswordHeader" xml:space="preserve">
+    <value>Passwort</value>
+  </data>
+  <data name="SettingsPageMulticityUsernameHeader" xml:space="preserve">
+    <value>Kundennummer
+(Kartennummer funktioniert nicht)</value>
+  </data>
+  <data name="BookingMulticityUsernamePasswordWrongDialog" xml:space="preserve">
+    <value>Der Login bei multicity war mit den von Dir angegebenen Zugangsdaten nicht erfolgreich.
+
+Möchtest Du die Daten jetzt auf der Einstellungsseite ändern?</value>
   </data>
 </root>
