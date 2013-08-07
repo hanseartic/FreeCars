@@ -3,7 +3,7 @@
   <AppExtra xmlns="" AppPlatformVersion="8.0">
     <Extra Name="Tiles" />
   </AppExtra>
-  <App xmlns="" ProductID="{f84f04f9-da10-4ad9-a360-3342417dc201}" Title="FreeCars" RuntimeType="Silverlight" Version="1.6.0.1" Genre="apps.normal" Author="Paul Schütte" Description="Find free carsharing-rides around you" Publisher="Hanseartic">
+  <App xmlns="" ProductID="{f84f04f9-da10-4ad9-a360-3342417dc201}" Title="FreeCars" RuntimeType="Silverlight" Version="1.7.0.0" Genre="apps.normal" Author="Paul Schütte" Description="Find free carsharing-rides around you" Publisher="Hanseartic">
     <IconPath IsRelative="true" IsResource="false">ApplicationIcon.png</IconPath>
     <Capabilities>
       <Capability Name="ID_CAP_IDENTITY_DEVICE" />
