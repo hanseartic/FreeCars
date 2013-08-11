@@ -116,9 +116,9 @@ namespace FreeCars {
 			isRefreshingDriveNow = true;
 			isRefreshingMulticity = true;
 			VisualStateManager.GoToState(this, "CarsLoadingShow", true);
-			VisualStateManager.GoToState(this, "isRefreshingCar2Go", false);
-			VisualStateManager.GoToState(this, "isRefreshingDriveNow", false);
-			VisualStateManager.GoToState(this, "isRefreshingMulticity", false);
+			VisualStateManager.GoToState(this, "isRefreshingCar2GoState", false);
+			VisualStateManager.GoToState(this, "isRefreshingDriveNowState", false);
+			VisualStateManager.GoToState(this, "isRefreshingMulticityState", false);
 			((App)Application.Current).ReloadPOIs();
 		}
 		protected override void OnNavigatedTo(NavigationEventArgs e) {
