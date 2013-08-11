@@ -173,7 +173,7 @@
 				</Image>
 			</Grid>
 		</Grid>
-		<Grid x:Name="AdsGrid" Grid.Row="2" Visibility="Collapsed">
+		<Grid x:Name="AdsGrid" Grid.Row="0" Visibility="Collapsed">
 			<adduplex:AdControl
 				x:Name="AdDuplexAdControl" Visibility="Visible"
 				AdLoadingError="OnAdduplexAddControlErrorOccured"
