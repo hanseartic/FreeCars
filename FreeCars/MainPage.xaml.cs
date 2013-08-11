@@ -112,13 +112,25 @@ namespace FreeCars {
 		}
 
 		private void ReloadPOIs() {
-			isRefreshingCar2Go = true;
-			isRefreshingDriveNow = true;
-			isRefreshingMulticity = true;
 			VisualStateManager.GoToState(this, "CarsLoadingShow", true);
-			VisualStateManager.GoToState(this, "isRefreshingCar2GoState", false);
-			VisualStateManager.GoToState(this, "isRefreshingDriveNowState", false);
-			VisualStateManager.GoToState(this, "isRefreshingMulticityState", false);
+			if (null == App.GetAppSetting("settings_show_car2go_cars") ||
+				(bool)App.GetAppSetting("settings_show_car2go_cars")) {
+				isRefreshingCar2Go = true;
+				VisualStateManager.GoToState(this, "isRefreshingCar2GoState", false);
+			}
+			if (null == App.GetAppSetting("settings_show_drivenow_cars") ||
+				(bool)App.GetAppSetting("settings_show_drivenow_cars")) {
+				isRefreshingDriveNow = true;
+				VisualStateManager.GoToState(this, "isRefreshingDriveNowState", false);
+			}
+			var showMulticity =
+				(null == App.GetAppSetting("settings_show_multicity_cars") || (bool)App.GetAppSetting("settings_show_multicity_cars")) ||
+				(null == App.GetAppSetting("settings_show_multicity_chargers") || (bool)App.GetAppSetting("settings_show_multicity_chargers"));
+			if (showMulticity) {
+				isRefreshingMulticity = true;
+				VisualStateManager.GoToState(this, "isRefreshingMulticityState", false);
+			}
+
 			((App)Application.Current).ReloadPOIs();
 		}
 		protected override void OnNavigatedTo(NavigationEventArgs e) {
@@ -141,7 +153,7 @@ namespace FreeCars {
 					map.Center = new GeoCoordinate(latitude, longitude);
 					return;
 				} catch { }
-			}
+			} 
 
 			if (NavigationMode.Back != e.NavigationMode) {
 				if (gpsAllowed) {
