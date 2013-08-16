@@ -1,5 +1,4 @@
-﻿<phone:PhoneApplicationPage  
-	x:Class="FreeCars.MainPage"
+﻿<phone:PhoneApplicationPage
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
@@ -10,6 +9,8 @@
 	xmlns:adduplex="clr-namespace:AdDuplex;assembly=AdDuplex.WindowsPhone"
 	xmlns:my="clr-namespace:Microsoft.Advertising.Mobile.UI;assembly=Microsoft.Advertising.Mobile.UI"
 	xmlns:local="clr-namespace:FreeCars"
+	xmlns:ec="clr-namespace:Microsoft.Expression.Interactivity.Core;assembly=Microsoft.Expression.Interactions"
+	x:Class="FreeCars.MainPage"
 	mc:Ignorable="d" d:DesignWidth="480" d:DesignHeight="800"
 	FontFamily="{StaticResource PhoneFontFamilyNormal}"
 	FontSize="{StaticResource PhoneFontSizeNormal}"
@@ -19,11 +20,6 @@
 
 	<!--LayoutRoot is the root grid where all page content is placed-->
 	<Grid x:Name="LayoutRoot" Background="Transparent">
-		<Grid.RowDefinitions>
-			<RowDefinition Height="Auto" />
-			<RowDefinition Height="*" />
-			<RowDefinition Height="Auto" />
-		</Grid.RowDefinitions>
 		<Grid.Resources>
 			<ControlTemplate x:Key="MyPositionPushpinTemplate" TargetType="map:Pushpin">
 				<Grid x:Name="ContentGrid" Width="28" Height="28" Margin="0">
@@ -32,25 +28,161 @@
 				</Grid>
 			</ControlTemplate>
 		</Grid.Resources>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="*" />
+			<RowDefinition Height="Auto" />
+		</Grid.RowDefinitions>
+		<VisualStateManager.VisualStateGroups>
+			<VisualStateGroup x:Name="IndicatorGroupStates" ec:ExtendedVisualStateManager.UseFluidLayout="True">
+				<VisualStateGroup.Transitions>
+					<VisualTransition GeneratedDuration="0:0:0.5"/>
+				</VisualStateGroup.Transitions>
+				<VisualState x:Name="CarsLoadingShow">
+					<Storyboard>
+						<DoubleAnimation Duration="0" To="0" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="LoadingIndicators" d:IsOptimized="True"/>
+					</Storyboard>
+				</VisualState>
+				<VisualState x:Name="CarsLoadingHide"/>
+			</VisualStateGroup>
+			<VisualStateGroup x:Name="IndicatorCar2GoStates">
+				<VisualStateGroup.Transitions>
+					<VisualTransition GeneratedDuration="0:0:0.2"/>
+				</VisualStateGroup.Transitions>
+				<VisualState x:Name="isRefreshingCar2GoState">
+					<Storyboard>
+						<DoubleAnimationUsingKeyFrames 
+							Storyboard.TargetName="car2goIndicator"
+							Storyboard.TargetProperty="(UIElement.Projection).(PlaneProjection.RotationY)" 
+							RepeatBehavior="Forever" >
+							<EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+							<EasingDoubleKeyFrame KeyTime="0:0:0.9" Value="360"/>
+							<EasingDoubleKeyFrame KeyTime="0:0:1.5" Value="360"/>
+						</DoubleAnimationUsingKeyFrames>						
+					</Storyboard>
+				</VisualState>
+				<VisualState x:Name="isRefreshingCar2GoDone">
+					<Storyboard>
+						<DoubleAnimation Duration="0" To="0" Storyboard.TargetProperty="(FrameworkElement.Height)" Storyboard.TargetName="car2goIndicator" d:IsOptimized="True"/>
+						<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="car2goIndicator">
+							<DiscreteObjectKeyFrame KeyTime="0">
+								<DiscreteObjectKeyFrame.Value>
+									<Thickness>8,7,0,3</Thickness>
+								</DiscreteObjectKeyFrame.Value>
+							</DiscreteObjectKeyFrame>
+						</ObjectAnimationUsingKeyFrames>
+					</Storyboard>
+				</VisualState>
+			</VisualStateGroup>
+			<VisualStateGroup x:Name="IndicatorDriveNowStates">
+				<VisualStateGroup.Transitions>
+					<VisualTransition GeneratedDuration="0:0:0.2"/>
+				</VisualStateGroup.Transitions>
+				<VisualState x:Name="isRefreshingDriveNowState">
+					<Storyboard>
+						<DoubleAnimationUsingKeyFrames
+							Storyboard.TargetName="driveNowIndicator"
+							Storyboard.TargetProperty="(UIElement.Projection).(PlaneProjection.RotationY)" 
+							RepeatBehavior="Forever" >
+							<EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+							<EasingDoubleKeyFrame KeyTime="0:0:0.9" Value="360"/>
+							<EasingDoubleKeyFrame KeyTime="0:0:1.5" Value="360"/>
+						</DoubleAnimationUsingKeyFrames>
+					</Storyboard>
+				</VisualState>
+				<VisualState x:Name="isRefreshingDriveNowDone">
+					<Storyboard>
+						<DoubleAnimation Duration="0" To="0" Storyboard.TargetProperty="(FrameworkElement.Height)" Storyboard.TargetName="driveNowIndicator" d:IsOptimized="True"/>
+						<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="driveNowIndicator">
+							<DiscreteObjectKeyFrame KeyTime="0">
+								<DiscreteObjectKeyFrame.Value>
+									<Thickness>0</Thickness>
+								</DiscreteObjectKeyFrame.Value>
+							</DiscreteObjectKeyFrame>
+						</ObjectAnimationUsingKeyFrames>
+					</Storyboard>
+				</VisualState>
+			</VisualStateGroup>
+			<VisualStateGroup x:Name="IndicatorMulticityStates">
+				<VisualStateGroup.Transitions>
+					<VisualTransition GeneratedDuration="0:0:0.2"/>
+				</VisualStateGroup.Transitions>
+				<VisualState x:Name="isRefreshingMulticityState">
+					<Storyboard>
+						<DoubleAnimationUsingKeyFrames
+							Storyboard.TargetName="multicityIndicator"
+							Storyboard.TargetProperty="(UIElement.Projection).(PlaneProjection.RotationY)" 
+							RepeatBehavior="Forever" >
+							<EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+							<EasingDoubleKeyFrame KeyTime="0:0:0.9" Value="360"/>
+							<EasingDoubleKeyFrame KeyTime="0:0:1.5" Value="360"/>
+						</DoubleAnimationUsingKeyFrames>
+					</Storyboard>
+				</VisualState>
+				<VisualState x:Name="isRefreshingMulticityDone">
+					<Storyboard>
+						<DoubleAnimation Duration="0" To="0" Storyboard.TargetProperty="(FrameworkElement.Height)" Storyboard.TargetName="multicityIndicator" d:IsOptimized="True"/>
+						<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="multicityIndicator">
+							<DiscreteObjectKeyFrame KeyTime="0">
+								<DiscreteObjectKeyFrame.Value>
+									<Thickness>0,0,8,0</Thickness>
+								</DiscreteObjectKeyFrame.Value>
+							</DiscreteObjectKeyFrame>
+						</ObjectAnimationUsingKeyFrames>
+					</Storyboard>
+				</VisualState>
+			</VisualStateGroup>
+		</VisualStateManager.VisualStateGroups>
 
-		<!--ContentPanel - place additional content here-->
+		<VisualStateManager.CustomVisualStateManager>
+			<ec:ExtendedVisualStateManager/>
+		</VisualStateManager.CustomVisualStateManager>
+<!--ContentPanel - place additional content here-->
 		<Grid x:Name="ContentPanel" Grid.Row="1">
-			<map:Map HorizontalAlignment="Left" Name="map" VerticalAlignment="Top" Height="800" Width="480" Tap="OnMapTap" Hold="OnMapHold" ViewChangeEnd="OnMapViewChangeEnd" ViewChangeStart="OnMapViewChangeStart">
-                <map:MapLayer x:Name="myLocationLayer">
-                    <map:Pushpin x:Name="myLocationPushpin" Template="{StaticResource MyPositionPushpinTemplate}" Margin="-14, 0, -14, 0" Opacity="0.9"  Visibility="Collapsed"  />
-                </map:MapLayer>
-				<map:MapLayer x:Name="multicityChargingLayer"></map:MapLayer>
-				<map:MapLayer x:Name="multicityFlinksterLayer"></map:MapLayer>
-				<map:MapLayer x:Name="multicityCarsLayer"></map:MapLayer>
-                <map:MapLayer x:Name="driveNowCarsLayer"></map:MapLayer>
-                <map:MapLayer x:Name="car2goCarsLayer"></map:MapLayer>
-				<map:MapLayer x:Name="activeLayer"></map:MapLayer>
-            </map:Map>
+			<map:Map HorizontalAlignment="Left" x:Name="map" VerticalAlignment="Top" Height="800" Width="480" Tap="OnMapTap" Hold="OnMapHold" ViewChangeEnd="OnMapViewChangeEnd" ViewChangeStart="OnMapViewChangeStart">
+				<map:MapLayer x:Name="myLocationLayer">
+					<map:Pushpin x:Name="myLocationPushpin" Template="{StaticResource MyPositionPushpinTemplate}" Margin="-14, 0, -14, 0" Opacity="0.9"  Visibility="Collapsed"  />
+				</map:MapLayer>
+				<map:MapLayer x:Name="multicityChargingLayer"/>
+				<map:MapLayer x:Name="multicityFlinksterLayer"/>
+				<map:MapLayer x:Name="multicityCarsLayer"/>
+				<map:MapLayer x:Name="driveNowCarsLayer"/>
+				<map:MapLayer x:Name="car2goCarsLayer"/>
+				<map:MapLayer x:Name="activeLayer"/>
+			</map:Map>
 			<Grid x:Name="bookingControlGrid" Visibility="Collapsed" Margin="0">
 				<local:BookingControl x:Name="bookingControl" Visibility="Visible" Margin="22" RenderTransformOrigin="0.5,0.5" />
 			</Grid>
+			<Grid x:Name="LoadingIndicators" VerticalAlignment="Top" Height="40" HorizontalAlignment="Center" Opacity="0.58" IsHitTestVisible="False" RenderTransformOrigin="0.5,0.5">
+				<Grid.RenderTransform>
+					<CompositeTransform TranslateY="-40"/>
+				</Grid.RenderTransform>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*" />
+					<ColumnDefinition Width="Auto" />
+					<ColumnDefinition Width="Auto" />
+					<ColumnDefinition Width="Auto" />
+					<ColumnDefinition Width="*" />
+				</Grid.ColumnDefinitions>
+				<Border Grid.Column="1" Grid.ColumnSpan="3" Background="Black" BorderBrush="Black" CornerRadius="0,0,8,8" />
+				<Image x:Name="car2goIndicator" Source="Resources\fortwo.png" Height="30" Grid.Column="1" Margin="8,7,8,3" RenderTransformOrigin="0.5,0.5">
+					<Image.Projection>
+						<PlaneProjection/>
+					</Image.Projection>
+				</Image>
+				<Image x:Name="driveNowIndicator" Source="Resources\mini.png" Height="30" Grid.Column="2" Margin="8,0" RenderTransformOrigin="0.5,0.5">
+					<Image.Projection>
+						<PlaneProjection/>
+					</Image.Projection>
+				</Image>
+				<Image x:Name="multicityIndicator" Source="Resources\czero.png" Height="30" Grid.Column="3" Margin="8,0" RenderTransformOrigin="0.5,0.5">
+					<Image.Projection>
+						<PlaneProjection/>
+					</Image.Projection>
+				</Image>
+			</Grid>
 		</Grid>
-		<Grid x:Name="AdsGrid" Grid.Row="2" Visibility="Collapsed">
+		<Grid x:Name="AdsGrid" Grid.Row="0" Visibility="Collapsed">
 			<adduplex:AdControl
 				x:Name="AdDuplexAdControl" Visibility="Visible"
 				AdLoadingError="OnAdduplexAddControlErrorOccured"

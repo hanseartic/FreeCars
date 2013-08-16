@@ -51,7 +51,7 @@ namespace FreeCars {
 			try {
 				if (false == (bool)IsolatedStorageSettings.ApplicationSettings["settings_show_multicity_cars"]) {
 					Markers = new List<MulticityMarker>();
-					TriggerUpdated();
+					TriggerUpdated("cars");
 					return;
 				}
 			} catch (KeyNotFoundException) { }
@@ -83,7 +83,7 @@ namespace FreeCars {
 					}
 				}
 				Markers = multicityCars;
-				TriggerUpdated();
+				TriggerUpdated("cars");
 			} catch { }
 		}
 		public static void LoadChargeState(Pushpin pushpin) {
@@ -108,7 +108,7 @@ namespace FreeCars {
 			try {
 				if (false == (bool)IsolatedStorageSettings.ApplicationSettings["settings_show_multicity_chargers"]) {
 					MulticityChargers = new List<MulticityChargerMarker>();
-					TriggerUpdated();
+					TriggerUpdated("chargers");
 					return;
 				}
 			} catch (KeyNotFoundException) { }
@@ -148,7 +148,7 @@ namespace FreeCars {
 					}
 				}
 				MulticityChargers = multicity_chargers;
-				TriggerUpdated();
+				TriggerUpdated("chargers");
 			} catch (DecoderFallbackException) { } catch (NullReferenceException) { } catch {
 				// TODO: repair correctly
 				// there is something nasty going on in WP8
@@ -160,10 +160,10 @@ namespace FreeCars {
 				SerializeChargers(e.Result);
 			} catch (WebException) { }
 		}
-		public event EventHandler Updated;
-		private void TriggerUpdated() {
+		public event EventHandler<CarsUpdatedEventArgs> Updated;
+		private void TriggerUpdated(String subsetName) {
 			if (null != Updated) {
-				Updated(this, null);
+				Updated(this, new CarsUpdatedEventArgs(CarsUpdatedEventArgs.UpdateType.Reload, subsetName));
 			}
 		}
 	}

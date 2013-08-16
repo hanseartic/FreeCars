@@ -110,11 +110,36 @@ namespace FreeCars {
 				e.Cancel = true;
 			}
 		}
+
+		private void ReloadPOIs() {
+			VisualStateManager.GoToState(this, "CarsLoadingShow", true);
+			if (null == App.GetAppSetting("settings_show_car2go_cars") ||
+				(bool)App.GetAppSetting("settings_show_car2go_cars")) {
+				isRefreshingCar2Go = true;
+				VisualStateManager.GoToState(this, "isRefreshingCar2GoState", false);
+			}
+			if (null == App.GetAppSetting("settings_show_drivenow_cars") ||
+				(bool)App.GetAppSetting("settings_show_drivenow_cars")) {
+				isRefreshingDriveNow = true;
+				VisualStateManager.GoToState(this, "isRefreshingDriveNowState", false);
+			}
+			if (null == App.GetAppSetting("settings_show_multicity_cars") ||
+				(bool)App.GetAppSetting("settings_show_multicity_cars")) {
+				isRefreshingMulticityCars = true;
+				VisualStateManager.GoToState(this, "isRefreshingMulticityState", false);
+			}
+			if (null == App.GetAppSetting("settings_show_multicity_chargers") ||
+				(bool)App.GetAppSetting("settings_show_multicity_chargers")) {
+				isRefreshingMulticityChargers = true;
+				VisualStateManager.GoToState(this, "isRefreshingMulticityState", false);
+			}
+
+			((App)Application.Current).ReloadPOIs();
+		}
 		protected override void OnNavigatedTo(NavigationEventArgs e) {
 			base.OnNavigatedTo(e);
 			CheckTrialAndAds();
-			((App)Application.Current).ReloadPOIs();
-
+			ReloadPOIs();
 			try {
 				gpsAllowed = (bool)IsolatedStorageSettings.ApplicationSettings["settings_use_GPS"];
 			} catch (KeyNotFoundException) {
@@ -131,7 +156,7 @@ namespace FreeCars {
 					map.Center = new GeoCoordinate(latitude, longitude);
 					return;
 				} catch { }
-			}
+			} 
 
 			if (NavigationMode.Back != e.NavigationMode) {
 				if (gpsAllowed) {
@@ -217,7 +242,7 @@ namespace FreeCars {
 			bookingControl.Closed += (sender, args) => { ApplicationBar.IsVisible = true; };
 			bookingControl.ActionCompleted += (sender, args) => {
 				DeactivateAllPushpins();
-				((App)Application.Current).ReloadPOIs();
+				ReloadPOIs();
 			};
 		}
 
@@ -240,7 +265,7 @@ namespace FreeCars {
 			NavigationService.Navigate(new Uri("/SettingsPage.xaml", UriKind.RelativeOrAbsolute));
 		}
 		void OnMainPageApplicationBarReloadButtonClick(object sender, EventArgs e) {
-			((App)Application.Current).ReloadPOIs();
+			ReloadPOIs();
 		}
 		private void OnMainPageApplicationBarPinButtonClick(object sender, EventArgs e) {
 			pinCurrentMapCenterAsSecondaryTile();
@@ -269,16 +294,37 @@ namespace FreeCars {
 			myLocationPushpin.Visibility = Visibility.Visible;
 		}
 
-		void OnCarsUpdated(object sender, EventArgs e) {
+		private bool isRefreshingMulticityCars, isRefreshingMulticityChargers, isRefreshingDriveNow, isRefreshingCar2Go;
+		void OnCarsUpdated(object sender, CarsUpdatedEventArgs e) {
 			if (sender.GetType() == typeof(Multicity)) {
 				UpdateMulticityLayers((Multicity)sender);
+				if (e.Type == CarsUpdatedEventArgs.UpdateType.Reload) {
+					if (e.CurrentSubsetName == "cars")
+						isRefreshingMulticityCars = false;
+					if (e.CurrentSubsetName == "chargers")
+						isRefreshingMulticityChargers = false;
+					if (isRefreshingMulticityCars || isRefreshingMulticityChargers)
+						return;
+					VisualStateManager.GoToState(this, "isRefreshingMulticityDone", true);
+				}
 			}
 			if (sender.GetType() == typeof(DriveNow)) {
 				UpdateDriveNowLayer((DriveNow)sender);
+				if (e.Type == CarsUpdatedEventArgs.UpdateType.Reload) {
+					isRefreshingDriveNow = false;
+					VisualStateManager.GoToState(this, "isRefreshingDriveNowDone", true);
+				}
 			}
 			if (sender.GetType() == typeof(Car2Go)) {
 				UpdateCar2GoLayer((Car2Go)sender);
+				if (e.Type == CarsUpdatedEventArgs.UpdateType.Reload) {
+					isRefreshingCar2Go = false;
+					VisualStateManager.GoToState(this, "isRefreshingCar2GoDone", true);
+				}
 			}
+			if (isRefreshingCar2Go || isRefreshingDriveNow || isRefreshingMulticityCars || isRefreshingMulticityChargers)
+				return;
+			VisualStateManager.GoToState(this, "CarsLoadingHide", true);
 		}
 		void UpdateDriveNowLayer(DriveNow driveNow) {
 			var centerLocation = map.Center;
