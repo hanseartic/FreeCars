@@ -51,11 +51,14 @@
 				</VisualStateGroup.Transitions>
 				<VisualState x:Name="isRefreshingCar2GoState">
 					<Storyboard>
-						<DoubleAnimation 
-							Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.Rotation)" 
+						<DoubleAnimationUsingKeyFrames 
 							Storyboard.TargetName="car2goIndicator"
-							From="0" To="360" Duration="0:0:01.3"
-							RepeatBehavior="Forever" />							
+							Storyboard.TargetProperty="(UIElement.Projection).(PlaneProjection.RotationY)" 
+							RepeatBehavior="Forever" >
+							<EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+							<EasingDoubleKeyFrame KeyTime="0:0:0.9" Value="360"/>
+							<EasingDoubleKeyFrame KeyTime="0:0:1.5" Value="360"/>
+						</DoubleAnimationUsingKeyFrames>						
 					</Storyboard>
 				</VisualState>
 				<VisualState x:Name="isRefreshingCar2GoDone">
@@ -77,11 +80,14 @@
 				</VisualStateGroup.Transitions>
 				<VisualState x:Name="isRefreshingDriveNowState">
 					<Storyboard>
-						<DoubleAnimation 
-							Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.Rotation)" 
+						<DoubleAnimationUsingKeyFrames
 							Storyboard.TargetName="driveNowIndicator"
-							From="0" To="360" Duration="0:0:01.3"
-							RepeatBehavior="Forever" />
+							Storyboard.TargetProperty="(UIElement.Projection).(PlaneProjection.RotationY)" 
+							RepeatBehavior="Forever" >
+							<EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+							<EasingDoubleKeyFrame KeyTime="0:0:0.9" Value="360"/>
+							<EasingDoubleKeyFrame KeyTime="0:0:1.5" Value="360"/>
+						</DoubleAnimationUsingKeyFrames>
 					</Storyboard>
 				</VisualState>
 				<VisualState x:Name="isRefreshingDriveNowDone">
@@ -103,11 +109,14 @@
 				</VisualStateGroup.Transitions>
 				<VisualState x:Name="isRefreshingMulticityState">
 					<Storyboard>
-						<DoubleAnimation 
-							Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.Rotation)" 
+						<DoubleAnimationUsingKeyFrames
 							Storyboard.TargetName="multicityIndicator"
-							From="0" To="360" Duration="0:0:01.3"
-							RepeatBehavior="Forever" />
+							Storyboard.TargetProperty="(UIElement.Projection).(PlaneProjection.RotationY)" 
+							RepeatBehavior="Forever" >
+							<EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+							<EasingDoubleKeyFrame KeyTime="0:0:0.9" Value="360"/>
+							<EasingDoubleKeyFrame KeyTime="0:0:1.5" Value="360"/>
+						</DoubleAnimationUsingKeyFrames>
 					</Storyboard>
 				</VisualState>
 				<VisualState x:Name="isRefreshingMulticityDone">
@@ -157,19 +166,19 @@
 				</Grid.ColumnDefinitions>
 				<Border Grid.Column="1" Grid.ColumnSpan="3" Background="Black" BorderBrush="Black" CornerRadius="0,0,8,8" />
 				<Image x:Name="car2goIndicator" Source="Resources\fortwo.png" Height="30" Grid.Column="1" Margin="8,7,8,3" RenderTransformOrigin="0.5,0.5">
-					<Image.RenderTransform>
-						<CompositeTransform/>
-					</Image.RenderTransform>
+					<Image.Projection>
+						<PlaneProjection/>
+					</Image.Projection>
 				</Image>
 				<Image x:Name="driveNowIndicator" Source="Resources\mini.png" Height="30" Grid.Column="2" Margin="8,0" RenderTransformOrigin="0.5,0.5">
-					<Image.RenderTransform>
-						<CompositeTransform/>
-					</Image.RenderTransform>
+					<Image.Projection>
+						<PlaneProjection/>
+					</Image.Projection>
 				</Image>
 				<Image x:Name="multicityIndicator" Source="Resources\czero.png" Height="30" Grid.Column="3" Margin="8,0" RenderTransformOrigin="0.5,0.5">
-					<Image.RenderTransform>
-						<CompositeTransform/>
-					</Image.RenderTransform>
+					<Image.Projection>
+						<PlaneProjection/>
+					</Image.Projection>
 				</Image>
 			</Grid>
 		</Grid>
