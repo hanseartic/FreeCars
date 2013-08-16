@@ -289,7 +289,11 @@ Please use one of the following options to get in touch with me for critics, sug
 I will answer every request!</value>
   </data>
   <data name="ChangelogPageBody" xml:space="preserve">
-    <value>1.7.0.0:
+    <value>1.7.0.1:
+* downloadindicatiors while loading data
+* ads on top to prevent accidental clicks
+
+1.7.0.0:
 * enable multicity booking
 * show battery-icon instead of fuel icon when DriveNow-vehicle has electric drive
 
