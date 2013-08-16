@@ -123,11 +123,14 @@ namespace FreeCars {
 				isRefreshingDriveNow = true;
 				VisualStateManager.GoToState(this, "isRefreshingDriveNowState", false);
 			}
-			var showMulticity =
-				(null == App.GetAppSetting("settings_show_multicity_cars") || (bool)App.GetAppSetting("settings_show_multicity_cars")) ||
-				(null == App.GetAppSetting("settings_show_multicity_chargers") || (bool)App.GetAppSetting("settings_show_multicity_chargers"));
-			if (showMulticity) {
-				isRefreshingMulticity = true;
+			if (null == App.GetAppSetting("settings_show_multicity_cars") ||
+				(bool)App.GetAppSetting("settings_show_multicity_cars")) {
+				isRefreshingMulticityCars = true;
+				VisualStateManager.GoToState(this, "isRefreshingMulticityState", false);
+			}
+			if (null == App.GetAppSetting("settings_show_multicity_chargers") ||
+				(bool)App.GetAppSetting("settings_show_multicity_chargers")) {
+				isRefreshingMulticityChargers = true;
 				VisualStateManager.GoToState(this, "isRefreshingMulticityState", false);
 			}
 
@@ -291,24 +294,35 @@ namespace FreeCars {
 			myLocationPushpin.Visibility = Visibility.Visible;
 		}
 
-		private bool isRefreshingMulticity, isRefreshingDriveNow, isRefreshingCar2Go;
-		void OnCarsUpdated(object sender, EventArgs e) {
+		private bool isRefreshingMulticityCars, isRefreshingMulticityChargers, isRefreshingDriveNow, isRefreshingCar2Go;
+		void OnCarsUpdated(object sender, CarsUpdatedEventArgs e) {
 			if (sender.GetType() == typeof(Multicity)) {
 				UpdateMulticityLayers((Multicity)sender);
-				isRefreshingMulticity = false;
-				VisualStateManager.GoToState(this, "isRefreshingMulticityDone", true);
+				if (e.Type == CarsUpdatedEventArgs.UpdateType.Reload) {
+					if (e.CurrentSubsetName == "cars")
+						isRefreshingMulticityCars = false;
+					if (e.CurrentSubsetName == "chargers")
+						isRefreshingMulticityChargers = false;
+					if (isRefreshingMulticityCars || isRefreshingMulticityChargers)
+						return;
+					VisualStateManager.GoToState(this, "isRefreshingMulticityDone", true);
+				}
 			}
 			if (sender.GetType() == typeof(DriveNow)) {
 				UpdateDriveNowLayer((DriveNow)sender);
-				isRefreshingDriveNow = false;
-				VisualStateManager.GoToState(this, "isRefreshingDriveNowDone", true);
+				if (e.Type == CarsUpdatedEventArgs.UpdateType.Reload) {
+					isRefreshingDriveNow = false;
+					VisualStateManager.GoToState(this, "isRefreshingDriveNowDone", true);
+				}
 			}
 			if (sender.GetType() == typeof(Car2Go)) {
 				UpdateCar2GoLayer((Car2Go)sender);
-				isRefreshingCar2Go = false;
-				VisualStateManager.GoToState(this, "isRefreshingCar2GoDone", true);
+				if (e.Type == CarsUpdatedEventArgs.UpdateType.Reload) {
+					isRefreshingCar2Go = false;
+					VisualStateManager.GoToState(this, "isRefreshingCar2GoDone", true);
+				}
 			}
-			if (isRefreshingCar2Go || isRefreshingDriveNow || isRefreshingMulticity)
+			if (isRefreshingCar2Go || isRefreshingDriveNow || isRefreshingMulticityCars || isRefreshingMulticityChargers)
 				return;
 			VisualStateManager.GoToState(this, "CarsLoadingHide", true);
 		}

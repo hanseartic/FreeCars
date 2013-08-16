@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO.IsolatedStorage;
 using System.Linq;
 using System.Windows;
@@ -110,18 +111,25 @@ namespace FreeCars {
 			FlurryWP7SDK.Api.StartSession("QSJ5BJB37BNTT862WT8G");
 		}
         private void OnLayerUpdated(object sender, EventArgs e) {
-            TriggerCarsUpdated(sender);
+	        var ea = e as CarsUpdatedEventArgs;
+	        if (ea != null) {
+				var ce = ea;
+				TriggerCarsUpdated(sender, ce.Type == CarsUpdatedEventArgs.UpdateType.Refresh, ce.CurrentSubsetName);
+			} else {
+				TriggerCarsUpdated(sender);
+			}
         }
-        public List<Pushpin> POIs { get; private set; }
+
+	    public List<Pushpin> POIs { get; private set; }
 		public void RefreshPOIs() {
 			try {
-					TriggerCarsUpdated(Resources["multicity"] as Multicity);
+					TriggerCarsUpdated(Resources["multicity"] as Multicity, true);
 			} catch { }
 			try {
-					TriggerCarsUpdated(Resources["driveNow"] as DriveNow);
+					TriggerCarsUpdated(Resources["driveNow"] as DriveNow, true);
 			} catch { }
 			try {
-					TriggerCarsUpdated(Resources["car2go"] as Car2Go);
+					TriggerCarsUpdated(Resources["car2go"] as Car2Go, true);
 			} catch { }
 		}
 		public void ReloadPOIs() {
@@ -135,7 +143,7 @@ namespace FreeCars {
 				(Resources["car2go"] as Car2Go).LoadPOIs();
 			} catch { }
 		}
-        public event EventHandler CarsUpdated;
+        public event EventHandler<CarsUpdatedEventArgs> CarsUpdated;
 		public event EventHandler TrialModeChanged;
         // Code to execute when the application is activated (brought to foreground)
         // This code will not execute when the application is first launched
@@ -143,9 +151,11 @@ namespace FreeCars {
 			ValidateTrialMode();
 			StartFlurry();
         }
-		private void TriggerCarsUpdated(object sender) {
+		private void TriggerCarsUpdated(object sender, bool isRefresh = false, String subset = "") {
 			if (null != CarsUpdated) {
-				CarsUpdated(sender, null);
+				CarsUpdated(sender, new CarsUpdatedEventArgs(isRefresh
+					? CarsUpdatedEventArgs.UpdateType.Refresh
+					: CarsUpdatedEventArgs.UpdateType.Reload, subset));
 			}
 		}
 		private void TriggerTrialModeChanged() {
@@ -264,13 +274,13 @@ namespace FreeCars {
 				if (null == isLowMemoryDevice) {
 					var result = true;
 					try {
-						// Check the working set limit and set the IsLowMemDevice flag accordingly.
+						// On newer devices we can check for the available memory
 						var applicationWorkingSetLimit = (Int64)DeviceExtendedProperties.GetValue("ApplicationWorkingSetLimit");
 						if (applicationWorkingSetLimit >= 94371840L)
 							result = false;
 					} catch (ArgumentOutOfRangeException) {
 						// Windows Phone OS update not installed, which indicates a 512-MB device. 
-						result = false;
+						result = true;
 					}
 					isLowMemoryDevice = result;
 				}
@@ -355,6 +365,28 @@ namespace FreeCars {
     }
 
 
+	public class CarsUpdatedEventArgs : EventArgs {
+		private UpdateType type;
+		private string currentSubsetName;
 
+		public enum UpdateType {
+			Reload, Refresh,
+		}
+
+		public CarsUpdatedEventArgs() : this(UpdateType.Reload, "") {
+		}
+		public CarsUpdatedEventArgs(UpdateType updateType, String subsetName) {
+			Type = updateType;
+			CurrentSubsetName = subsetName;
+		}
+		public UpdateType Type {
+			get { return type; }
+			private set { type = value; }
+		}
+		public String CurrentSubsetName {
+			get { return currentSubsetName; }
+			private set { currentSubsetName = value; }
+		}
+	}
 
 }
