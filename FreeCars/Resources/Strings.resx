@@ -540,4 +540,10 @@ preparing reservation</value>
 
 Do you want to go to the settings-page now and enter the correct credentials?</value>
   </data>
+  <data name="SettingsPageCar2GoAuthExpired" xml:space="preserve">
+    <value>The subsription to you car2go-account is older than 90 days and must be renewed.</value>
+  </data>
+  <data name="SettingsPageCar2GoAuthFailed" xml:space="preserve">
+    <value>Could not authorize FreeCars to connect to your car2go account. Please try again.</value>
+  </data>
 </root>

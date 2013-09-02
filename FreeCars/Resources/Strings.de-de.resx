@@ -546,4 +546,12 @@ Möchtest Du jetzt Deine Zugangsdaten speichern?</value>
 
 Möchtest Du die Daten jetzt auf der Einstellungsseite ändern?</value>
   </data>
+  <data name="SettingsPageCar2GoAuthExpired" xml:space="preserve">
+    <value>FreeCars kann nicht mehr auf Deinen car2go Account zugreifen, da die Verknüpfung nur 90 Tage gültig ist.
+
+Bitte verknüpfe FreeCars erneut mit Deinem Account.</value>
+  </data>
+  <data name="SettingsPageCar2GoAuthFailed" xml:space="preserve">
+    <value>FreeCars konnte nicht mit Deinem car2go-Account verbunden werden. Versuch' es später nochmal.</value>
+  </data>
 </root>

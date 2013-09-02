@@ -155,11 +155,18 @@ namespace FreeCars {
 		private void CreateCar2GoBooking(DownloadStringCompletedEventHandler requestCallback) {
 			var item = (Car2GoMarker)Item;
 			var car2GoRequestEndpoint = "https://www.car2go.com/api/v2.1/bookings";
-			
+			var oauth_timestamp = (DateTime?)App.GetAppSetting("car2go.oauth_token_timestamp");
+			if (null == oauth_timestamp) {
+				App.ClearAppSetting("car2go.oauth_token");
+				App.ClearAppSetting("car2go.oauth_token_secret");
+			} else if (((DateTime)oauth_timestamp).AddDays(90.0).CompareTo(DateTime.UtcNow) <= 0) {
+				App.ClearAppSetting("car2go.oauth_token");
+				App.ClearAppSetting("car2go.oauth_token_secret");
+			}
 			var oauthToken = (string)App.GetAppSetting("car2go.oauth_token");
 			var oauthTokenSecret = (string)App.GetAppSetting("car2go.oauth_token_secret");
 			if (null == oauthToken || null == oauthTokenSecret) {
-				HandleNotConnectedToCar2Go();
+				HandleNotConnectedToCar2Go(null == oauth_timestamp ? "" : Strings.SettingsPageCar2GoAuthExpired);
 			}
 			var accountId = "";
 			try {
@@ -206,9 +213,11 @@ namespace FreeCars {
 					}
 					if (mbResult == MessageBoxResult.OK) {
 						InvokeActionCompleted();
+						FlurryWP7SDK.Api.LogEvent("Car2GoBookingSucessfull");
 					}
 				});
 			});
+			FlurryWP7SDK.Api.LogEvent("Car2GoookingStarted");
 		}
 		private void CancelCar2GoBooking() {
 			var item = (Car2GoMarker)Item;
@@ -283,8 +292,11 @@ namespace FreeCars {
 				}
 			});
 		}
-		private void HandleNotConnectedToCar2Go() {
-			var mbResult = MessageBox.Show(Strings.BookingPageCar2GoNotConnected, Strings.NotConnected, MessageBoxButton.OKCancel);
+		private void HandleNotConnectedToCar2Go(String message = "") {
+			message = message.Equals("")
+				          ? Strings.BookingPageCar2GoNotConnected
+				          : message;
+			var mbResult = MessageBox.Show(message, Strings.NotConnected, MessageBoxButton.OKCancel);
 			switch (mbResult) {
 				case MessageBoxResult.OK:
 					try {
@@ -342,7 +354,7 @@ namespace FreeCars {
 			dnBookingBrowser.ScriptNotify += onDriveNowScriptNotify;
 			dnBookingBrowser.LoadCompleted += onDriveNowLoadCompleted;
 			dnBookingBrowser.Navigate(new Uri("https://m.drive-now.com/", UriKind.Absolute));
-
+			FlurryWP7SDK.Api.LogEvent("DriveNowBookingStarted");
 			//dnBookingBrowser.Navigate(new Uri("https://m.drive-now.com/php/metropolis/details?vin=" + item.vin, UriKind.Absolute));
 		}
 		private void gotoDriveNowCredentials() {
@@ -387,6 +399,7 @@ namespace FreeCars {
 			}
 			if ("dn-booking-successful" == args.Value) {
 				MessageBox.Show(Strings.DriveNowBookingSucessfull);
+				FlurryWP7SDK.Api.LogEvent("DriveNowBookingSucessfull");
 				Deactivate();
 				return;
 			}
@@ -454,6 +467,7 @@ namespace FreeCars {
 				null,
 				"User-Agent: FreeCars/1.6 (compatible; MSIE 8.0; Windows NT 6.2; Win64; x64; Trident/6.0)\r\n");
 				//"User-Agent: Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; Win64; x64; Trident/6.0)\r\n");
+			FlurryWP7SDK.Api.LogEvent("MulticityBookingStarted");
 		}
 		private bool CheckMulticityCredentials() {
 			try {
@@ -509,7 +523,8 @@ namespace FreeCars {
 					Deactivate();
 					break;
 				case "mc-booking-successful":
-				MessageBox.Show(Strings.DriveNowBookingSucessfull);
+					MessageBox.Show(Strings.MulticityBookingSucessfull);
+					FlurryWP7SDK.Api.LogEvent("MulticityBookingSucessfull");
 				//Deactivate();
 					break;
 				case "mc-loggedin":
