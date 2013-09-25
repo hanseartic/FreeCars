@@ -1,60 +1,65 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.IO;
 using System.IO.IsolatedStorage;
 using System.Linq;
+using System.Net;
+using System.Text;
 using System.Windows;
 using System.Windows.Navigation;
 using System.Xml;
 using FreeCars.Providers;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Info;
+using Microsoft.Phone.Notification;
+using Microsoft.Phone.Scheduler;
 using Microsoft.Phone.Shell;
 using Microsoft.Phone.Controls.Maps;
 using Microsoft.Phone.Marketplace;
 
 namespace FreeCars {
-    public partial class App {
-        /// <summary>
-        /// Provides easy access to the root frame of the Phone Application.
-        /// </summary>
-        /// <returns>The root frame of the Phone Application.</returns>
-        public PhoneApplicationFrame RootFrame { get; private set; }
+	public partial class App {
+		/// <summary>
+		/// Provides easy access to the root frame of the Phone Application.
+		/// </summary>
+		/// <returns>The root frame of the Phone Application.</returns>
+		public PhoneApplicationFrame RootFrame { get; private set; }
 
-        /// <summary>
-        /// Constructor for the Application object.
-        /// </summary>
-        public App() {
-            // Global handler for uncaught exceptions. 
-            UnhandledException += Application_UnhandledException;
+		/// <summary>
+		/// Constructor for the Application object.
+		/// </summary>
+		public App() {
+			// Global handler for uncaught exceptions. 
+			UnhandledException += Application_UnhandledException;
 
-            // Standard Silverlight initialization
-            InitializeComponent();
+			// Standard Silverlight initialization
+			InitializeComponent();
 
-            // Phone-specific initialization
-            InitializePhoneApplication();
+			// Phone-specific initialization
+			InitializePhoneApplication();
 
-            // Show graphics profiling information while debugging.
-            if (System.Diagnostics.Debugger.IsAttached) {
-                // Display the current frame rate counters.
-                Application.Current.Host.Settings.EnableFrameRateCounter = true;
+			// Show graphics profiling information while debugging.
+			if (System.Diagnostics.Debugger.IsAttached) {
+				// Display the current frame rate counters.
+				Application.Current.Host.Settings.EnableFrameRateCounter = true;
 
-                // Show the areas of the app that are being redrawn in each frame.
-                //Application.Current.Host.Settings.EnableRedrawRegions = true;
+				// Show the areas of the app that are being redrawn in each frame.
+				//Application.Current.Host.Settings.EnableRedrawRegions = true;
 
-                // Enable non-production analysis visualization mode, 
-                // which shows areas of a page that are handed off to GPU with a colored overlay.
-                //Application.Current.Host.Settings.EnableCacheVisualization = true;
+				// Enable non-production analysis visualization mode, 
+				// which shows areas of a page that are handed off to GPU with a colored overlay.
+				//Application.Current.Host.Settings.EnableCacheVisualization = true;
 
-                // Disable the application idle detection by setting the UserIdleDetectionMode property of the
-                // application's PhoneApplicationService object to Disabled.
-                // Caution:- Use this under debug mode only. Application that disables user idle detection will continue to run
-                // and consume battery power when the user is not using the phone.
-                // PhoneApplicationService.Current.UserIdleDetectionMode = IdleDetectionMode.Disabled;
-            }
-
+				// Disable the application idle detection by setting the UserIdleDetectionMode property of the
+				// application's PhoneApplicationService object to Disabled.
+				// Caution:- Use this under debug mode only. Application that disables user idle detection will continue to run
+				// and consume battery power when the user is not using the phone.
+				// PhoneApplicationService.Current.UserIdleDetectionMode = IdleDetectionMode.Disabled;
+			}
 			PhoneApplicationService.Current.ApplicationIdleDetectionMode = IdleDetectionMode.Disabled;
-        }
+		}
 		private void ValidateTrialMode() {
 			IsInTrialMode = new LicenseInformation().IsTrial();
 			TriggerTrialModeChanged();
@@ -63,14 +68,14 @@ namespace FreeCars {
 			get;
 			private set;
 		}
-        // Code to execute when the application is launching (eg, from Start)
-        // This code will not execute when the application is reactivated
-        private void Application_Launching(object sender, LaunchingEventArgs e) {
+		// Code to execute when the application is launching (eg, from Start)
+		// This code will not execute when the application is reactivated
+		private void Application_Launching(object sender, LaunchingEventArgs e) {
 			ValidateTrialMode();
-            var multicity = new Multicity();
-            multicity.Updated += OnLayerUpdated;
-            multicity.LoadPOIs();
-            this.Resources.Add("multicity", multicity);
+			var multicity = new Multicity();
+			multicity.Updated += OnLayerUpdated;
+			multicity.LoadPOIs();
+			this.Resources.Add("multicity", multicity);
 
 			var driveNow = new DriveNow();
 			driveNow.Updated += OnLayerUpdated;
@@ -84,7 +89,7 @@ namespace FreeCars {
 			StartFlurry();
 			UpdateFlipTile(
 				"", "FreeCars", "\n     car2go\n   DriveNow\n    multicity", "Find free rides around you - car2go, DriveNow, multicity", 0,
-				new Uri("/", UriKind.Relative), 
+				new Uri("/", UriKind.Relative),
 				null, //new Uri("/ApplicationIcon.png", UriKind.Relative),
 				null,
 				null,
@@ -110,26 +115,26 @@ namespace FreeCars {
 			FlurryWP7SDK.Api.SetVersion(GetAppAttribute("Version"));
 			FlurryWP7SDK.Api.StartSession("QSJ5BJB37BNTT862WT8G");
 		}
-        private void OnLayerUpdated(object sender, EventArgs e) {
-	        var ea = e as CarsUpdatedEventArgs;
-	        if (ea != null) {
+		private void OnLayerUpdated(object sender, EventArgs e) {
+			var ea = e as CarsUpdatedEventArgs;
+			if (ea != null) {
 				var ce = ea;
 				TriggerCarsUpdated(sender, ce.Type == CarsUpdatedEventArgs.UpdateType.Refresh, ce.CurrentSubsetName);
 			} else {
 				TriggerCarsUpdated(sender);
 			}
-        }
+		}
 
-	    public List<Pushpin> POIs { get; private set; }
+		public List<Pushpin> POIs { get; private set; }
 		public void RefreshPOIs() {
 			try {
-					TriggerCarsUpdated(Resources["multicity"] as Multicity, true);
+				TriggerCarsUpdated(Resources["multicity"] as Multicity, true);
 			} catch { }
 			try {
-					TriggerCarsUpdated(Resources["driveNow"] as DriveNow, true);
+				TriggerCarsUpdated(Resources["driveNow"] as DriveNow, true);
 			} catch { }
 			try {
-					TriggerCarsUpdated(Resources["car2go"] as Car2Go, true);
+				TriggerCarsUpdated(Resources["car2go"] as Car2Go, true);
 			} catch { }
 		}
 		public void ReloadPOIs() {
@@ -143,14 +148,14 @@ namespace FreeCars {
 				(Resources["car2go"] as Car2Go).LoadPOIs();
 			} catch { }
 		}
-        public event EventHandler<CarsUpdatedEventArgs> CarsUpdated;
+		public event EventHandler<CarsUpdatedEventArgs> CarsUpdated;
 		public event EventHandler TrialModeChanged;
-        // Code to execute when the application is activated (brought to foreground)
-        // This code will not execute when the application is first launched
-        private void Application_Activated(object sender, ActivatedEventArgs e) {
+		// Code to execute when the application is activated (brought to foreground)
+		// This code will not execute when the application is first launched
+		private void Application_Activated(object sender, ActivatedEventArgs e) {
 			ValidateTrialMode();
 			StartFlurry();
-        }
+		}
 		private void TriggerCarsUpdated(object sender, bool isRefresh = false, String subset = "") {
 			if (null != CarsUpdated) {
 				CarsUpdated(sender, new CarsUpdatedEventArgs(isRefresh
@@ -163,7 +168,7 @@ namespace FreeCars {
 				TrialModeChanged(this, null);
 			}
 		}
-		public static ShellTile CheckIfTileExist(string tileUri) {
+		public static ShellTile CheckIfTileExists(string tileUri) {
 			var shellTile = ShellTile.ActiveTiles.FirstOrDefault(
 				tile => tile.NavigationUri.ToString().Contains(tileUri));
 			return shellTile;
@@ -182,7 +187,7 @@ namespace FreeCars {
 			Uri backBackgroundImage,
 			Uri wideBackgroundImage,
 			Uri wideBackBackgroundImage) {
-			
+
 			if (LeastVersionIs78) {
 				// Loop through any existing Tiles that are pinned to Start.
 				foreach (var tileToUpdate in ShellTile.ActiveTiles) {
@@ -195,7 +200,7 @@ namespace FreeCars {
 						var updateTileData = CreateFlipTileData();
 						if (null == updateTileData) return;
 						// Set the properties.
- 						
+
 						SetProperty(updateTileData, "Title", title);
 						SetProperty(updateTileData, "Count", count);
 						SetProperty(updateTileData, "BackTitle", backTitle);
@@ -206,7 +211,7 @@ namespace FreeCars {
 						SetProperty(updateTileData, "WideBackgroundImage", wideBackgroundImage);
 						SetProperty(updateTileData, "WideBackBackgroundImage", wideBackBackgroundImage);
 						SetProperty(updateTileData, "WideBackContent", wideBackContent);
-						
+
 						// Invoke the new version of ShellTile.Update.
 						shellTileType.GetMethod("Update").Invoke(tileToUpdate, new[] { updateTileData });
 						break;
@@ -219,7 +224,7 @@ namespace FreeCars {
 			try {
 				// Get the new FlipTileData type.
 				Type flipTileDataType = Type.GetType("Microsoft.Phone.Shell.FlipTileData, Microsoft.Phone");
-				var flipTileData = flipTileDataType.GetConstructor(new Type[] {}).Invoke(null);
+				var flipTileData = flipTileDataType.GetConstructor(new Type[] { }).Invoke(null);
 				return flipTileData;
 			} catch (NullReferenceException) {
 				return null;
@@ -229,39 +234,39 @@ namespace FreeCars {
 			try {
 				// Get the new FlipTileData type.
 				Type flipTileDataType = Type.GetType("Microsoft.Phone.Shell.FlipTileData, Microsoft.Phone");
-				var flipTileData = flipTileDataType.GetConstructor(new Type[] {}).Invoke(null);
+				var flipTileData = flipTileDataType.GetConstructor(new Type[] { }).Invoke(null);
 				return flipTileData;
 			} catch (NullReferenceException) {
 				return null;
 			}
 		}
 		// Code to execute when the application is deactivated (sent to background)
-        // This code will not execute when the application is closing
-        private void Application_Deactivated(object sender, DeactivatedEventArgs e) {
-        }
+		// This code will not execute when the application is closing
+		private void Application_Deactivated(object sender, DeactivatedEventArgs e) {
+		}
 
-        // Code to execute when the application is closing (eg, user hit Back)
-        // This code will not execute when the application is deactivated
-        private void Application_Closing(object sender, ClosingEventArgs e) {
-        }
+		// Code to execute when the application is closing (eg, user hit Back)
+		// This code will not execute when the application is deactivated
+		private void Application_Closing(object sender, ClosingEventArgs e) {
+		}
 
-        // Code to execute if a navigation fails
-        private void RootFrame_NavigationFailed(object sender, NavigationFailedEventArgs e) {
-            if (System.Diagnostics.Debugger.IsAttached) {
-                // A navigation has failed; break into the debugger
-                System.Diagnostics.Debugger.Break();
-            }
-        }
+		// Code to execute if a navigation fails
+		private void RootFrame_NavigationFailed(object sender, NavigationFailedEventArgs e) {
+			if (System.Diagnostics.Debugger.IsAttached) {
+				// A navigation has failed; break into the debugger
+				System.Diagnostics.Debugger.Break();
+			}
+		}
 
-        // Code to execute on Unhandled Exceptions
-        private void Application_UnhandledException(object sender, ApplicationUnhandledExceptionEventArgs e) {
-            if (System.Diagnostics.Debugger.IsAttached) {
-                // An unhandled exception has occurred; break into the debugger
-                System.Diagnostics.Debugger.Break();
-            }
+		// Code to execute on Unhandled Exceptions
+		private void Application_UnhandledException(object sender, ApplicationUnhandledExceptionEventArgs e) {
+			if (System.Diagnostics.Debugger.IsAttached) {
+				// An unhandled exception has occurred; break into the debugger
+				System.Diagnostics.Debugger.Break();
+			}
 			FlurryWP7SDK.Api.LogError("Uncaught Exception occured", e.ExceptionObject);
-	        //e.Handled = true;
-        }
+			//e.Handled = true;
+		}
 		public static void SetProperty(object instance, string name, object value) {
 			var setMethod = instance.GetType().GetProperty(name).GetSetMethod();
 			setMethod.Invoke(instance, new object[] { value });
@@ -299,11 +304,11 @@ namespace FreeCars {
 			try {
 				IsolatedStorageSettings.ApplicationSettings.Save();
 			} catch (IsolatedStorageException) {
-			} catch (InvalidOperationException) {}
+			} catch (InvalidOperationException) { }
 		}
 
 		internal static object GetAppSetting(string key) {
-			try { 
+			try {
 				return IsolatedStorageSettings.ApplicationSettings[key];
 			} catch (KeyNotFoundException) {
 				return null;
@@ -329,40 +334,225 @@ namespace FreeCars {
 			}
 		}
 
-        #region Phone application initialization
+		#region Radar tasks
+		private const String FreeCarsRadarTaskName = "FreeCars.RadarAgent";
+		private const String FreeCarsRadarNotificationChannelName = "FreeCars.RadarAgentNotificationChannel";
 
-        // Avoid double-initialization
-        private bool phoneApplicationInitialized = false;
+		protected internal static void SetupRadarNotificationChannel() {
+			var liveTileUpdateNotificationChannel = HttpNotificationChannel.Find(FreeCarsRadarNotificationChannelName);
+			if (null == liveTileUpdateNotificationChannel) {
+				liveTileUpdateNotificationChannel = new HttpNotificationChannel(FreeCarsRadarNotificationChannelName);
+				liveTileUpdateNotificationChannel.ChannelUriUpdated += 
+					OnLiveTileUpdateNotificationChannelChannelUriUpdated;
+				liveTileUpdateNotificationChannel.ErrorOccurred += 
+					OnLiveTileUpdateNotificationChannelErrorOccurred;
+				liveTileUpdateNotificationChannel.ConnectionStatusChanged += 
+					OnLiveTileUpdateNotificationChannelConnectionStatusChanged;
+				liveTileUpdateNotificationChannel.ShellToastNotificationReceived +=
+					OnLiveTileUpdateNotificationChannelShellToastNotificationReceived;
+				liveTileUpdateNotificationChannel.HttpNotificationReceived += OnLiveTileUpdateNotificationChannelHttpNotificationReceived;
+				liveTileUpdateNotificationChannel.Open();
+			} else {
+				// completely re-setup the channel to circumvent the 500 messages/day limit
+				liveTileUpdateNotificationChannel.Close();
+				liveTileUpdateNotificationChannel.ChannelUriUpdated -= 
+					OnLiveTileUpdateNotificationChannelChannelUriUpdated;
+				liveTileUpdateNotificationChannel.ErrorOccurred -= 
+					OnLiveTileUpdateNotificationChannelErrorOccurred;
+				liveTileUpdateNotificationChannel.ConnectionStatusChanged -=
+					OnLiveTileUpdateNotificationChannelConnectionStatusChanged;
+				liveTileUpdateNotificationChannel.ShellToastNotificationReceived -=
+					OnLiveTileUpdateNotificationChannelShellToastNotificationReceived;
+				liveTileUpdateNotificationChannel.Dispose();
+				SetupRadarNotificationChannel();
+				return;
+			}
 
-        // Do not add any additional code to this method
-        private void InitializePhoneApplication() {
-            if (phoneApplicationInitialized)
-                return;
+			try {
+				var radarTileUri =
+					ShellTile.ActiveTiles.FirstOrDefault(x => x.NavigationUri.ToString().Contains("FreeCarsRadarTile")).NavigationUri;
+				var radarTileUriString = Uri.EscapeUriString(radarTileUri.ToString());
+				var tileUris = new Collection<Uri> {
+					//radarTileUri
+					new Uri("http://freecars.hanseartic.de", UriKind.Absolute)
+				};
+				RegisterForPushService(liveTileUpdateNotificationChannel.ChannelUri);
+			} catch (NullReferenceException) { }
+		}
 
-            // Create the frame but don't set it as RootVisual yet; this allows the splash
-            // screen to remain active until the application is ready to render.
-            RootFrame = new PhoneApplicationFrame();
-            RootFrame.Navigated += CompleteInitializePhoneApplication;
+		protected internal static void UnsetRadarNotificationChannel() {
+			var liveTileUpdateNotificationChannel = HttpNotificationChannel.Find(FreeCarsRadarNotificationChannelName);
+			if (null == liveTileUpdateNotificationChannel) {
+				return;
+			}
+			if (liveTileUpdateNotificationChannel.IsShellTileBound) {
+				liveTileUpdateNotificationChannel.UnbindToShellTile();
+			}
+			if (liveTileUpdateNotificationChannel.IsShellToastBound) {
+				liveTileUpdateNotificationChannel.UnbindToShellToast();
+			}
+			liveTileUpdateNotificationChannel.Close();
+			liveTileUpdateNotificationChannel.ChannelUriUpdated -=
+				OnLiveTileUpdateNotificationChannelChannelUriUpdated;
+			liveTileUpdateNotificationChannel.ErrorOccurred -=
+				OnLiveTileUpdateNotificationChannelErrorOccurred;
+			liveTileUpdateNotificationChannel.ConnectionStatusChanged -=
+				OnLiveTileUpdateNotificationChannelConnectionStatusChanged;
+			liveTileUpdateNotificationChannel.ShellToastNotificationReceived -=
+				OnLiveTileUpdateNotificationChannelShellToastNotificationReceived;
+			liveTileUpdateNotificationChannel.Dispose();
+		}
 
-            // Handle navigation failures
-            RootFrame.NavigationFailed += RootFrame_NavigationFailed;
+		private static void OnLiveTileUpdateNotificationChannelHttpNotificationReceived(object sender, HttpNotificationEventArgs httpNotificationEventArgs) {
+			// ONLY FOR RAW NOTIFICATIONS
+		}
 
-            // Ensure we don't initialize again
-            phoneApplicationInitialized = true;
-        }
+		private static void OnLiveTileUpdateNotificationChannelShellToastNotificationReceived(object sender, NotificationEventArgs e) {
+			// NO ACTION IN RUNNIG APP
+		}
 
-        // Do not add any additional code to this method
-        private void CompleteInitializePhoneApplication(object sender, NavigationEventArgs e) {
-            // Set the root visual to allow the application to render
-            if (RootVisual != RootFrame)
-                RootVisual = RootFrame;
+		private static void OnLiveTileUpdateNotificationChannelConnectionStatusChanged(object sender, NotificationChannelConnectionEventArgs notificationChannelConnectionEventArgs) {
+			// IGNORE FOR NOW
+		}
 
-            // Remove this handler since it is no longer needed
-            RootFrame.Navigated -= CompleteInitializePhoneApplication;
-        }
+		private static void OnLiveTileUpdateNotificationChannelErrorOccurred(object sender, NotificationChannelErrorEventArgs e) {
+			switch (e.ErrorType) {
+				case ChannelErrorType.ChannelOpenFailed:
+					break;
+				case ChannelErrorType.PayloadFormatError:
+					break;
+				case ChannelErrorType.MessageBadContent:
+					break;
+				case ChannelErrorType.NotificationRateTooHigh:
+					break;
+				case ChannelErrorType.PowerLevelChanged:
+					if (e.ErrorAdditionalData == (int)ChannelPowerLevel.LowPowerLevel) {
+						// TODO: notify user about deactivated push
+					}
+					break;
+				case ChannelErrorType.Unknown:
+					break;
+				default:
+					throw new ArgumentOutOfRangeException();
+			}
+		}
 
-        #endregion
-    }
+		protected internal static void SubscribeForRadarLocation(string tileId, string city) {
+			jsonRequestFromServer("add_radar", new[] { tileId, city });
+		}
+		protected internal static void RegisterForPushService(Uri channelUri) {
+			try {
+				var pushUrl = channelUri.ToString();
+				jsonRequestFromServer("update_user", new[] { pushUrl, GetAppAttribute("Version"), (IsInTrialMode ? "0" : "1") });
+			} catch (NullReferenceException) { }
+		}
+
+		protected internal static void jsonRequestFromServer(String methodName, String[] parameters) {
+			object anidObj;
+			UserExtendedProperties.TryGetValue("ANID", out anidObj);
+			var anid = string.Empty;
+			if (anidObj != null && anidObj.ToString().Length >= (34)) {
+				anid = anidObj.ToString().Substring(2, 32);
+			}
+			var jsonParams = "";
+			if (0 < parameters.Length) {
+				jsonParams = parameters.Aggregate(jsonParams, (current, param) => current + (", \"" + param + "\""));
+			}
+			var jsonRpc = "{\"jsonrpc\": \"2.0\", \"method\": \"" + methodName + "\", \"id\": \"" + DateTime.UtcNow.ToFileTime() + "\","
+				+ " \"params\": [\"" + anid + "\"" + jsonParams + "] }";
+			var wr = WebRequest.CreateHttp("http://freecars.hanseartic.de/server/json.php");
+			wr.Method = "POST";
+			wr.ContentType = "application/json";
+			wr.BeginGetRequestStream(iar => {
+				HttpWebRequest request = null;
+				try {
+					request = (HttpWebRequest)iar.AsyncState;
+					var requestStream = request.EndGetRequestStream(iar);
+					using (var streamWriter = new StreamWriter(requestStream)) {
+						streamWriter.Write(jsonRpc);
+						streamWriter.Flush();
+						streamWriter.Close();
+					}
+				} catch { }
+				request.BeginGetResponse(responseResult => {
+					try {
+						var responseRequest = (HttpWebRequest)responseResult.AsyncState;
+						var response = (HttpWebResponse)responseRequest.EndGetResponse(responseResult);
+						var responseStream = response.GetResponseStream();
+						using (var streamReader = new StreamReader(CopyAndClose(responseStream))) {
+							var responseStreamString = streamReader.ReadToEnd();
+						}
+					} catch {
+
+					}
+
+				}, request);
+			}, wr);
+		}
+
+		private static Stream CopyAndClose(Stream inputStream) {
+			const int readSize = 256;
+			byte[] buffer = new byte[readSize];
+			MemoryStream ms = new MemoryStream();
+
+			int count = inputStream.Read(buffer, 0, readSize);
+			while (count > 0) {
+				ms.Write(buffer, 0, count);
+				count = inputStream.Read(buffer, 0, readSize);
+			}
+			ms.Position = 0;
+			inputStream.Close();
+			return ms;
+		}
+
+		private static void OnLiveTileUpdateNotificationChannelChannelUriUpdated(object sender, NotificationChannelUriEventArgs e) {
+			var liveTileUpdateNotificationChannel = (HttpNotificationChannel)sender;
+			if (liveTileUpdateNotificationChannel.IsShellTileBound) {
+				liveTileUpdateNotificationChannel.UnbindToShellTile();
+			}
+			if (liveTileUpdateNotificationChannel.IsShellToastBound) {
+				liveTileUpdateNotificationChannel.UnbindToShellToast();
+			}
+			liveTileUpdateNotificationChannel.BindToShellTile();
+			liveTileUpdateNotificationChannel.BindToShellToast();
+			RegisterForPushService(e.ChannelUri);
+		}
+		#endregion
+		#region Phone application initialization
+
+		// Avoid double-initialization
+		private bool phoneApplicationInitialized = false;
+
+		// Do not add any additional code to this method
+		private void InitializePhoneApplication() {
+			if (phoneApplicationInitialized)
+				return;
+
+			// Create the frame but don't set it as RootVisual yet; this allows the splash
+			// screen to remain active until the application is ready to render.
+			RootFrame = new PhoneApplicationFrame();
+			RootFrame.Navigated += CompleteInitializePhoneApplication;
+
+			// Handle navigation failures
+			RootFrame.NavigationFailed += RootFrame_NavigationFailed;
+
+			// Ensure we don't initialize again
+			phoneApplicationInitialized = true;
+		}
+
+		// Do not add any additional code to this method
+		private void CompleteInitializePhoneApplication(object sender, NavigationEventArgs e) {
+			// Set the root visual to allow the application to render
+			if (RootVisual != RootFrame)
+				RootVisual = RootFrame;
+
+			// Remove this handler since it is no longer needed
+			RootFrame.Navigated -= CompleteInitializePhoneApplication;
+			SetupRadarNotificationChannel();
+		}
+
+		#endregion
+	}
 
 
 	public class CarsUpdatedEventArgs : EventArgs {
@@ -373,7 +563,8 @@ namespace FreeCars {
 			Reload, Refresh,
 		}
 
-		public CarsUpdatedEventArgs() : this(UpdateType.Reload, "") {
+		public CarsUpdatedEventArgs()
+			: this(UpdateType.Reload, "") {
 		}
 		public CarsUpdatedEventArgs(UpdateType updateType, String subsetName) {
 			Type = updateType;

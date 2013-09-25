@@ -110,7 +110,7 @@
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Marker.cs" />
+    <Compile Include="Serialization\Marker.cs" />
     <Compile Include="Providers\Multicity.cs" />
     <Compile Include="Serialization\Multicity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
