@@ -80,6 +80,7 @@ namespace FreeCars {
 		}
 
 		private void OnBookingBrowserNavigated(object sender, NavigationEventArgs e) {
+
 		}
 		private void OnBookingBrowserNavigationFailed(object sender, NavigationFailedEventArgs e) {
 			/// TODO message-box or toast notifiyng about failed browsing.
@@ -347,8 +348,11 @@ namespace FreeCars {
 				return;
 			}
 			VisualStateManager.GoToState(this, "DNActiveState", false);
-			dnBookingBrowser.LoadCompleted -= onDriveNowLoadCompleted;
-			dnBookingBrowser.ScriptNotify -= onDriveNowScriptNotify;
+			if (null != dnBookingBrowser) {
+				dnBookingBrowser.LoadCompleted -= onDriveNowLoadCompleted;
+				dnBookingBrowser.ScriptNotify -= onDriveNowScriptNotify;
+				//dnBookingBrowser = new WebBrowser();
+			}
 			var item = (DriveNowMarker)Item;
 
 			dnBookingBrowser.ScriptNotify += onDriveNowScriptNotify;
@@ -428,7 +432,9 @@ namespace FreeCars {
 					"dn_login.throw_login_error = function(e, d) { window.external.notify('dn-login-incorrect'); };" +
 				"}; " +
 				"window.readyStateCheckInterval = setInterval(function() {window.external.notify('timer');if (document.readyState === 'complete') {" +
-				"if (typeof dn_login === 'undefined') return; clearInterval(window.readyStateCheckInterval);window.checkLoggedIn();}}, 100);" +
+				"if (typeof dn_login === 'undefined') return; clearInterval(window.readyStateCheckInterval);window.checkLoggedIn();" +
+				//"window.readyStateCheckInterval = null; window.checkLoggedIn = null;" +
+				"}}, 100);" +
 					//"window.checkLoggedIn();" +
 				"");
 			} catch (Exception exception) {
