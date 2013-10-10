@@ -334,6 +334,7 @@ namespace FreeCars {
 			}
 		}
 
+		/*
 		#region Radar tasks
 		private const String FreeCarsRadarTaskName = "FreeCars.RadarAgent";
 		private const String FreeCarsRadarNotificationChannelName = "FreeCars.RadarAgentNotificationChannel";
@@ -518,6 +519,7 @@ namespace FreeCars {
 			RegisterForPushService(e.ChannelUri);
 		}
 		#endregion
+		*/
 		#region Phone application initialization
 
 		// Avoid double-initialization
@@ -548,7 +550,7 @@ namespace FreeCars {
 
 			// Remove this handler since it is no longer needed
 			RootFrame.Navigated -= CompleteInitializePhoneApplication;
-			SetupRadarNotificationChannel();
+			//SetupRadarNotificationChannel();
 		}
 
 		#endregion
