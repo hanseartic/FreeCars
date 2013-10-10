@@ -617,7 +617,7 @@ namespace FreeCars {
 				var longitude = map.Center.Longitude.ToString(usCultureInfo.NumberFormat);
 				var zoom = map.ZoomLevel.ToString(usCultureInfo.NumberFormat);
 				var tileParam = "Lat=" + latitude + "&Lon=" + longitude + "&Zoom=" + zoom;
-				if (null != App.CheckIfTileExist(tileParam)) return;
+				if (null != App.CheckIfTileExists(tileParam)) return;
 
 				using (var store = IsolatedStorageFile.GetUserStoreForApplication()) {
 					foreach (var layer in map.Children.OfType<MapLayer>()) {
