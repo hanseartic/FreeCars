@@ -116,7 +116,7 @@
 							<TextBlock Text="{Binding LocalizedStrings.SettingsPageCallMulticityHeader, Source={StaticResource ResourceAccess}}" Tap="OnCallMulticityTap" Style="{StaticResource PhoneTextTitle3Style}" Margin="0" />
 							<TextBlock Text="{Binding LocalizedStrings.SettingsPageCallMulticityPhoneNumber, Source={StaticResource ResourceAccess}}" Style="{StaticResource PhoneTextTitle2Style}" Margin="0" Tap="OnCallMulticityTap" HorizontalAlignment="Center"/>
 							<TextBlock Text="{Binding LocalizedStrings.SettingsPageMulticityUsernameHeader, Source={StaticResource ResourceAccess}}" Tap="OnMulticityUsernameTap" Style="{StaticResource PhoneTextTitle3Style}" Margin="0" />
-							<TextBox x:Name="multicityUsernameTextbox" InputScope="EmailUserName"></TextBox>
+							<TextBox x:Name="multicityUsernameTextbox" InputScope="Number"></TextBox>
 							<TextBlock Text="{Binding LocalizedStrings.SettingsPageMulticityPasswordHeader, Source={StaticResource ResourceAccess}}" Tap="OnMulticityPassordTap" Style="{StaticResource PhoneTextTitle3Style}" Margin="0" />
 							<PasswordBox x:Name="multicityPasswordbox" ></PasswordBox>
 							<Grid HorizontalAlignment="Stretch">

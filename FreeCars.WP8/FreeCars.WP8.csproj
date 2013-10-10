@@ -89,14 +89,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="..\FreeCars\Marker.cs">
-      <Link>Marker.cs</Link>
-    </Compile>
     <Compile Include="..\FreeCars\Serialization\Car2Go.cs">
       <Link>Serialization\Car2Go.cs</Link>
     </Compile>
     <Compile Include="..\FreeCars\Serialization\DriveNow.cs">
       <Link>Serialization\DriveNow.cs</Link>
+    </Compile>
+    <Compile Include="..\FreeCars\Serialization\Marker.cs">
+      <Link>Serialization\Marker.cs</Link>
     </Compile>
     <Compile Include="..\FreeCars\Serialization\Multicity.cs">
       <Link>Serialization\Multicity.cs</Link>

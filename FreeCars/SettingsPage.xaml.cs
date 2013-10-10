@@ -226,6 +226,7 @@ namespace FreeCars {
 			App.ClearAppSetting("car2go.oauth_request_token");
 			App.ClearAppSetting("car2go.oauth_token_secret");
 			App.ClearAppSetting("car2go.oauth_account_id");
+			App.ClearAppSetting("car2go.oauth_timestamp");
 			CheckCar2GoApiAccess();
 		}
 
@@ -293,9 +294,19 @@ namespace FreeCars {
 
 		private void CheckCar2GoApiAccess() {
 
+			c2gAuthText.Text = Strings.SettingsPageCar2GoAuthStatusNotConnected;
+
+			var oauth_timestamp = (DateTime?)App.GetAppSetting("car2go.oauth_token_timestamp");
+			if (null == oauth_timestamp) {
+				App.ClearAppSetting("car2go.oauth_token");
+				App.ClearAppSetting("car2go.oauth_token_secret");
+			} else if (((DateTime)oauth_timestamp).AddDays(90.0).CompareTo(DateTime.UtcNow) <= 0) {
+				c2gAuthText.Text = Strings.SettingsPageCar2GoAuthExpired;
+				App.ClearAppSetting("car2go.oauth_token");
+				App.ClearAppSetting("car2go.oauth_token_secret");
+			}
 			var oauth_token = (string)App.GetAppSetting("car2go.oauth_token");
 			var oauth_token_secret = (string)App.GetAppSetting("car2go.oauth_token_secret");
-			c2gAuthText.Text = Strings.SettingsPageCar2GoAuthStatusNotConnected;
 			if (null != oauth_token && null != oauth_token_secret) {
 				getCar2GoAccounts(
 					oauth_token,
@@ -390,12 +401,13 @@ namespace FreeCars {
 			var webClient = new WebClient();
 			webClient.DownloadStringCompleted += (client, arguments) => {
 				if (null != arguments.Error) {
-					MessageBox.Show("Could not authorize FreeCars to connect to your car2go account. Please try again.");
+					MessageBox.Show(Strings.SettingsPageCar2GoAuthFailed);
 					return;
 				}
 				var results = arguments.Result.Split(new char[] { '&' }, StringSplitOptions.None);
 				App.SetAppSetting("car2go.oauth_token", results[0].Split(new char[] { '=' })[1]);
 				App.SetAppSetting("car2go.oauth_token_secret", results[1].Split(new char[] { '=' })[1]);
+				App.SetAppSetting("car2go.oauth_token_timestamp", DateTime.UtcNow);
 				CheckCar2GoApiAccess();
 			};
 			webClient.DownloadStringAsync(requestUrl);

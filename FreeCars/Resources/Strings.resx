@@ -289,7 +289,11 @@ Please use one of the following options to get in touch with me for critics, sug
 I will answer every request!</value>
   </data>
   <data name="ChangelogPageBody" xml:space="preserve">
-    <value>1.7.0.1:
+    <value>1.7.0.2:
+* booking-requests could only be displayed for one DriveNow - consecutive attempts hung with 'Logging in' message.
+* the connection to the car2go-account expires after 90 days - now there is a message telling you about it
+
+1.7.0.1:
 * downloadindicatiors while loading data
 * ads on top to prevent accidental clicks
 
@@ -323,7 +327,7 @@ I will answer every request!</value>
 1.5.0.0:
 * connect to car2go account
 * bookings for car2go
-* differenciate between elektric drive and combustion engines with car2go
+* differenciate between electric drive and combustion engines with car2go
 * performace improvements
 * add facebook button
 
@@ -499,6 +503,9 @@ preparing reservation</value>
   <data name="DriveNowBookingSucessfull" xml:space="preserve">
     <value>The car was booked. Please wait for the SMS.</value>
   </data>
+  <data name="MulticityBookingSucessfull" xml:space="preserve">
+    <value>The car was booked. Please wait for the SMS.</value>
+  </data>
   <data name="SettingsPageCar2GoAuthStatusNotConnected" xml:space="preserve">
     <value>FreeCars is not connected to a car2go account.
 
@@ -539,5 +546,11 @@ preparing reservation</value>
     <value>Could not log you in to Multicity with the credentials you provided.
 
 Do you want to go to the settings-page now and enter the correct credentials?</value>
+  </data>
+  <data name="SettingsPageCar2GoAuthExpired" xml:space="preserve">
+    <value>The subsription to you car2go-account is older than 90 days and must be renewed.</value>
+  </data>
+  <data name="SettingsPageCar2GoAuthFailed" xml:space="preserve">
+    <value>Could not authorize FreeCars to connect to your car2go account. Please try again.</value>
   </data>
 </root>

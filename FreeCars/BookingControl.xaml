@@ -95,6 +95,9 @@
 							</ObjectAnimationUsingKeyFrames>
 						</Storyboard>
 					</VisualTransition>
+					<VisualTransition From="DNActiveState" GeneratedDuration="0:0:0.2" To="DnBookingBrowserOpenState">
+						<Storyboard/>
+					</VisualTransition>
 				</VisualStateGroup.Transitions>
 				<VisualState x:Name="ActiveState">
 					<Storyboard>
@@ -148,6 +151,7 @@
 								</DiscreteObjectKeyFrame.Value>
 							</DiscreteObjectKeyFrame>
 						</ObjectAnimationUsingKeyFrames>
+						<DoubleAnimation Duration="0" To="0" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="dnBookingBrowser" d:IsOptimized="True"/>
 					</Storyboard>
 				</VisualState>
 				<VisualState x:Name="DNActiveState">
@@ -166,6 +170,14 @@
 								</DiscreteObjectKeyFrame.Value>
 							</DiscreteObjectKeyFrame>
 						</ObjectAnimationUsingKeyFrames>
+						<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="dnBookingBrowser">
+							<DiscreteObjectKeyFrame KeyTime="0">
+								<DiscreteObjectKeyFrame.Value>
+									<Visibility>Visible</Visibility>
+								</DiscreteObjectKeyFrame.Value>
+							</DiscreteObjectKeyFrame>
+						</ObjectAnimationUsingKeyFrames>
+						<DoubleAnimation Duration="0" To="800" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="dnBookingBrowser" d:IsOptimized="True"/>
 					</Storyboard>
 				</VisualState>
 				<VisualState x:Name="MCActiveState">
@@ -193,7 +205,7 @@
 			<RowDefinition Height="Auto" />
 		</Grid.RowDefinitions>
 		<Grid x:Name="providersPanels">
-			<StackPanel x:Name="car2GoPanel" Orientation="Vertical" Visibility="{Binding Car2GoVisibility}">
+			<StackPanel x:Name="car2GoPanel" Orientation="Vertical" Visibility="{Binding Car2GoVisibility}" d:IsHidden="True">
 				<TextBlock TextWrapping="Wrap" VerticalAlignment="Top" Text="{Binding LocalizedStrings.BookingPageHeadline, Source={StaticResource ResourceAccess}}" Style="{StaticResource PhoneTextTitle1Style}" Visibility="{Binding Car2GoBookVisibility}" />
 				<TextBlock TextWrapping="Wrap" VerticalAlignment="Top" Text="{Binding LocalizedStrings.BookingPageQuestion, Source={StaticResource ResourceAccess}}" Style="{StaticResource PhoneTextTitle2Style}" Visibility="{Binding Car2GoBookVisibility}" />
 				<TextBlock TextWrapping="Wrap" VerticalAlignment="Top" Text="{Binding LocalizedStrings.BookingPageCancelHeadline, Source={StaticResource ResourceAccess}}" Style="{StaticResource PhoneTextTitle1Style}" Visibility="{Binding Car2GoCancelVisibility}" />
@@ -225,10 +237,14 @@
 					IsScriptEnabled="True" 
 					IsEnabled="True"
 					NavigationFailed="OnBookingBrowserNavigationFailed"
-					Height="800"
-					/>
+					Height="800" RenderTransformOrigin="0.5,0.5"
+					>
+					<phone:WebBrowser.RenderTransform>
+						<CompositeTransform/>
+					</phone:WebBrowser.RenderTransform>
+				</phone:WebBrowser>
 			</Grid>
-			<Grid x:Name="multicityPanel" Visibility="{Binding MulticityVisibility}">
+			<Grid x:Name="multicityPanel" Visibility="{Binding MulticityVisibility}" d:IsHidden="True">
 				<StackPanel x:Name="mcProgressStackPanel" VerticalAlignment="Center" Visibility="Visible">
 					<TextBlock TextAlignment="Center" FontSize="26.667" Text="{Binding LocalizedStrings.BookingPageConnectingToMulticity, Source={StaticResource ResourceAccess}}" />
 					<ProgressBar x:Name="mcProgressBar" IsIndeterminate="True" Background="{StaticResource PhoneAccentBrush}" Foreground="{StaticResource PhoneAccentBrush}" />
