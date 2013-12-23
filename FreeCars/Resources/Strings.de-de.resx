@@ -294,7 +294,11 @@ Bitte nutze eine der folgenden Kontaktmöglichkeiten bei Kritik, Verbesserungsvo
 Jede Anfrage wird beantwortet!</value>
   </data>
   <data name="ChangelogPageBody" xml:space="preserve">
-    <value>1.7.0.2:
+    <value>1.7.0.3:
+* DriveNow kann wieder gebucht werden
+* Problem mit Button bei der multicity-Buchung behoben
+
+1.7.0.2:
 * Hängenbleiben bei erneutem Öffnen der Buchungsvorschau von DriveNow behoben.
 * Benachrichtigung wenn nach 90 Tagen die Verknüpfung mit dem car2go-Account abgelaufen ist.
 
