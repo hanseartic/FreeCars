@@ -49,7 +49,7 @@ namespace FreeCars.Providers {
 			} catch (KeyNotFoundException) { }
 			var wc = new WebClient();
 			//var callUri = "https://www.drive-now.com/php/metropolis/json.vehicle_filter?tenant=germany&language=de_DE&L=0&url=%2Fphp%2Fmetropolis%2Fcity_berlin&redirect_flag=1";
-			var callUri = "https://de.drive-now.com/php/metropolis/json.vehicle_filter?timestamp=" + OAuthTools.GetTimestamp();
+			var callUri = "https://m.drive-now.com/php/metropolis/json.vehicle_filter?timestamp=" + OAuthTools.GetTimestamp();
 
 			wc.OpenReadCompleted += OnDriveNowCarsOpenReadCompleted;
 			wc.OpenReadAsync(new Uri(callUri));
