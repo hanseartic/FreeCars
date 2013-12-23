@@ -289,7 +289,11 @@ Please use one of the following options to get in touch with me for critics, sug
 I will answer every request!</value>
   </data>
   <data name="ChangelogPageBody" xml:space="preserve">
-    <value>1.7.0.2:
+    <value>1.7.0.3:
+* fixed issue with DriveNow
+* make button for multicity booking more accessible
+
+1.7.0.2:
 * booking-requests could only be displayed for one DriveNow - consecutive attempts hung with 'Logging in' message.
 * the connection to the car2go-account expires after 90 days - now there is a message telling you about it
 
