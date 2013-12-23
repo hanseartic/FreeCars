@@ -587,7 +587,8 @@ namespace FreeCars {
 						"clearInterval(window.readyStateCheckInterval);" +
 						"jQuery('html').addClass('m');" +
 						"jQuery('#iframeheader').hide();" +
-						"jQuery('#iframefooter').hide();" +
+						// if we hide this, the user cannot scroll down to the button anymore
+						//"jQuery('#iframefooter').hide();" +
 						"window.external.notify('document.ready');" +
 					"}}, 200);" +
 				//"readyStateCheckInterval();" +
